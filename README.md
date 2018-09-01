@@ -23,6 +23,7 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
         * [`checked` `unchecked`](#checked-unchecked)
         * [`validMessage`](#validmessage)
         * [`valuePropName` `changePropName` `focusPropName` `blurPropName`](#valuepropname-changepropname-focuspropname-blurpropname)
+        * [`controlId` `bsSize` `bsClass`](#controlid-bssize-bsclass)
     + [`<CheckboxGroup />`](#checkboxgroup-)
     + [`<RadioGroup />`](#radiogroup-)
     + [`支持的组件`](#支持的组件)
@@ -30,6 +31,7 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
         * [`Checkbox`](#checkbox)
         * [`Radio`](#radio)
         * [`InputGroup`](#inputgroup)
+        * [`Checkbox` `Radio`](#checkbox-radio)
 - [FAQ](#faq)
     + [`给组件设置的 onChange、onFocus 等方法无效、不执行`](#给组件设置的-onchangeonfocus-等方法无效不执行)
 
@@ -242,6 +244,10 @@ class MyForm extends Component {
 </FormGroup>
 ```
 
+##### `controlId` `bsSize` `bsClass`
+
+这三个属性同`react-bootstrap`中 FormGroup 组件的同名属性
+
 #### `<CheckboxGroup />`
 
 该组件用来同步多选组，需要嵌套在`FormGroup`下配合使用：
@@ -344,6 +350,14 @@ class MyForm extends Component {
         <FormControl type="text" />
     </InputGroup>
 </FormGroup>
+```
+
+##### [`Checkbox`](#checkbox) [`Radio`](#radio)
+
+**注意**：这两个组件并不是`react-bootstrap`提供的组件，而是`react-bootstrap-formutil`提供的。
+
+```javascript
+import { CheckboxGroup, RadioGroup } from 'react-bootstrap-formutil';
 ```
 
 ### FAQ
