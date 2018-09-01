@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { withForm, FormGroup } from 'app/../../src';
-import { Grid, Row, Col, Form, FormControl, Checkbox, Button } from 'react-bootstrap';
+import { withForm, FormGroup, CheckboxGroup, RadioGroup } from 'app/../../src';
+import { Grid, Row, Col, Form, FormControl, Checkbox, Radio, Button, InputGroup } from 'react-bootstrap';
 
 @withForm
 class App extends Component {
@@ -50,7 +50,14 @@ class App extends Component {
                                 </FormControl>
                             </FormGroup>
 
-                            <div class="form-horizontal">
+                            <FormGroup name="addon" required label="Addon">
+                                <InputGroup>
+                                    <InputGroup.Addon>@</InputGroup.Addon>
+                                    <FormControl type="text" />
+                                </InputGroup>
+                            </FormGroup>
+
+                            <div className="form-horizontal">
                                 <FormGroup
                                     name="job"
                                     required
@@ -83,6 +90,50 @@ class App extends Component {
                                         md: 2
                                     }}>
                                     <Checkbox>Checkbox</Checkbox>
+                                </FormGroup>
+
+                                <FormGroup
+                                    name="group.checkbox"
+                                    required
+                                    label="Checkbox group"
+                                    wrapperCol={{
+                                        xs: 12,
+                                        md: 10
+                                    }}
+                                    labelCol={{
+                                        xs: 12,
+                                        md: 2
+                                    }}>
+                                    <CheckboxGroup>
+                                        <Checkbox inline value="1">
+                                            1
+                                        </Checkbox>
+                                        <Checkbox inline value="2">
+                                            2
+                                        </Checkbox>
+                                        <Checkbox inline value="3">
+                                            3
+                                        </Checkbox>
+                                    </CheckboxGroup>
+                                </FormGroup>
+
+                                <FormGroup
+                                    name="group.radio"
+                                    required
+                                    label="Radio group"
+                                    wrapperCol={{
+                                        xs: 12,
+                                        md: 10
+                                    }}
+                                    labelCol={{
+                                        xs: 12,
+                                        md: 2
+                                    }}>
+                                    <RadioGroup>
+                                        <Radio value="1">1</Radio>
+                                        <Radio value="2">2</Radio>
+                                        <Radio value="3">3</Radio>
+                                    </RadioGroup>
                                 </FormGroup>
                             </div>
 
