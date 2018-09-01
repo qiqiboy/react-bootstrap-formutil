@@ -1,0 +1,53 @@
+{
+  "name": "react-bootstrap-formutil",
+  "version": "0.0.1",
+  "description": "Happy to build forms with react-formutil in the project based on react-bootstrap ^_^",
+  "main": "lib/index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build": "BABEL_ENV=production ./node_modules/.bin/babel src --out-dir lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qiqiboy/react-antd-formutil.git"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://qiqiboy@github.com/qiqiboy/react-bootstrap-formutil.git"
+  },
+  "babel": {
+    "presets": ["react-app"],
+    "plugins": ["transform-decorators-legacy"]
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "react-formuitl",
+    "react-bootstrap"
+  ],
+  "author": "qiqiboy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/qiqiboy/react-bootstrap-formutil/issues"
+  },
+  "homepage": "https://github.com/qiqiboy/react-bootstrap-formutil#readme",
+  "peerDependencies": {
+    "react": ">15.0.0",
+    "prop-types": ">15.0.0",
+    "react-bootstrap": ">3.0.0",
+    "react-formutil": ">0.3.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react-app": "^3.1.1"
+  }
+}
