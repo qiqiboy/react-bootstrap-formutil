@@ -352,7 +352,7 @@ class MyForm extends Component {
 </FormGroup>
 ```
 
-##### [`Checkbox`](#checkbox) [`Radio`](#radio)
+##### [`CheckboxGroup`](#checkboxgroup-) [`RadioGroup`](#radiogroup-)
 
 **注意**：这两个组件并不是`react-bootstrap`提供的组件，而是`react-bootstrap-formutil`提供的。
 
