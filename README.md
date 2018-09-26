@@ -362,8 +362,7 @@ class MyForm extends Component {
 ##### [`ToggleButtonGroup`](https://react-bootstrap.github.io/components/button-group/#btn-groups-checkbox-radio)
 
 ```javascript
-<FormGroup
-    name="hobbies"}>
+<FormGroup name="hobbies">
     <ToggleButtonGroup type="checkbox">
         <ToggleButton value={1}>option 1</ToggleButton>
         <ToggleButton value={2}>option 2</ToggleButton>
