@@ -10,7 +10,8 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
 >
 > 1. ant-design [`react-antd-formutil`](https://github.com/qiqiboy/react-antd-formutil) [![npm](https://img.shields.io/npm/v/react-antd-formutil.svg?style=flat)](https://npm.im/react-antd-formutil)
 > 1. react-md [`react-md-formutil`](https://github.com/qiqiboy/react-md-formutil) [![npm](https://img.shields.io/npm/v/react-md-formutil.svg?style=flat)](https://npm.im/react-md-formutil)
-> -  Material-UI [`react-material-formutil`](https://github.com/qiqiboy/react-material-formutil) [![npm](https://img.shields.io/npm/v/react-material-formutil.svg?style=flat)](https://npm.im/react-material-formutil)
+>
+> -   Material-UI [`react-material-formutil`](https://github.com/qiqiboy/react-material-formutil) [![npm](https://img.shields.io/npm/v/react-material-formutil.svg?style=flat)](https://npm.im/react-material-formutil)
 
 <!-- vim-markdown-toc GFM -->
 
@@ -37,7 +38,8 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
         * [`Checkbox`](#checkbox)
         * [`Radio`](#radio)
         * [`InputGroup`](#inputgroup)
-        * [`Checkbox` `Radio`](#checkbox-radio)
+        * [`ToggleButtonGroup`](#togglebuttongroup)
+        * [`CheckboxGroup` `RadioGroup`](#checkboxgroup-radiogroup)
 - [FAQ](#faq)
     + [`给组件设置的 onChange、onFocus 等方法无效、不执行`](#给组件设置的-onchangeonfocus-等方法无效不执行)
 
@@ -117,14 +119,14 @@ class MyForm extends Component {
 
 > 同 react-formutil 的 EasyField，FormControl 也内置了同样的校验规则：
 
-> *   `required` 必填 `required`
-> *   `maxLength` 。最大输入长度，有效输入时才会校验 `maxLength="100"`
-> *   `minLength` 最小输入长度，有效输入时才会校验 `minLength="10"`
-> *   `max` 最大输入数值，仅支持 Number 比较。有效输入时才会校验 `max="100"`
-> *   `min` 最小输入数值，仅支持 Number 比较。有效输入时才会校验 `min="10"`
-> *   `pattern` 正则匹配。有效输入时才会校验 `pattern={/^\d+$/}`
-> *   `enum` 枚举值检测。有效输入时才会校验 `enum={[1,2,3]}`
-> *   `checker` 自定义校验函数。`checker={value => value > 10 && value < 100 || ' 输入比如大于 10 小与 100'}`
+> -   `required` 必填 `required`
+> -   `maxLength` 。最大输入长度，有效输入时才会校验 `maxLength="100"`
+> -   `minLength` 最小输入长度，有效输入时才会校验 `minLength="10"`
+> -   `max` 最大输入数值，仅支持 Number 比较。有效输入时才会校验 `max="100"`
+> -   `min` 最小输入数值，仅支持 Number 比较。有效输入时才会校验 `min="10"`
+> -   `pattern` 正则匹配。有效输入时才会校验 `pattern={/^\d+$/}`
+> -   `enum` 枚举值检测。有效输入时才会校验 `enum={[1,2,3]}`
+> -   `checker` 自定义校验函数。`checker={value => value > 10 && value < 100 || ' 输入比如大于 10 小与 100'}`
 
 注：校验属性的值为 `null` 时表示不进行该校验
 
@@ -355,6 +357,19 @@ class MyForm extends Component {
         <InputGroup.Addon>@</InputGroup.Addon>
         <FormControl type="text" />
     </InputGroup>
+</FormGroup>
+```
+
+##### [`ToggleButtonGroup`](https://react-bootstrap.github.io/components/button-group/#btn-groups-checkbox-radio)
+
+```javascript
+<FormGroup
+    name="hobbies"}>
+    <ToggleButtonGroup type="checkbox">
+        <ToggleButton value={1}>option 1</ToggleButton>
+        <ToggleButton value={2}>option 2</ToggleButton>
+        <ToggleButton value={3}>option 3</ToggleButton>
+    </ToggleButtonGroup>
 </FormGroup>
 ```
 

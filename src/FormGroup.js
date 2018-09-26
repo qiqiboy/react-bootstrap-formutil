@@ -1,7 +1,16 @@
 import React, { Component, cloneElement, isValidElement, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { EasyField } from 'react-formutil';
-import { FormGroup, FormControl, ControlLabel, HelpBlock, Checkbox, Radio, Col } from 'react-bootstrap';
+import {
+    FormGroup,
+    FormControl,
+    ControlLabel,
+    HelpBlock,
+    Checkbox,
+    Radio,
+    Col,
+    ToggleButtonGroup
+} from 'react-bootstrap';
 import CheckboxGroup from './CheckboxGroup';
 
 const isUglify = FormControl.name !== 'FormControl';
@@ -9,6 +18,7 @@ const isUglify = FormControl.name !== 'FormControl';
 const _Checkbox = isUglify ? Checkbox : 'Checkbox';
 const _Radio = isUglify ? Radio : 'Radio';
 const _CheckboxGroup = isUglify ? CheckboxGroup : 'CheckboxGroup';
+const _ToggleButtonGroup = isUglify ? ToggleButtonGroup : 'Uncontrolled(ToggleButtonGroup)';
 
 function getChildComponent(children) {
     if (children && typeof children.type === 'function') {
@@ -83,7 +93,10 @@ class _FormGroup extends Component {
                 break;
 
             case _CheckboxGroup:
-                fieldProps.__TYPE__ = 'array';
+            case _ToggleButtonGroup:
+                if (children.props.type !== 'radio') {
+                    fieldProps.__TYPE__ = 'array';
+                }
                 break;
 
             default:
@@ -125,7 +138,8 @@ class _FormGroup extends Component {
                         default:
                             childProps = {
                                 [changePropName]: onChange,
-                                [valuePropName]: value
+                                [valuePropName]: value,
+                                name: fieldProps.name
                             };
                             break;
                     }

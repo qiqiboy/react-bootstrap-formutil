@@ -1,6 +1,18 @@
 import React, { Component } from 'react';
-import { withForm, FormGroup, CheckboxGroup, RadioGroup } from 'app/../../src';
-import { Grid, Row, Col, Form, FormControl, Checkbox, Radio, Button, InputGroup } from 'react-bootstrap';
+import { withForm, FormGroup, CheckboxGroup, RadioGroup } from '../../../src';
+import {
+    Grid,
+    Row,
+    Col,
+    Form,
+    FormControl,
+    Checkbox,
+    Radio,
+    Button,
+    InputGroup,
+    ToggleButtonGroup,
+    ToggleButton
+} from 'react-bootstrap';
 
 @withForm
 class App extends Component {
@@ -80,7 +92,7 @@ class App extends Component {
                                     checked="yes"
                                     unchecked="no"
                                     required
-                                    label="Agreement"
+                                    label="Checkbox"
                                     wrapperCol={{
                                         xs: 12,
                                         md: 10
@@ -90,6 +102,23 @@ class App extends Component {
                                         md: 2
                                     }}>
                                     <Checkbox>Checkbox</Checkbox>
+                                </FormGroup>
+
+                                <FormGroup
+                                    name="radio"
+                                    checked="yes"
+                                    unchecked="no"
+                                    required
+                                    label="Radio"
+                                    wrapperCol={{
+                                        xs: 12,
+                                        md: 10
+                                    }}
+                                    labelCol={{
+                                        xs: 12,
+                                        md: 2
+                                    }}>
+                                    <Radio>Radio</Radio>
                                 </FormGroup>
 
                                 <FormGroup
@@ -134,6 +163,46 @@ class App extends Component {
                                         <Radio value="2">2</Radio>
                                         <Radio value="3">3</Radio>
                                     </RadioGroup>
+                                </FormGroup>
+
+                                <FormGroup
+                                    name="group.buttonCheckbox"
+                                    required
+                                    label="ButtonGroup"
+                                    $defaultValue={[1, 2]}
+                                    wrapperCol={{
+                                        xs: 12,
+                                        md: 10
+                                    }}
+                                    labelCol={{
+                                        xs: 12,
+                                        md: 2
+                                    }}>
+                                    <ToggleButtonGroup type="checkbox">
+                                        <ToggleButton value={1}>option 1</ToggleButton>
+                                        <ToggleButton value={2}>option 2</ToggleButton>
+                                        <ToggleButton value={3}>option 3</ToggleButton>
+                                    </ToggleButtonGroup>
+                                </FormGroup>
+
+                                <FormGroup
+                                    name="group.buttonRadio"
+                                    required
+                                    $defaultValue={3}
+                                    label="ButtonGroup"
+                                    wrapperCol={{
+                                        xs: 12,
+                                        md: 10
+                                    }}
+                                    labelCol={{
+                                        xs: 12,
+                                        md: 2
+                                    }}>
+                                    <ToggleButtonGroup type="radio">
+                                        <ToggleButton value={1}>option 1</ToggleButton>
+                                        <ToggleButton value={2}>option 2</ToggleButton>
+                                        <ToggleButton value={3}>option 3</ToggleButton>
+                                    </ToggleButtonGroup>
                                 </FormGroup>
                             </div>
 
