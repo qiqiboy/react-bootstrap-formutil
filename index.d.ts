@@ -1,36 +1,28 @@
-// Type definitions for react-bootstrap-formutil@>0.3.0
+// Type definitions for react-bootstrap-formutil@>0.0.3
 // Project: react-bootstrap-formutil
 // Definitions by: qiqiboy <https://github.com/qiqiboy>
 
-import { FormGroup as _FormGroup } from '@types/react-bootstrap';
+import { FormGroupProps, ColProps } from 'react-bootstrap';
 import React from 'react';
-import ReactFormutil from 'react-formutil';
+import { EasyFieldComponentProps } from 'react-formutil';
 
-export { Field, withField, Form, withForm, EasyField, connect } from 'react-formutil';
+export * from 'react-formutil';
 
-const { FormGroupProps } = _FormGroup;
-
-interface FormGroupComponentProps extends ReactFormutil.EasyFieldComponentProps, FormGroupProps {
-    wrapperCol?: object;
-    labelCol?: object;
-    label?: React.ReactNode;
-    helper?: React.ReactNode;
+interface FormGroupComponentProps<T = any, P = {}, Fields = {}, WeakFields = Fields>
+    extends EasyFieldComponentProps<T, P, Fields, WeakFields> {
+    wrapperCol: ColProps;
+    labelCol: ColProps;
+    label: React.ReactNode;
+    helper: React.ReactNode;
     children: React.ReactElement<any>;
 
     [otherName: string]: any;
 }
 
-export class FormGroup extends React.Component<FormGroupComponentProps, any> {}
+export class FormGroup<T = any, P = {}, Fields = {}, WeakFields = Fields> extends React.Component<
+    Partial<FormGroupComponentProps<T, P, Fields, WeakFields>>
+> {}
 
-interface CheckboxGroupProps {
-    name?: string;
-    value?: any;
-    onChange?: (ev: React.SyntheticEvent) => any;
-    onFocus?: (ev: React.SyntheticEvent) => any;
-    onBlur?: (ev: React.SyntheticEvent) => any;
-}
+export class CheckboxGroup extends React.Component<React.HTMLProps<CheckboxGroup>> {}
 
-export class CheckboxGroup extends React.Component<CheckboxGroupProps, any> {}
-
-export class RadioGroup extends React.Component<CheckboxGroupProps, any> {}
-
+export class RadioGroup extends React.Component<React.HTMLProps<RadioGroup>> {}
