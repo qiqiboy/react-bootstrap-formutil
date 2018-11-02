@@ -8,21 +8,28 @@ import { EasyFieldComponentProps } from 'react-formutil';
 
 export * from 'react-formutil';
 
-interface FormGroupComponentProps<T = any, P = {}, Fields = {}, WeakFields = Fields>
+export interface FormGroupComponentProps<T = any, P = {}, Fields = {}, WeakFields = Fields>
     extends EasyFieldComponentProps<T, P, Fields, WeakFields> {
-    wrapperCol: ColProps;
-    labelCol: ColProps;
-    label: React.ReactNode;
-    helper: React.ReactNode;
+    wrapperCol?: ColProps;
+    labelCol?: ColProps;
+    label?: React.ReactNode;
+    helper?: React.ReactNode;
     children: React.ReactElement<any>;
 
     [otherName: string]: any;
 }
 
 export class FormGroup<T = any, P = {}, Fields = {}, WeakFields = Fields> extends React.Component<
-    Partial<FormGroupComponentProps<T, P, Fields, WeakFields>>
+    FormGroupComponentProps<T, P, Fields, WeakFields>
 > {}
 
-export class CheckboxGroup extends React.Component<React.HTMLProps<CheckboxGroup>> {}
+interface CheckboxGroupProps<T> {
+    onChange(value: T[]): void;
+    onFocus: React.FocusEventHandler;
+    onBlur: React.FocusEventHandler;
+    value: T[]
+}
 
-export class RadioGroup extends React.Component<React.HTMLProps<RadioGroup>> {}
+export class CheckboxGroup<T = any> extends React.Component<CheckboxGroupProps<T>> {}
+
+export class RadioGroup<T = any> extends React.Component<CheckboxGroupProps<T>> {}
