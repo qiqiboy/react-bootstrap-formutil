@@ -15,8 +15,8 @@ export interface FormGroupComponentProps<T = any, P = {}, Fields = {}, WeakField
     label?: React.ReactNode;
     helper?: React.ReactNode;
     addons?: {
-        pre?: ReactNode;
-        end?: ReactNode;
+        pre?: React.ReactNode;
+        end?: React.ReactNode;
     };
     children: React.ReactElement<any>;
 
