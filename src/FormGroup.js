@@ -5,6 +5,7 @@ import {
     FormGroup,
     FormControl,
     ControlLabel,
+    InputGroup,
     HelpBlock,
     Checkbox,
     Radio,
@@ -12,6 +13,17 @@ import {
     ToggleButtonGroup
 } from 'react-bootstrap';
 import CheckboxGroup from './CheckboxGroup';
+
+let errorLevel = 1;
+
+/**
+ * 0 dirty & invalid & touched
+ * 1 dirty & invalid
+ * 2 invalid
+ */
+export const setErrorLevel = function(level) {
+    errorLevel = level;
+};
 
 const isUglify = FormControl.name !== 'FormControl';
 
@@ -38,7 +50,9 @@ class _FormGroup extends Component {
         label: PropTypes.any,
         helper: PropTypes.any,
         labelCol: PropTypes.object,
-        wrapperCol: PropTypes.object
+        wrapperCol: PropTypes.object,
+        addons: PropTypes.object
+
         //$parser $formatter checked unchecked $validators validMessage等传递给 EasyField 组件的额外参数
     };
 
@@ -46,6 +60,7 @@ class _FormGroup extends Component {
         const props = this.props;
         let {
             children,
+            addons,
             label,
             helper,
             labelCol,
@@ -57,7 +72,7 @@ class _FormGroup extends Component {
             ...fieldProps
         } = props;
 
-        const Wrapper = wrapperCol ? Col : Fragment;
+        let Wrapper = wrapperCol ? Col : Fragment;
         const groupProps = {
             controlId,
             bsSize,
@@ -78,6 +93,19 @@ class _FormGroup extends Component {
                     <ControlLabel>{label}</ControlLabel>
                 );
             }
+        }
+
+        let AddonWrapper = addons ? InputGroup : Fragment;
+        if (addons) {
+            if (addons.pre && !isValidElement(addons.pre)) {
+                addons.pre = <InputGroup.Addon>{addons.pre}</InputGroup.Addon>;
+            }
+
+            if (addons.end && !isValidElement(addons.end)) {
+                addons.end = <InputGroup.Addon>{addons.end}</InputGroup.Addon>;
+            }
+        } else {
+            addons = {};
         }
 
         if (helper && !isValidElement(helper)) {
@@ -108,7 +136,7 @@ class _FormGroup extends Component {
                 {...fieldProps}
                 passUtil="$fieldutil"
                 render={({ $fieldutil, ...restProps }) => {
-                    const { $invalid, $dirty, $error } = $fieldutil;
+                    const { $invalid, $dirty, $touched, $getFirstError } = $fieldutil;
                     const {
                         valuePropName = 'value',
                         changePropName = 'onChange',
@@ -149,12 +177,30 @@ class _FormGroup extends Component {
                         [blurPropName]: onBlur
                     });
 
+                    let hasError;
+
+                    switch (errorLevel) {
+                        case 0:
+                            hasError = $invalid && $dirty & $touched;
+                            break;
+                        case 1:
+                            hasError = $invalid && $dirty;
+                            break;
+                        default:
+                            hasError = $invalid;
+                            break;
+                    }
+
                     return (
-                        <FormGroup {...groupProps} validationState={$invalid && $dirty ? 'error' : validationState}>
+                        <FormGroup {...groupProps} validationState={hasError ? 'error' : validationState}>
                             {label}
                             <Wrapper {...wrapperCol}>
-                                {cloneElement(children, childProps)}
-                                {$invalid && $dirty ? <HelpBlock>{Object.values($error)[0]}</HelpBlock> : helper}
+                                <AddonWrapper>
+                                    {addons.pre}
+                                    {cloneElement(children, childProps)}
+                                    {addons.end}
+                                </AddonWrapper>
+                                {hasError ? <HelpBlock>{$getFirstError()}</HelpBlock> : helper}
                             </Wrapper>
                         </FormGroup>
                     );

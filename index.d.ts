@@ -2,8 +2,8 @@
 // Project: react-bootstrap-formutil
 // Definitions by: qiqiboy <https://github.com/qiqiboy>
 
-import { FormGroupProps, ColProps } from 'react-bootstrap';
 import React from 'react';
+import { ColProps, FormGroupProps } from 'react-bootstrap';
 import { EasyFieldComponentProps } from 'react-formutil';
 
 export * from 'react-formutil';
@@ -14,6 +14,10 @@ export interface FormGroupComponentProps<T = any, P = {}, Fields = {}, WeakField
     labelCol?: ColProps;
     label?: React.ReactNode;
     helper?: React.ReactNode;
+    addons?: {
+        pre?: ReactNode;
+        end?: ReactNode;
+    };
     children: React.ReactElement<any>;
 
     [otherName: string]: any;
@@ -24,12 +28,14 @@ export class FormGroup<T = any, P = {}, Fields = {}, WeakFields = Fields> extend
 > {}
 
 interface CheckboxGroupProps<T> {
-    onChange(value: T[]): void;
     onFocus: React.FocusEventHandler;
     onBlur: React.FocusEventHandler;
-    value: T[]
+    value: T[];
+    onChange(value: T[]): void;
 }
 
 export class CheckboxGroup<T = any> extends React.Component<CheckboxGroupProps<T>> {}
 
 export class RadioGroup<T = any> extends React.Component<CheckboxGroupProps<T>> {}
+
+export function setErrorLevel(errorLevel: 0 | 1 | 2): void;

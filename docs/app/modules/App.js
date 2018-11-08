@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withForm, FormGroup, CheckboxGroup, RadioGroup } from '../../../src';
+import { withForm, FormGroup, CheckboxGroup, RadioGroup, setErrorLevel } from '../../../src';
 import {
     Grid,
     Row,
@@ -9,10 +9,11 @@ import {
     Checkbox,
     Radio,
     Button,
-    InputGroup,
     ToggleButtonGroup,
     ToggleButton
 } from 'react-bootstrap';
+
+setErrorLevel(0);
 
 @withForm
 class App extends Component {
@@ -62,11 +63,14 @@ class App extends Component {
                                 </FormControl>
                             </FormGroup>
 
-                            <FormGroup name="addon" required label="Addon">
-                                <InputGroup>
-                                    <InputGroup.Addon>@</InputGroup.Addon>
-                                    <FormControl type="text" />
-                                </InputGroup>
+                            <FormGroup
+                                name="addon"
+                                required
+                                label="Addon"
+                                addons={{
+                                    pre: '@'
+                                }}>
+                                <FormControl type="text" />
                             </FormGroup>
 
                             <div className="form-horizontal">

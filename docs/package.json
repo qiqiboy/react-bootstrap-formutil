@@ -66,7 +66,7 @@
     "react-awesome-snippets": "0.0.22",
     "react-bootstrap": "^0.32.3",
     "react-dom": "16.4.2",
-    "react-formutil": "^0.3.7",
+    "react-formutil": "0.4.0",
     "react-router-dom": "4.2.2",
     "react-transition-group": "2.4.0"
   },

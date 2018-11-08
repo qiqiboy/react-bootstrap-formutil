@@ -8,9 +8,9 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
 
 > **如果你在使用其他 react 组件库，可以查阅：**
 >
-> 1. ant-design [`react-antd-formutil`](https://github.com/qiqiboy/react-antd-formutil) [![npm](https://img.shields.io/npm/v/react-antd-formutil.svg?style=flat)](https://npm.im/react-antd-formutil)
-> 1. react-md [`react-md-formutil`](https://github.com/qiqiboy/react-md-formutil) [![npm](https://img.shields.io/npm/v/react-md-formutil.svg?style=flat)](https://npm.im/react-md-formutil)
-> 1. Material-UI [`react-material-formutil`](https://github.com/qiqiboy/react-material-formutil) [![npm](https://img.shields.io/npm/v/react-material-formutil.svg?style=flat)](https://npm.im/react-material-formutil)
+> 1.  ant-design [`react-antd-formutil`](https://github.com/qiqiboy/react-antd-formutil) [![npm](https://img.shields.io/npm/v/react-antd-formutil.svg?style=flat)](https://npm.im/react-antd-formutil)
+> 1.  react-md [`react-md-formutil`](https://github.com/qiqiboy/react-md-formutil) [![npm](https://img.shields.io/npm/v/react-md-formutil.svg?style=flat)](https://npm.im/react-md-formutil)
+> 1.  Material-UI [`react-material-formutil`](https://github.com/qiqiboy/react-material-formutil) [![npm](https://img.shields.io/npm/v/react-material-formutil.svg?style=flat)](https://npm.im/react-material-formutil)
 
 <!-- vim-markdown-toc GFM -->
 
@@ -24,6 +24,7 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
         * [`helper`](#helper)
         * [`labelCol`](#labelcol)
         * [`wrapperCol`](#wrappercol)
+        * [`addons`](#addons)
         * [`$parser`](#parser)
         * [`$formatter`](#formatter)
         * [`checked` `unchecked`](#checked-unchecked)
@@ -32,6 +33,7 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
         * [`controlId` `bsSize` `bsClass`](#controlid-bssize-bsclass)
     + [`<CheckboxGroup />`](#checkboxgroup-)
     + [`<RadioGroup />`](#radiogroup-)
+    + [`setErrorLevel(level)`](#seterrorlevellevel)
     + [`支持的组件`](#支持的组件)
         * [`FormControl`](#formcontrol)
         * [`Checkbox`](#checkbox)
@@ -118,14 +120,14 @@ class MyForm extends Component {
 
 > 同 react-formutil 的 EasyField，FormControl 也内置了同样的校验规则：
 
-> -   `required` 必填 `required`
-> -   `maxLength` 。最大输入长度，有效输入时才会校验 `maxLength="100"`
-> -   `minLength` 最小输入长度，有效输入时才会校验 `minLength="10"`
-> -   `max` 最大输入数值，仅支持 Number 比较。有效输入时才会校验 `max="100"`
-> -   `min` 最小输入数值，仅支持 Number 比较。有效输入时才会校验 `min="10"`
-> -   `pattern` 正则匹配。有效输入时才会校验 `pattern={/^\d+$/}`
-> -   `enum` 枚举值检测。有效输入时才会校验 `enum={[1,2,3]}`
-> -   `checker` 自定义校验函数。`checker={value => value > 10 && value < 100 || ' 输入比如大于 10 小与 100'}`
+> *   `required` 必填 `required`
+> *   `maxLength` 。最大输入长度，有效输入时才会校验 `maxLength="100"`
+> *   `minLength` 最小输入长度，有效输入时才会校验 `minLength="10"`
+> *   `max` 最大输入数值，仅支持 Number 比较。有效输入时才会校验 `max="100"`
+> *   `min` 最小输入数值，仅支持 Number 比较。有效输入时才会校验 `min="10"`
+> *   `pattern` 正则匹配。有效输入时才会校验 `pattern={/^\d+$/}`
+> *   `enum` 枚举值检测。有效输入时才会校验 `enum={[1,2,3]}`
+> *   `checker` 自定义校验函数。`checker={value => value > 10 && value < 100 || ' 输入比如大于 10 小与 100'}`
 
 注：校验属性的值为 `null` 时表示不进行该校验
 
@@ -187,7 +189,22 @@ class MyForm extends Component {
 
 该属性可用来搭配`labelCol`设置水平布局的表单项的 `栅格` 布局
 
-示例见`labelCol`
+##### `addons`
+
+该属性可以用来实现`InputGroup`布局，该属性包含两个字段`pre` `end`，可以分别用来添加前后`addons`。
+
+如果`pre` `end`的值为字符串，则会自动添加`InputGroup.Addon`组件。当然，你也可以执行定义要添加的节点。
+
+```javascript
+<FormGroup
+    name="email"
+    addons={{
+        pre: 'Email',
+        end: <InputGroup.Addon>@apple.com</InputGroup.Addon>
+    }}>
+    <FormControl />
+</FormGroup>
+```
 
 ##### `$parser`
 
@@ -315,6 +332,22 @@ class MyForm extends Component {
 </FormGroup>
 ```
 
+#### `setErrorLevel(level)`
+
+`setErrorLevel` 该方法可以用来全局设置错误信息何时出现，有三个级别可以设置：
+
+*   `0` 当`$dirty` `$touched` `invalid` 都为 true 时
+*   `1` 当`$dirty` `invalid` 都为 true 时
+*   `2` 当`invalid` 为 true 时
+
+默认值为 `1`
+
+```javascript
+import { setErrorLevel } from 'react-bootstrap-formutil';
+
+setErrorLevel(0);
+```
+
 #### `支持的组件`
 
 ##### [`FormControl`](https://react-bootstrap.github.io/components/forms/#forms-props-form-control)
@@ -351,11 +384,8 @@ class MyForm extends Component {
 ##### [`InputGroup`](https://react-bootstrap.github.io/components/forms/#forms-props-input-group)
 
 ```javascript
-<FormGroup name="name">
-    <InputGroup>
-        <InputGroup.Addon>@</InputGroup.Addon>
-        <FormControl type="text" />
-    </InputGroup>
+<FormGroup name="name" addons={{ pre: '@' }}>
+    <FormControl type="text" />
 </FormGroup>
 ```
 
