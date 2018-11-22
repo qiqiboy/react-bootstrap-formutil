@@ -14,7 +14,7 @@ import {
 } from 'react-bootstrap';
 import CheckboxGroup from './CheckboxGroup';
 
-let errorLevel = 1;
+let errorLevelGlobal = 1;
 
 /**
  * 0 dirty & invalid & touched
@@ -22,7 +22,7 @@ let errorLevel = 1;
  * 2 invalid
  */
 export const setErrorLevel = function(level) {
-    errorLevel = level;
+    errorLevelGlobal = level;
 };
 
 const isUglify = FormControl.name !== 'FormControl';
@@ -51,7 +51,8 @@ class _FormGroup extends Component {
         helper: PropTypes.any,
         labelCol: PropTypes.object,
         wrapperCol: PropTypes.object,
-        addons: PropTypes.object
+        addons: PropTypes.object,
+        errorLevel: PropTypes.number
 
         //$parser $formatter checked unchecked $validators validMessage等传递给 EasyField 组件的额外参数
     };
@@ -69,6 +70,7 @@ class _FormGroup extends Component {
             validationState,
             bsSize,
             bsClass,
+            errorLevel = errorLevelGlobal,
             ...fieldProps
         } = props;
 

@@ -31,6 +31,7 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
         * [`validMessage`](#validmessage)
         * [`valuePropName` `changePropName` `focusPropName` `blurPropName`](#valuepropname-changepropname-focuspropname-blurpropname)
         * [`controlId` `bsSize` `bsClass`](#controlid-bssize-bsclass)
+        * [`errorLevel`](#errorlevel)
     + [`<CheckboxGroup />`](#checkboxgroup-)
     + [`<RadioGroup />`](#radiogroup-)
     + [`setErrorLevel(level)`](#seterrorlevellevel)
@@ -271,6 +272,10 @@ class MyForm extends Component {
 ##### `controlId` `bsSize` `bsClass`
 
 这三个属性同`react-bootstrap`中 FormGroup 组件的同名属性
+
+##### `errorLevel`
+
+用来覆盖全局的 errorLevel 设置。参考[`setErrorLevel(level)`](#seterrorlevellevel)
 
 #### `<CheckboxGroup />`
 
