@@ -36,6 +36,10 @@ function getChildComponent(children) {
     if (children && typeof children.type === 'function') {
         const func = children.type;
 
+        if (func.formutilType) {
+            return func.formutilType;
+        }
+
         if (isUglify) {
             return func;
         }
@@ -130,6 +134,7 @@ class _FormGroup extends Component {
                 break;
 
             default:
+                fieldProps.__TYPE__ = component;
                 break;
         }
 
@@ -151,9 +156,8 @@ class _FormGroup extends Component {
                     const value = restProps[valuePropName];
 
                     let childProps;
-                    switch (component) {
-                        case _Checkbox:
-                        case _Radio:
+                    switch (fieldProps.__TYPE__) {
+                        case 'checked':
                             const { checked = true, unchecked = false } = props;
                             childProps = {
                                 checked: value === checked,
