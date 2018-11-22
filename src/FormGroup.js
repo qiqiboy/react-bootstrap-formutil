@@ -133,8 +133,15 @@ class _FormGroup extends Component {
                 }
                 break;
 
-            default:
+            case 'checked':
+            case 'array':
+            case 'object':
+            case 'number':
+            case 'empty':
                 fieldProps.__TYPE__ = component;
+                break;
+
+            default:
                 break;
         }
 
