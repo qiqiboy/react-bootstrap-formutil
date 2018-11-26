@@ -37,14 +37,22 @@ export class FormGroup<T = any, P = {}, Fields = {}, WeakFields = Fields> extend
 > {}
 
 interface CheckboxGroupProps<T> {
-    onFocus: React.FocusEventHandler;
-    onBlur: React.FocusEventHandler;
-    value: T[];
-    onChange(value: T[]): void;
+    onFocus?: React.FocusEventHandler;
+    onBlur?: React.FocusEventHandler;
+    value?: T[];
+    onChange?(value: T[]): void;
 }
 
 export class CheckboxGroup<T = any> extends React.Component<CheckboxGroupProps<T>> {}
 
-export class RadioGroup<T = any> extends React.Component<CheckboxGroupProps<T>> {}
+
+interface RadioGroupProps<T> {
+    onFocus?: React.FocusEventHandler;
+    onBlur?: React.FocusEventHandler;
+    value?: T;
+    onChange?(value: T): void;
+}
+
+export class RadioGroup<T = any> extends React.Component<RadioGroupProps<T>> {}
 
 export function setErrorLevel(errorLevel: ErrorLevel): void;
