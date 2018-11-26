@@ -29,6 +29,7 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
         * [`$formatter`](#formatter)
         * [`checked` `unchecked`](#checked-unchecked)
         * [`validMessage`](#validmessage)
+        * [`feedback`](#feedback)
         * [`valuePropName` `changePropName` `focusPropName` `blurPropName`](#valuepropname-changepropname-focuspropname-blurpropname)
         * [`controlId` `bsSize` `bsClass`](#controlid-bssize-bsclass)
         * [`errorLevel`](#errorlevel)
@@ -251,6 +252,20 @@ class MyForm extends Component {
     validMessage={{
         required: '请输入用户名'
     }}>
+    <FormControl />
+</FormGroup>
+```
+
+##### `feedback`
+
+设置额外的状态 icon。支持布尔值，或者自定义的节点
+
+```javascript
+<FormGroup name="username" feedback>
+    <FormControl />
+</FormGroup>
+
+<FormGroup name="username" feedback={<Glyphicon glyph="music" />}>
     <FormControl />
 </FormGroup>
 ```

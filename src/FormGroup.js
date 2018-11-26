@@ -56,6 +56,7 @@ class _FormGroup extends Component {
         labelCol: PropTypes.object,
         wrapperCol: PropTypes.object,
         addons: PropTypes.object,
+        feedback: PropTypes.oneOfType([PropTypes.bool, PropTypes.element]),
         errorLevel: PropTypes.number
 
         //$parser $formatter checked unchecked $validators validMessage等传递给 EasyField 组件的额外参数
@@ -74,6 +75,7 @@ class _FormGroup extends Component {
             validationState,
             bsSize,
             bsClass,
+            feedback,
             errorLevel = errorLevelGlobal,
             ...fieldProps
         } = props;
@@ -190,7 +192,7 @@ class _FormGroup extends Component {
                         [blurPropName]: onBlur
                     });
 
-                    let hasError;
+                    let hasError, feedbackNode;
 
                     switch (errorLevel) {
                         case 0:
@@ -204,6 +206,14 @@ class _FormGroup extends Component {
                             break;
                     }
 
+                    if (feedback) {
+                        if (typeof feedback === 'boolean') {
+                            feedbackNode = <FormControl.Feedback />;
+                        } else {
+                            feedbackNode = <FormControl.Feedback>{feedback}</FormControl.Feedback>;
+                        }
+                    }
+
                     return (
                         <FormGroup {...groupProps} validationState={hasError ? 'error' : validationState}>
                             {label}
@@ -213,6 +223,7 @@ class _FormGroup extends Component {
                                     {cloneElement(children, childProps)}
                                     {addons.end}
                                 </AddonWrapper>
+                                {feedbackNode}
                                 {hasError ? <HelpBlock>{$getFirstError()}</HelpBlock> : helper}
                             </Wrapper>
                         </FormGroup>

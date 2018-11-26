@@ -20,6 +20,7 @@ export interface FormGroupComponentProps<T = any, P = {}, Fields = {}, WeakField
         pre?: React.ReactNode;
         end?: React.ReactNode;
     };
+    feedback?: React.ReactElement<any> | boolean;
     errorLevel?: ErrorLevel;
     children: React.ReactElement<any>;
 
