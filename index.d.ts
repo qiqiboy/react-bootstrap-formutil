@@ -11,7 +11,7 @@ export * from 'react-formutil';
 export type ErrorLevel = 0 | 1 | 2;
 
 export interface FormGroupComponentProps<T = any, P = {}, Fields = {}, WeakFields = Fields>
-    extends EasyFieldComponentProps<T, P, Fields, WeakFields> {
+    extends EasyFieldComponentProps<T, P, Fields, WeakFields>, FormGroupProps {
     wrapperCol?: ColProps;
     labelCol?: ColProps;
     label?: React.ReactNode;
