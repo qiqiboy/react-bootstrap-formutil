@@ -3,7 +3,7 @@
 // Definitions by: qiqiboy <https://github.com/qiqiboy>
 
 import React from 'react';
-import { ColProps, FormGroupProps } from 'react-bootstrap';
+import { ColProps, Sizes } from 'react-bootstrap';
 import { EasyFieldComponentProps } from 'react-formutil';
 
 export * from 'react-formutil';
@@ -11,7 +11,7 @@ export * from 'react-formutil';
 export type ErrorLevel = 0 | 1 | 2;
 
 export interface FormGroupComponentProps<T = any, P = {}, Fields = {}, WeakFields = Fields>
-    extends EasyFieldComponentProps<T, P, Fields, WeakFields>, FormGroupProps {
+    extends EasyFieldComponentProps<T, P, Fields, WeakFields> {
     wrapperCol?: ColProps;
     labelCol?: ColProps;
     label?: React.ReactNode;
@@ -23,6 +23,11 @@ export interface FormGroupComponentProps<T = any, P = {}, Fields = {}, WeakField
     feedback?: React.ReactElement<any> | boolean;
     errorLevel?: ErrorLevel;
     children: React.ReactElement<any>;
+
+    bsClass?: string;
+    bsSize?: Sizes;
+    controlId?: string;
+    validationState?: 'success' | 'warning' | 'error' | null;
 
     [otherName: string]: any;
 }

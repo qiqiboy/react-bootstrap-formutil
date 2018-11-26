@@ -1,6 +1,6 @@
 {
   "name": "react-bootstrap-formutil",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Happy to build forms with react-formutil in the project based on react-bootstrap ^_^",
   "main": "lib/index.js",
   "directories": {
