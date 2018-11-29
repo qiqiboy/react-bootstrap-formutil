@@ -57,7 +57,7 @@ class _FormGroup extends Component {
         wrapperCol: PropTypes.object,
         addons: PropTypes.object,
         feedback: PropTypes.oneOfType([PropTypes.bool, PropTypes.element]),
-        errorLevel: PropTypes.number
+        errorLevel: PropTypes.oneOf([0, 1, 2, 'off'])
 
         //$parser $formatter checked unchecked $validators validMessage等传递给 EasyField 组件的额外参数
     };
@@ -75,6 +75,7 @@ class _FormGroup extends Component {
             validationState,
             bsSize,
             bsClass,
+            className,
             feedback,
             errorLevel = errorLevelGlobal,
             ...fieldProps
@@ -84,7 +85,8 @@ class _FormGroup extends Component {
         const groupProps = {
             controlId,
             bsSize,
-            bsClass
+            bsClass,
+            className
         };
 
         if (label) {
@@ -201,8 +203,11 @@ class _FormGroup extends Component {
                         case 1:
                             hasError = $invalid && $dirty;
                             break;
-                        default:
+                        case 2:
                             hasError = $invalid;
+                            break;
+                        default:
+                            hasError = false;
                             break;
                     }
 

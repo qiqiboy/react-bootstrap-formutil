@@ -8,7 +8,7 @@ import { EasyFieldComponentProps } from 'react-formutil';
 
 export * from 'react-formutil';
 
-export type ErrorLevel = 0 | 1 | 2;
+export type ErrorLevel = 0 | 1 | 2 | 'off';
 
 export interface FormGroupComponentProps<T = any, P = {}, Fields = {}, WeakFields = Fields>
     extends EasyFieldComponentProps<T, P, Fields, WeakFields> {
