@@ -33,18 +33,22 @@ const _CheckboxGroup = isUglify ? CheckboxGroup : 'CheckboxGroup';
 const _ToggleButtonGroup = isUglify ? ToggleButtonGroup : 'Uncontrolled(ToggleButtonGroup)';
 
 function getChildComponent(children) {
-    if (children && typeof children.type === 'function') {
-        const func = children.type;
+    if (children) {
+        if (typeof children.type === 'function') {
+            const func = children.type;
 
-        if (func.formutilType) {
-            return func.formutilType;
+            if (func.formutilType) {
+                return func.formutilType;
+            }
+
+            if (isUglify) {
+                return func;
+            }
+
+            return func.displayName || func.name;
+        } else {
+            return children.props.type || children.type;
         }
-
-        if (isUglify) {
-            return func;
-        }
-
-        return func.displayName || func.name;
     }
 }
 
@@ -127,6 +131,8 @@ class _FormGroup extends Component {
         switch (component) {
             case _Checkbox:
             case _Radio:
+            case 'checkbox':
+            case 'radio':
                 fieldProps.__TYPE__ = 'checked';
                 break;
 
@@ -169,6 +175,8 @@ class _FormGroup extends Component {
                     let childProps;
                     switch (fieldProps.__TYPE__) {
                         case 'checked':
+                        case 'checkbox':
+                        case 'radio':
                             const { checked = true, unchecked = false } = props;
                             childProps = {
                                 checked: value === checked,
