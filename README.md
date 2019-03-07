@@ -12,6 +12,10 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
 > 1.  react-md [`react-md-formutil`](https://github.com/qiqiboy/react-md-formutil) [![npm](https://img.shields.io/npm/v/react-md-formutil.svg?style=flat)](https://npm.im/react-md-formutil)
 > 1.  Material-UI [`react-material-formutil`](https://github.com/qiqiboy/react-material-formutil) [![npm](https://img.shields.io/npm/v/react-material-formutil.svg?style=flat)](https://npm.im/react-material-formutil)
 
+**`react-boostrap-formutil`只适用于基于`bootstrap v3`版本的[`react-boostrap`组件库](https://5c507d49471426000887a6a7--react-bootstrap.netlify.com/getting-started/introduction)！并且目前没有更新支持`bootstrap v4`以及`react-bootstrap v1`的计划。**
+
+你可以点此查看该版本的[`react-boostrap`组件库](https://5c507d49471426000887a6a7--react-bootstrap.netlify.com/getting-started/introduction)的文档！
+
 <!-- vim-markdown-toc GFM -->
 
 - [安装 Installation](#安装-installation)
@@ -25,8 +29,8 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
         * [`labelCol`](#labelcol)
         * [`wrapperCol`](#wrappercol)
         * [`addons`](#addons)
-        * [`$parser`](#parser)
-        * [`$formatter`](#formatter)
+    + [`$parser`](#parser)
+    + [`$formatter`](#formatter)
         * [`checked` `unchecked`](#checked-unchecked)
         * [`validMessage`](#validmessage)
         * [`feedback`](#feedback)
@@ -50,12 +54,24 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
 
 ### 安装 Installation
 
+安装最新版的`react-bootstrap-formutil`:
+
 ```bash
 # npm
 npm install react-bootstrap-formutil --save
 
 # yarn
 yarn install react-bootstrap-formutil
+```
+
+安装适用于`bootstrap v3`的`react-bootstrap`:
+
+```bash
+# npm
+npm install react-bootstrap@0.32 --save
+
+# yarn
+yarn install react-bootstrap@0.32
 ```
 
 ### 使用 Usage
@@ -106,6 +122,8 @@ class MyForm extends Component {
 `FormGroup`提供了与`react-bootstrap`中同名组件一样的 UI 与状态展示功能，所以你完全可以使用`react-bootstrap-formutil`中的`FormGroup`替代`react-bootstrap`中的该组件。
 
 > `FormGroup`下只允许放置一个表单组件，不允许多个。
+
+`FormGroup`基于`react-formutil`中的[`<EasyField />`](https://github.com/qiqiboy/react-formutil#easyfield-)组件实现，同名属性参数用法可以更多参考[`<EasyField />`](https://github.com/qiqiboy/react-formutil#easyfield-)。
 
 ##### `name`
 
@@ -208,25 +226,36 @@ class MyForm extends Component {
 </FormGroup>
 ```
 
-##### `$parser`
+#### `$parser`
 
-设置输入的值收集到 formutil 状态中时的过滤处理。默认为`value => value`
+**注意：** 这里介绍的`$parser`和`$formatter`为`react-formutil@>0.5.0`的用法。如果你还在使用`0.5.0`以前的版本，请参考[安装`0.5.0`版本以上的`react-formutil`](https://github.com/qiqiboy/react-formutil#安装-installation);
+
+当用户在表单中进行输入时（主动更新视图），视图中的值在更新到状态模型中前，会经过 `$parser` 处理。
 
 ```javascript
-<FormGroup $parser={value => parseInt(value)}>
-    <FormControl />
+// 通过$parser属性来过滤前后输入空格
+<FormGroup name="fieldName" $parser={(viewValue, $setViewValue) => viewValue.trim()}>
+    //...
 </FormGroup>
 ```
 
-##### `$formatter`
-
-设置 formutil 中的值渲染到输入组件上时的过滤处理。默认为`value => value`
+注意，上述写法不会修改当前视图值，它仅仅影响状态模型中的值。如果希望限制用户的输入（例如禁止用户输入任意空格），可以通过`$parser`的第二个参数`$setViewValue`，来在用户每次输入后立即更新视图值。
 
 ```javascript
-<FormGroup $formatter={value => '$' + value}>
-    <FormControl />
-</FormGroup>
+// 通过$parser属性来过滤前后输入空格
+<FormGroup name="fieldName" $parser={(viewValue, $setViewValue) => $setViewValue(viewValue.trim())} />
 ```
+
+#### `$formatter`
+
+当在表单模型中主动更新模型值时，会通过 `$formatter` 将模型中的值转换为`$viewValue`后传递给视图渲染。
+
+```javascript
+// 通过$formatter将模型中的值转换为标准的金额书写格式
+<FormGroup name="amount" $formatter={(value, $setModelValue) => priceFormat(value)} />
+```
+
+`$formatter`同样有一个回调方法`$setModelValue`，它可以用来在处理模型值时再次对其进行修改。
 
 ##### `checked` `unchecked`
 
