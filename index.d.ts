@@ -4,14 +4,14 @@
 
 import React from 'react';
 import { ColProps, Sizes } from 'react-bootstrap';
-import { EasyFieldComponentProps } from 'react-formutil';
+import { BaseEasyFieldComponentProps } from 'react-formutil';
 
 export * from 'react-formutil';
 
 export type ErrorLevel = 0 | 1 | 2 | 'off';
 
 export interface FormGroupComponentProps<T = any, P = {}, Fields = {}, WeakFields = Fields>
-    extends EasyFieldComponentProps<T, P, Fields, WeakFields> {
+    extends BaseEasyFieldComponentProps<T, P, Fields, WeakFields> {
     wrapperCol?: ColProps;
     labelCol?: ColProps;
     label?: React.ReactNode;

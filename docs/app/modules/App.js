@@ -21,7 +21,9 @@ class App extends Component {
         ev.preventDefault();
 
         const { $invalid, $batchDirty } = this.props.$formutil;
+
         console.log('submit');
+
         if ($invalid) {
             $batchDirty(true);
         } else {

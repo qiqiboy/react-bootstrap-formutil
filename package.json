@@ -1,6 +1,6 @@
 {
   "name": "react-bootstrap-formutil",
-  "version": "0.0.17",
+  "version": "0.1.0",
   "description": "Happy to build forms with react-formutil in the project based on react-bootstrap ^_^",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -40,7 +40,7 @@
     "react": ">16.0.0",
     "prop-types": ">15.0.0",
     "react-bootstrap": ">0.3.0",
-    "react-formutil": ">0.4.0"
+    "react-formutil": ">0.5.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.3",
