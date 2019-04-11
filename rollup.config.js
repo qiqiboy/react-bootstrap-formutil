@@ -93,6 +93,19 @@ function createConfig(env, module) {
                                   keep_infinity: true
                               }
                             : false,
+                    mangle: {
+                        // https://github.com/ant-design/babel-plugin-import/issues/282
+                        reserved: [
+                            'FormGroup',
+                            'FormControl',
+                            'ControlLabel',
+                            'InputGroup',
+                            'HelpBlock',
+                            'Checkbox',
+                            'Radio',
+                            'ToggleButtonGroup'
+                        ]
+                    },
                     warnings: false,
                     ecma: 5,
                     ie8: false,

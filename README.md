@@ -1,6 +1,18 @@
 # react-bootstrap-formutil
 
 [![npm](https://img.shields.io/npm/v/react-bootstrap-formutil.svg?style=flat)](https://npm.im/react-bootstrap-formutil)
+[![peerDependencies](https://img.shields.io/npm/dependency-version/react-bootstrap-formutil/peer/react.svg?color=yellowgreen)](https://reactjs.org)
+[![definitionTypes](https://img.shields.io/npm/types/react-bootstrap-formutil.svg)](https://github.com/qiqiboy/react-bootstrap-formutil/blob/master/index.d.ts)
+[![gzip](https://img.shields.io/bundlephobia/minzip/react-bootstrap-formutil.svg)](https://npm.im/react-bootstrap-formutil)
+[![download](https://img.shields.io/npm/dm/react-bootstrap-formutil.svg)](https://npm.im/react-bootstrap-formutil)
+[![issues](https://img.shields.io/github/issues/qiqiboy/react-bootstrap-formutil.svg)](https://github.com/qiqiboy/react-bootstrap-formutil/issues)
+[![license](https://img.shields.io/github/license/qiqiboy/react-bootstrap-formutil.svg)](https://github.com/qiqiboy/react-bootstrap-formutil/blob/master/LICENSE)
+[![github](https://img.shields.io/github/last-commit/qiqiboy/react-bootstrap-formutil.svg)](https://github.com/qiqiboy/react-bootstrap-formutil)
+[![github](https://img.shields.io/github/release-date/qiqiboy/react-bootstrap-formutil.svg)](https://github.com/qiqiboy/react-bootstrap-formutil/releases)
+[![github](https://img.shields.io/github/commit-activity/m/qiqiboy/react-bootstrap-formutil.svg)](https://github.com/qiqiboy/react-bootstrap-formutil/commits/master)
+[![github](https://img.shields.io/github/stars/qiqiboy/react-bootstrap-formutil.svg?style=social)](https://github.com/qiqiboy/react-bootstrap-formutil)
+
+[![react-formutil](https://nodei.co/npm/react-bootstrap-formutil.png?compact=true)](https://npm.im/react-bootstrap-formutil)
 
 Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
 
@@ -49,10 +61,13 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
         * [`CheckboxGroup` `RadioGroup`](#checkboxgroup-radiogroup)
 - [FAQ](#faq)
     + [`给组件设置的 onChange、onFocus 等方法无效、不执行`](#给组件设置的-onchangeonfocus-等方法无效不执行)
+    + [`在生产环境(NODE_ENV==='production')部分组件调用有异常？`](#在生产环境node_envproduction部分组件调用有异常)
 
 <!-- vim-markdown-toc -->
 
 ### 安装 Installation
+
+[![react-bootstrap-formutil](https://nodei.co/npm/react-bootstrap-formutil.png?compact=true)](https://npm.im/react-bootstrap-formutil)
 
 安装最新版的`react-bootstrap-formutil`:
 
@@ -481,4 +496,32 @@ import { CheckboxGroup, RadioGroup } from 'react-bootstrap-formutil';
 <FormGroup name="test" onChange={ev => console.log('change', ev)} onFocus={ev => console.log('focus', ev)}>
     <FormControl />
 </FormGroup>
+```
+
+#### `在生产环境(NODE_ENV==='production')部分组件调用有异常？`
+
+如果在生产环境，发现例如`Checkbox` `Radio` `Switch`等组件无法正确捕获用户输入的值，这种情况一般是由于项目中使用了`babel-plugin-import`插件。
+
+`react-bootstrap-formutil`中是使用 `import { FormControl } from 'react-bootstrap'` 这种写法来调用 `FormControl` 组件的，而`babel-plugin-import`插件会将项目源代码中的类似语句，替换成`import FormControl from 'react-bootstrap/lib/FormControl'`。这两种写法获取到的`Switch`其实并不是严格意义上的相等，前者是对后者的又一层导出封装。
+
+而由于`babel-plugin-import`一般仅仅会配置成仅仅对项目代码进行处理，所以处于项目`node_modules`目录中的`react-bootstrap-formutil`中的语句不会被处理。我们需要通过修改项目 webpack 配置的方式，来使`babel-plugin-import`插件能处理`react-bootstrap-formutil`的代码。
+
+可以编辑项目的 webpack 配置（只需要配置生产环境的构建配置即可），在`rules`模块下添加以下的代码：
+
+```javascript
+{
+    test: /\.(js|mjs)$/,
+    include: /react-bootstrap-formutil/, // 仅仅处理react-bootstrap-formutil即可
+    loader: require.resolve('babel-loader'),
+    options: {
+        babelrc: false,
+        plugins: [[
+            "import",
+            {
+                "libraryName": "react-bootstrap"
+            },
+            "react-bootstrap"
+        ]]
+    }
+}
 ```
