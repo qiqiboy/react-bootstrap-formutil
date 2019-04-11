@@ -13,7 +13,10 @@ function createConfig(env, module) {
 
     return {
         input: 'src/index.js',
-        external: module === 'umd' ? ['react', 'prop-types', 'react-formutil'] : id => !id.startsWith('.') && !id.startsWith('@babel/runtime') && !path.isAbsolute(id),
+        external:
+            module === 'umd'
+                ? ['react', 'prop-types', 'react-formutil', 'react-bootstrap']
+                : id => !id.startsWith('.') && !id.startsWith('@babel/runtime') && !path.isAbsolute(id),
         output: {
             file: `dist/react-bootstrap-formutil.${module}.${env}.js`,
             format: module,
@@ -23,7 +26,8 @@ function createConfig(env, module) {
             globals: {
                 react: 'React',
                 'prop-types': 'PropTypes',
-                'react-formutil': 'ReactFormutil'
+                'react-formutil': 'ReactFormutil',
+                'react-bootstrap': 'ReactBootstrap'
             }
         },
         plugins: [
@@ -81,15 +85,18 @@ function createConfig(env, module) {
                 terser({
                     sourcemap: true,
                     output: { comments: false },
-                    compress: {
-                        warnings: false,
-                        comparisons: false,
-                        keep_infinity: true
-                    },
+                    compress:
+                        module === 'umd'
+                            ? {
+                                  warnings: false,
+                                  comparisons: false,
+                                  keep_infinity: true
+                              }
+                            : false,
                     warnings: false,
                     ecma: 5,
                     ie8: false,
-                    toplevel: false
+                    toplevel: module !== 'umd'
                 })
         ].filter(Boolean)
     };
