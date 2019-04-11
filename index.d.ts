@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { ColProps, Sizes } from 'react-bootstrap';
-import { BaseEasyFieldComponentProps } from 'react-formutil';
+import { BaseEasyFieldComponentProps, FieldValidatorProps, OtherKeys } from 'react-formutil';
 
 export * from 'react-formutil';
 
@@ -28,12 +28,10 @@ export interface FormGroupComponentProps<T = any, P = {}, Fields = {}, WeakField
     bsSize?: Sizes;
     controlId?: string;
     validationState?: 'success' | 'warning' | 'error' | null;
-
-    [otherName: string]: any;
 }
 
 export class FormGroup<T = any, P = {}, Fields = {}, WeakFields = Fields> extends React.Component<
-    FormGroupComponentProps<T, P, Fields, WeakFields>
+    FormGroupComponentProps<T, P, Fields, WeakFields> & FieldValidatorProps<P> & OtherKeys
 > {}
 
 interface CheckboxGroupProps<T> {

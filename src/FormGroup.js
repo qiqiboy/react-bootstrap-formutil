@@ -1,4 +1,4 @@
-import React, { Component, cloneElement, isValidElement, Fragment } from 'react';
+import React, { Component, cloneElement, isValidElement, Children, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { EasyField } from 'react-formutil';
 import {
@@ -159,18 +159,23 @@ class _FormGroup extends Component {
             <EasyField
                 {...fieldProps}
                 passUtil="$fieldutil"
-                render={({ $fieldutil, ...restProps }) => {
-                    const { $invalid, $dirty, $touched, $getFirstError } = $fieldutil;
+                render={$handleProps => {
                     const {
+                        $fieldutil,
+
                         valuePropName = 'value',
                         changePropName = 'onChange',
                         focusPropName = 'onFocus',
-                        blurPropName = 'onBlur'
-                    } = props;
-                    const onChange = restProps[changePropName];
-                    const onFocus = restProps[focusPropName];
-                    const onBlur = restProps[blurPropName];
-                    const value = restProps[valuePropName];
+                        blurPropName = 'onBlur',
+
+                        [valuePropName]: onChange,
+                        [focusPropName]: onFocus,
+                        [blurPropName]: onBlur,
+                        [valuePropName]: value,
+
+                        ...restProps
+                    } = $handleProps;
+                    const { $invalid, $dirty, $touched, $getFirstError } = $fieldutil;
 
                     let childProps;
                     switch (fieldProps.__TYPE__) {
@@ -233,7 +238,7 @@ class _FormGroup extends Component {
                             <Wrapper {...wrapperCol}>
                                 <AddonWrapper>
                                     {addons.pre}
-                                    {cloneElement(children, childProps)}
+                                    {cloneElement(Children.only(children), childProps)}
                                     {addons.end}
                                 </AddonWrapper>
                                 {feedbackNode}

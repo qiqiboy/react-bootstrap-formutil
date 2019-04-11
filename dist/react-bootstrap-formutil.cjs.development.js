@@ -199,6 +199,9 @@ CheckboxGroup.propTypes = {
   value: PropTypes.array
 };
 
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
+
+function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var errorLevelGlobal = 1;
 /**
  * 0 dirty & invalid & touched
@@ -341,28 +344,28 @@ function (_Component) {
 
       return React__default.createElement(reactFormutil.EasyField, Object.assign({}, fieldProps, {
         passUtil: "$fieldutil",
-        render: function render(_ref) {
+        render: function render($handleProps) {
           var _childProps, _Object$assign;
 
-          var $fieldutil = _ref.$fieldutil,
-              restProps = _objectWithoutProperties(_ref, ["$fieldutil"]);
+          var $fieldutil = $handleProps.$fieldutil,
+              _$handleProps$valuePr = $handleProps.valuePropName,
+              valuePropName = _$handleProps$valuePr === void 0 ? 'value' : _$handleProps$valuePr,
+              _$handleProps$changeP = $handleProps.changePropName,
+              changePropName = _$handleProps$changeP === void 0 ? 'onChange' : _$handleProps$changeP,
+              _$handleProps$focusPr = $handleProps.focusPropName,
+              focusPropName = _$handleProps$focusPr === void 0 ? 'onFocus' : _$handleProps$focusPr,
+              _$handleProps$blurPro = $handleProps.blurPropName,
+              blurPropName = _$handleProps$blurPro === void 0 ? 'onBlur' : _$handleProps$blurPro,
+              _onChange = $handleProps[valuePropName],
+              onFocus = $handleProps[focusPropName],
+              onBlur = $handleProps[blurPropName],
+              value = $handleProps[valuePropName],
+              restProps = _objectWithoutProperties($handleProps, ["$fieldutil", "valuePropName", "changePropName", "focusPropName", "blurPropName", valuePropName, focusPropName, blurPropName, valuePropName].map(_toPropertyKey));
 
           var $invalid = $fieldutil.$invalid,
               $dirty = $fieldutil.$dirty,
               $touched = $fieldutil.$touched,
               $getFirstError = $fieldutil.$getFirstError;
-          var _props$valuePropName = props.valuePropName,
-              valuePropName = _props$valuePropName === void 0 ? 'value' : _props$valuePropName,
-              _props$changePropName = props.changePropName,
-              changePropName = _props$changePropName === void 0 ? 'onChange' : _props$changePropName,
-              _props$focusPropName = props.focusPropName,
-              focusPropName = _props$focusPropName === void 0 ? 'onFocus' : _props$focusPropName,
-              _props$blurPropName = props.blurPropName,
-              blurPropName = _props$blurPropName === void 0 ? 'onBlur' : _props$blurPropName;
-          var _onChange = restProps[changePropName];
-          var onFocus = restProps[focusPropName];
-          var onBlur = restProps[blurPropName];
-          var value = restProps[valuePropName];
           var childProps;
 
           switch (fieldProps.__TYPE__) {
@@ -419,7 +422,7 @@ function (_Component) {
 
           return React__default.createElement(reactBootstrap.FormGroup, Object.assign({}, groupProps, {
             validationState: hasError ? 'error' : validationState
-          }), label, React__default.createElement(Wrapper, wrapperCol, React__default.createElement(AddonWrapper, null, addons.pre, React.cloneElement(children, childProps), addons.end), feedbackNode, hasError ? React__default.createElement(reactBootstrap.HelpBlock, null, $getFirstError()) : helper));
+          }), label, React__default.createElement(Wrapper, wrapperCol, React__default.createElement(AddonWrapper, null, addons.pre, React.cloneElement(React.Children.only(children), childProps), addons.end), feedbackNode, hasError ? React__default.createElement(reactBootstrap.HelpBlock, null, $getFirstError()) : helper));
         }
       }));
     }
