@@ -161,14 +161,15 @@ class _FormGroup extends Component {
                 passUtil="$fieldutil"
                 render={$handleProps => {
                     const {
-                        $fieldutil,
-
                         valuePropName = 'value',
                         changePropName = 'onChange',
                         focusPropName = 'onFocus',
-                        blurPropName = 'onBlur',
+                        blurPropName = 'onBlur'
+                    } = props;
+                    const {
+                        $fieldutil,
 
-                        [valuePropName]: onChange,
+                        [changePropName]: onChange,
                         [focusPropName]: onFocus,
                         [blurPropName]: onBlur,
                         [valuePropName]: value,
@@ -233,7 +234,10 @@ class _FormGroup extends Component {
                     }
 
                     return (
-                        <FormGroup {...groupProps} validationState={hasError ? 'error' : validationState}>
+                        <FormGroup
+                            {...restProps}
+                            {...groupProps}
+                            validationState={hasError ? 'error' : validationState}>
                             {label}
                             <Wrapper {...wrapperCol}>
                                 <AddonWrapper>
