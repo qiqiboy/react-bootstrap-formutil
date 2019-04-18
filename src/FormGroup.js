@@ -69,7 +69,7 @@ class _FormGroup extends Component {
     render() {
         const props = this.props;
         let {
-            children,
+            children: childList,
             addons,
             label,
             helper,
@@ -84,6 +84,7 @@ class _FormGroup extends Component {
             errorLevel = errorLevelGlobal,
             ...fieldProps
         } = props;
+        const children = Children.only(childList);
 
         let Wrapper = wrapperCol ? Col : Fragment;
         const groupProps = {
@@ -212,7 +213,7 @@ class _FormGroup extends Component {
 
                     switch (errorLevel) {
                         case 0:
-                            hasError = $invalid && $dirty & $touched;
+                            hasError = $invalid && $dirty && $touched;
                             break;
                         case 1:
                             hasError = $invalid && $dirty;
@@ -242,7 +243,7 @@ class _FormGroup extends Component {
                             <Wrapper {...wrapperCol}>
                                 <AddonWrapper>
                                     {addons.pre}
-                                    {cloneElement(Children.only(children), childProps)}
+                                    {cloneElement(children, childProps)}
                                     {addons.end}
                                 </AddonWrapper>
                                 {feedbackNode}

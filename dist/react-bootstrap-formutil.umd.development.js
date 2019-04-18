@@ -257,7 +257,7 @@
       value: function render() {
         var props = this.props;
 
-        var children = props.children,
+        var childList = props.children,
             addons = props.addons,
             label = props.label,
             helper = props.helper,
@@ -273,6 +273,7 @@
             errorLevel = _props$errorLevel === void 0 ? errorLevelGlobal : _props$errorLevel,
             fieldProps = _objectWithoutProperties(props, ["children", "addons", "label", "helper", "labelCol", "wrapperCol", "controlId", "validationState", "bsSize", "bsClass", "className", "feedback", "errorLevel"]);
 
+        var children = React.Children.only(childList);
         var Wrapper = wrapperCol ? reactBootstrap.Col : React.Fragment;
         var groupProps = {
           controlId: controlId,
@@ -396,7 +397,7 @@
 
             switch (errorLevel) {
               case 0:
-                hasError = $invalid && $dirty & $touched;
+                hasError = $invalid && $dirty && $touched;
                 break;
 
               case 1:
@@ -422,7 +423,7 @@
 
             return React__default.createElement(reactBootstrap.FormGroup, Object.assign({}, restProps, groupProps, {
               validationState: hasError ? 'error' : validationState
-            }), label, React__default.createElement(Wrapper, wrapperCol, React__default.createElement(AddonWrapper, null, addons.pre, React.cloneElement(React.Children.only(children), childProps), addons.end), feedbackNode, hasError ? React__default.createElement(reactBootstrap.HelpBlock, null, $getFirstError()) : helper));
+            }), label, React__default.createElement(Wrapper, wrapperCol, React__default.createElement(AddonWrapper, null, addons.pre, React.cloneElement(children, childProps), addons.end), feedbackNode, hasError ? React__default.createElement(reactBootstrap.HelpBlock, null, $getFirstError()) : helper));
           }
         }));
       }
