@@ -197,8 +197,21 @@ class _FormGroup extends Component {
 
                         default:
                             childProps = {
-                                [changePropName]: onChange,
-                                [valuePropName]: value,
+                                onCompositionEnd: ev => {
+                                    this.isComposition = false;
+                                    delete this.compositionValue;
+                                    onChange(ev);
+                                },
+                                onCompositionStart: () => (this.isComposition = true),
+                                [changePropName]: (ev, ...rest) => {
+                                    if (this.isComposition) {
+                                        this.compositionValue = ev.target[valuePropName];
+                                        this.forceUpdate();
+                                    } else {
+                                        onChange(ev, ...rest)
+                                    }
+                                },
+                                [valuePropName]: 'compositionValue' in this ? this.compositionValue : value,
                                 name: fieldProps.name
                             };
                             break;
