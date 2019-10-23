@@ -19,7 +19,7 @@ function createConfig(env, module) {
         external:
             module === 'umd'
                 ? ['react', 'prop-types', 'react-formutil', 'react-bootstrap']
-                : id => !id.startsWith('.') && !id.startsWith('@babel/runtime') && !path.isAbsolute(id),
+                : id => !id.startsWith('.') && !path.isAbsolute(id),
         output: {
             file: `dist/react-bootstrap-formutil.${module}.${env}.js`,
             format: module,
@@ -42,7 +42,11 @@ function createConfig(env, module) {
             }),
             nodeResolve(),
             commonjs({
-                include: /node_modules/
+                include: /node_modules/,
+                namedExports: {
+                    'node_modules/_react-is@16.8.6@react-is/index.js': ['isValidElementType'],
+                    'node_modules/react-is/index.js': ['isValidElementType']
+                }
             }),
             babel({
                 exclude: /node_modules/,
@@ -51,8 +55,9 @@ function createConfig(env, module) {
                     [
                         '@babel/preset-env',
                         {
-                            modules: false,
                             useBuiltIns: 'entry',
+                            corejs: 3,
+                            modules: false,
                             exclude: ['transform-typeof-symbol']
                         }
                     ],
@@ -93,13 +98,16 @@ function createConfig(env, module) {
                     mangle: {
                         // https://github.com/ant-design/babel-plugin-import/issues/282
                         reserved: [
+                            'Form',
+                            'FormCheck',
                             'FormGroup',
                             'FormControl',
-                            'ControlLabel',
+                            'FormLabel',
+                            'FormText',
                             'InputGroup',
-                            'HelpBlock',
-                            'Checkbox',
-                            'Radio',
+                            'Row',
+                            'Col',
+                            'ToggleButton',
                             'ToggleButtonGroup'
                         ]
                     },

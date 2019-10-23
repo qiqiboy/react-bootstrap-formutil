@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-var-requires: 0 */
 const fs = require('fs-extra');
 const glob = require('glob');
 const Parser = require('i18next-scanner').Parser;
@@ -6,6 +7,7 @@ const paths = require('./config/paths');
 const path = require('path');
 const chalk = require('chalk');
 const ora = require('ora');
+const lodash = require('lodash');
 const pkg = require(paths.appPackageJson);
 
 const spinner = ora();
@@ -24,6 +26,17 @@ if (terminalArg === '--scan') {
     reader();
 }
 
+function sortByPinyin(obj) {
+    const allKeys = Object.keys(obj);
+    const orderedKeys = allKeys.sort();
+
+    return orderedKeys.reduce((orderedObj, key) => {
+        orderedObj[key] = obj[key];
+
+        return orderedObj;
+    }, {});
+}
+
 function ensureLocalsConfig() {
     if (Array.isArray(pkg.locals) === false) {
         spinner.fail(chalk.red('未在 package.json 中找到相关语言包配置！'));
@@ -31,6 +44,7 @@ function ensureLocalsConfig() {
         spinner.warn(
             chalk.yellow('需要 package.json 中添加 { "locals": ["zh_CN", "en_US"] } 配置后，才能运行该命令！')
         );
+
         process.exit(0);
     }
 }
@@ -41,7 +55,11 @@ function ensureLocalsConfig() {
  */
 function scanner() {
     const i18nParser = new Parser({
-        lngs: pkg.locals
+        lngs: pkg.locals,
+        nsSeparator: false,
+        keySeparator: false,
+        pluralSeparator: false,
+        contextSeparator: false
     });
 
     fs.ensureDirSync(path.join(paths.locals, 'xlsx'));
@@ -49,7 +67,7 @@ function scanner() {
     glob.sync(paths.appSrc + '/**/*.{js,jsx,ts,tsx}').forEach(file => {
         const content = fs.readFileSync(file);
 
-        i18nParser.parseFuncFromString(content, { list: ['__'] }, key => {
+        i18nParser.parseFuncFromString(content, { list: ['__', 'i18n.__', 'window.__'] }, key => {
             if (key) {
                 i18nParser.set(key, key);
             }
@@ -62,14 +80,14 @@ function scanner() {
         const jsonDestination = path.join(paths.locals, key + '.json');
         const excelDestination = path.join(paths.locals, 'xlsx', key + '.xlsx');
 
+        const translation = i18nJson[key].translation;
         const existConfig = fs.existsSync(jsonDestination) ? JSON.parse(fs.readFileSync(jsonDestination)) : {};
+        const newConfig = Object.assign(translation, lodash.pickBy(existConfig, (value, key) => key in translation));
+        const orderedConfig = sortByPinyin(newConfig);
 
-        fs.outputFile(
-            path.join(paths.locals, key + '.json'),
-            JSON.stringify(Object.assign(i18nJson[key].translation, existConfig), '\n', 2)
-        );
+        fs.outputFile(path.join(paths.locals, key + '.json'), JSON.stringify(orderedConfig, '\n', 2));
 
-        convertJson2Excel(Object.assign(i18nJson[key].translation, existConfig), key, path.join(excelDestination));
+        convertJson2Excel(orderedConfig, key, path.join(excelDestination));
 
         spinner.succeed('输出 ' + chalk.bold(chalk.green(key)) + ' 到 ' + chalk.cyan(excelDestination));
     });
@@ -84,7 +102,7 @@ function scanner() {
  * 读取excel文件，并转换为json语言包
  */
 function reader() {
-    glob.sync(path.join(paths.locals, 'xlsx', '*.xlsx')).forEach(file => {
+    glob.sync(path.join(paths.locals, 'xlsx', '!(~$)*.xlsx')).forEach(file => {
         const lang = path.basename(file, '.xlsx');
         const jsonDestination = path.join(paths.locals, lang + '.json');
 
@@ -114,7 +132,7 @@ function convertJson2Excel(jsonContent, lang, destination) {
 function convertExcel2Json(file, lang, destination) {
     const sheets = xlsx.parse(fs.readFileSync(file));
 
-    const jsonData = {};
+    const jsonData = require(destination) || {};
 
     sheets[0].data.slice(2).forEach(item => {
         if (item.length) {

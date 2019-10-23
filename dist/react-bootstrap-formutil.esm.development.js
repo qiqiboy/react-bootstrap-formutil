@@ -1,8 +1,9 @@
 import { EasyField } from 'react-formutil';
 export * from 'react-formutil';
-import React, { Fragment, Children, cloneElement, Component, isValidElement } from 'react';
+import React, { Children, cloneElement, Component, isValidElement, Fragment } from 'react';
+import { isValidElementType } from 'react-is';
 import PropTypes from 'prop-types';
-import { FormControl, Col, ControlLabel, InputGroup, HelpBlock, FormGroup, Checkbox, Radio, ToggleButtonGroup } from 'react-bootstrap';
+import { Form, FormControl, FormLabel, InputGroup, FormText, FormGroup, FormCheck, ToggleButton, ToggleButtonGroup, Col, Row } from 'react-bootstrap';
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -39,6 +40,40 @@ function _defineProperty(obj, key, value) {
   }
 
   return obj;
+}
+
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    });
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+
+    if (i % 2) {
+      ownKeys(source, true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(source).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+
+  return target;
 }
 
 function _inherits(subClass, superClass) {
@@ -163,7 +198,9 @@ function (_Component) {
           onChange = _this$props.onChange,
           value = _this$props.value,
           onFocus = _this$props.onFocus,
-          onBlur = _this$props.onBlur;
+          onBlur = _this$props.onBlur,
+          isValid = _this$props.isValid,
+          isInvalid = _this$props.isInvalid;
 
       var childOnChange = function childOnChange(ev) {
         var _ev$target = ev.target,
@@ -175,16 +212,18 @@ function (_Component) {
         }));
       };
 
-      return React.createElement(Fragment, null, Children.map(children, function (child) {
+      return Children.map(children, function (child) {
         var childValue = child.props.value;
         return cloneElement(child, {
+          isValid: isValid,
+          isInvalid: isInvalid,
           checked: !!value && value.indexOf(childValue) > -1,
           onChange: childOnChange,
           onFocus: onFocus,
           onBlur: onBlur,
           name: name
         });
-      }));
+      });
     }
   }]);
 
@@ -208,33 +247,37 @@ var errorLevelGlobal = 1;
 var setErrorLevel = function setErrorLevel(level) {
   errorLevelGlobal = level;
 };
-var isUglify = FormControl.name !== 'FormControl';
+var isUglify = Form.displayName !== 'Form';
 
-var _Checkbox = isUglify ? Checkbox : 'Checkbox';
+var _FormControl = isUglify ? FormControl : 'FormControl';
 
-var _Radio = isUglify ? Radio : 'Radio';
+var _FormCheck = isUglify ? FormCheck : 'FormCheck';
 
 var _CheckboxGroup = isUglify ? CheckboxGroup : 'CheckboxGroup';
 
-var _ToggleButtonGroup = isUglify ? ToggleButtonGroup : 'Uncontrolled(ToggleButtonGroup)';
+var _ToggleButton = isUglify ? ToggleButton : 'ToggleButton';
+
+var _ToggleButtonGroup = isUglify ? ToggleButtonGroup : 'ToggleButtonGroup';
+
+var HelpBlock = FormControl.Feedback;
 
 function getChildComponent(children) {
   if (children) {
-    if (typeof children.type === 'function') {
-      var func = children.type;
+    var childrenType = children.type;
 
-      if (func.formutilType) {
-        return func.formutilType;
+    if (typeof childrenType !== 'string' && isValidElementType(childrenType)) {
+      if (childrenType.formutilType) {
+        return childrenType.formutilType;
       }
 
       if (isUglify) {
-        return func;
+        return childrenType;
       }
 
-      return func.displayName || func.name;
-    } else {
-      return children.props.type || children.type;
+      return childrenType.displayName || childrenType.name;
     }
+
+    return children.props.type || children.type;
   }
 }
 
@@ -262,63 +305,79 @@ function (_Component) {
           helper = props.helper,
           labelCol = props.labelCol,
           wrapperCol = props.wrapperCol,
-          controlId = props.controlId,
           validationState = props.validationState,
-          bsSize = props.bsSize,
-          bsClass = props.bsClass,
           className = props.className,
           feedback = props.feedback,
+          extraNode = props.extra,
           _props$errorLevel = props.errorLevel,
           errorLevel = _props$errorLevel === void 0 ? errorLevelGlobal : _props$errorLevel,
-          fieldProps = _objectWithoutProperties(props, ["children", "addons", "label", "helper", "labelCol", "wrapperCol", "controlId", "validationState", "bsSize", "bsClass", "className", "feedback", "errorLevel"]);
+          fieldProps = _objectWithoutProperties(props, ["children", "addons", "label", "helper", "labelCol", "wrapperCol", "validationState", "className", "feedback", "extra", "errorLevel"]);
 
       var children = Children.only(childList);
       var Wrapper = wrapperCol ? Col : Fragment;
       var groupProps = {
-        controlId: controlId,
-        bsSize: bsSize,
-        bsClass: bsClass,
         className: className
       };
 
       if (label) {
         if (isValidElement(label)) {
           if (labelCol) {
-            label = React.createElement(Col, labelCol, label);
+            label = cloneElement(label, _objectSpread2({
+              column: true
+            }, labelCol));
           }
         } else {
-          label = labelCol ? React.createElement(Col, Object.assign({}, labelCol, {
-            componentClass: ControlLabel
-          }), label) : React.createElement(ControlLabel, null, label);
+          label = React.createElement(FormLabel, Object.assign({
+            column: !!labelCol
+          }, labelCol), label);
         }
       }
 
+      if (labelCol || wrapperCol) {
+        groupProps.as = Row;
+      }
+
       var AddonWrapper = addons ? InputGroup : Fragment;
+      var addonWrapperProps = addons ? {
+        size: addons.size
+      } : {};
 
       if (addons) {
         if (addons.pre && !isValidElement(addons.pre)) {
-          addons.pre = React.createElement(InputGroup.Addon, null, addons.pre);
+          addons.pre = React.createElement(InputGroup.Prepend, null, React.createElement(InputGroup.Text, null, addons.pre));
         }
 
         if (addons.end && !isValidElement(addons.end)) {
-          addons.end = React.createElement(InputGroup.Addon, null, addons.end);
+          addons.end = React.createElement(InputGroup.Append, null, React.createElement(InputGroup.Text, null, addons.end));
         }
       } else {
         addons = {};
       }
 
       if (helper && !isValidElement(helper)) {
-        helper = React.createElement(HelpBlock, null, helper);
+        helper = React.createElement(FormText, {
+          className: "text-muted"
+        }, helper);
       }
 
       var component = getChildComponent(children);
 
+      if (component === _FormControl) {
+        if (children.props.as === 'select' && children.props.multiple) {
+          component = 'multipleSelect';
+        }
+      }
+
       switch (component) {
-        case _Checkbox:
-        case _Radio:
+        case _FormCheck:
+        case _ToggleButton:
         case 'checkbox':
         case 'radio':
           fieldProps.__TYPE__ = 'checked';
+          break;
+
+        case 'multipleSelect':
+          fieldProps.__TYPE__ = 'array';
           break;
 
         case _CheckboxGroup:
@@ -335,9 +394,6 @@ function (_Component) {
         case 'number':
         case 'empty':
           fieldProps.__TYPE__ = component;
-          break;
-
-        default:
           break;
       }
 
@@ -366,6 +422,8 @@ function (_Component) {
               $dirty = $fieldutil.$dirty,
               $touched = $fieldutil.$touched,
               $getFirstError = $fieldutil.$getFirstError;
+          /** @type {any} */
+
           var childProps;
 
           switch (fieldProps.__TYPE__) {
@@ -397,7 +455,13 @@ function (_Component) {
                 onCompositionStart: function onCompositionStart() {
                   return _this.isComposition = true;
                 }
-              }, _defineProperty(_childProps, changePropName, function (ev) {
+              }, _defineProperty(_childProps, changePropName, component === 'multipleSelect' ? function (ev) {
+                _onChange([].slice.call(ev.target.options).filter(function (option) {
+                  return option.selected;
+                }).map(function (option) {
+                  return option.value;
+                }), ev);
+              } : function (ev) {
                 if (_this.isComposition) {
                   _this.compositionValue = ev.target[valuePropName];
 
@@ -414,7 +478,7 @@ function (_Component) {
           }
 
           Object.assign(childProps, (_Object$assign = {}, _defineProperty(_Object$assign, focusPropName, onFocus), _defineProperty(_Object$assign, blurPropName, onBlur), _Object$assign));
-          var hasError, feedbackNode;
+          var hasError;
 
           switch (errorLevel) {
             case 0:
@@ -434,17 +498,17 @@ function (_Component) {
               break;
           }
 
-          if (feedback) {
-            if (typeof feedback === 'boolean') {
-              feedbackNode = React.createElement(FormControl.Feedback, null);
-            } else {
-              feedbackNode = React.createElement(FormControl.Feedback, null, feedback);
-            }
+          if (hasError) {
+            childProps.isInvalid = true;
           }
 
-          return React.createElement(FormGroup, Object.assign({}, restProps, groupProps, {
-            validationState: hasError ? 'error' : validationState
-          }), label, React.createElement(Wrapper, wrapperCol, React.createElement(AddonWrapper, null, addons.pre, cloneElement(children, childProps), addons.end), feedbackNode, hasError ? React.createElement(HelpBlock, null, $getFirstError()) : helper));
+          if (feedback && !$invalid) {
+            childProps.isValid = true;
+          }
+
+          return React.createElement(FormGroup, Object.assign({}, restProps, groupProps), label, React.createElement(Wrapper, wrapperCol, React.createElement(AddonWrapper, addonWrapperProps, addons.pre, cloneElement(children, childProps), addons.end), hasError ? React.createElement(HelpBlock, {
+            type: "invalid"
+          }, React.createElement(FormText, null, $getFirstError())) : helper), extraNode);
         }
       }));
     }
@@ -460,8 +524,9 @@ _FormGroup.propTypes = {
   labelCol: PropTypes.object,
   wrapperCol: PropTypes.object,
   addons: PropTypes.object,
-  feedback: PropTypes.oneOfType([PropTypes.bool, PropTypes.element]),
-  errorLevel: PropTypes.oneOf([0, 1, 2, 'off']) //$parser $formatter checked unchecked $validators validMessage等传递给 EasyField 组件的额外参数
+  extra: PropTypes.node,
+  feedback: PropTypes.bool,
+  errorLevel: PropTypes.oneOf([0, 1, 2, 'off']) // $parser $formatter checked unchecked $validators validMessage等传递给 EasyField 组件的额外参数
 
 };
 
@@ -485,22 +550,26 @@ function (_Component) {
           onChange = _this$props.onChange,
           value = _this$props.value,
           onFocus = _this$props.onFocus,
-          onBlur = _this$props.onBlur;
+          onBlur = _this$props.onBlur,
+          isValid = _this$props.isValid,
+          isInvalid = _this$props.isInvalid;
 
       var childOnChange = function childOnChange(ev) {
         onChange(ev.target.value, ev);
       };
 
-      return React.createElement(Fragment, null, Children.map(children, function (child) {
+      return Children.map(children, function (child) {
         var childValue = child.props.value;
         return cloneElement(child, {
+          isValid: isValid,
+          isInvalid: isInvalid,
           checked: value === childValue,
           onChange: childOnChange,
           onFocus: onFocus,
           onBlur: onBlur,
           name: name
         });
-      }));
+      });
     }
   }]);
 
@@ -514,5 +583,5 @@ RadioGroup.propTypes = {
   value: PropTypes.string
 };
 
-export { CheckboxGroup, _FormGroup as FormGroup, RadioGroup, setErrorLevel };
+export { CheckboxGroup, _FormGroup as FormGroup, RadioGroup, CheckboxGroup as SwitchGroup, setErrorLevel };
 //# sourceMappingURL=react-bootstrap-formutil.esm.development.js.map

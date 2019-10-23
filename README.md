@@ -24,10 +24,6 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
 > 1.  react-md [`react-md-formutil`](https://github.com/qiqiboy/react-md-formutil) [![npm](https://img.shields.io/npm/v/react-md-formutil.svg?style=flat)](https://npm.im/react-md-formutil)
 > 1.  Material-UI [`react-material-formutil`](https://github.com/qiqiboy/react-material-formutil) [![npm](https://img.shields.io/npm/v/react-material-formutil.svg?style=flat)](https://npm.im/react-material-formutil)
 
-**`react-boostrap-formutil`只适用于基于`bootstrap v3`版本的[`react-boostrap`组件库](https://5c507d49471426000887a6a7--react-bootstrap.netlify.com/getting-started/introduction)！并且目前没有更新支持`bootstrap v4`以及`react-bootstrap v1`的计划。**
-
-你可以点此查看该版本的[`react-boostrap`组件库](https://5c507d49471426000887a6a7--react-bootstrap.netlify.com/getting-started/introduction)的文档！
-
 <!-- vim-markdown-toc GFM -->
 
 - [安装 Installation](#安装-installation)
@@ -41,24 +37,25 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
         * [`labelCol`](#labelcol)
         * [`wrapperCol`](#wrappercol)
         * [`addons`](#addons)
-    + [`$parser`](#parser)
-    + [`$formatter`](#formatter)
+        * [`extra`](#extra)
+        * [`$parser`](#parser)
+        * [`$formatter`](#formatter)
         * [`checked` `unchecked`](#checked-unchecked)
         * [`validMessage`](#validmessage)
         * [`feedback`](#feedback)
         * [`valuePropName` `changePropName` `focusPropName` `blurPropName`](#valuepropname-changepropname-focuspropname-blurpropname)
-        * [`controlId` `bsSize` `bsClass`](#controlid-bssize-bsclass)
+        * [`controlId` `as` `xs` `sm` `md` `lg` 等](#controlid-as-xs-sm-md-lg-等)
         * [`errorLevel`](#errorlevel)
     + [`<CheckboxGroup />`](#checkboxgroup-)
     + [`<RadioGroup />`](#radiogroup-)
+    + [`<SwitchGroup />`](#switchgroup-)
     + [`setErrorLevel(level)`](#seterrorlevellevel)
     + [`支持的组件`](#支持的组件)
-        * [`FormControl`](#formcontrol)
-        * [`Checkbox`](#checkbox)
-        * [`Radio`](#radio)
+        * [`FormControl` `Form.Control`](#formcontrol-formcontrol)
+        * [`Form.Check` `FormCheck`](#formcheck-formcheck)
         * [`InputGroup`](#inputgroup)
         * [`ToggleButtonGroup`](#togglebuttongroup)
-        * [`CheckboxGroup` `RadioGroup`](#checkboxgroup-radiogroup)
+        * [`CheckboxGroup` `RadioGroup` `SwitchGroup`](#checkboxgroup-radiogroup-switchgroup)
 - [FAQ](#faq)
     + [`给组件设置的 onChange、onFocus 等方法无效、不执行`](#给组件设置的-onchangeonfocus-等方法无效不执行)
     + [`在生产环境(NODE_ENV==='production')部分组件调用有异常？`](#在生产环境node_envproduction部分组件调用有异常)
@@ -69,7 +66,9 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
 
 [![react-bootstrap-formutil](https://nodei.co/npm/react-bootstrap-formutil.png?compact=true)](https://npm.im/react-bootstrap-formutil)
 
-安装最新版的`react-bootstrap-formutil`:
+由于目前流行的`bootstrap`版本主要有`v3`和`v4`，其对应的`react-bootstrap`也有两个相对应的版本，所以我们也提供了两个版本供选择下载。
+
+该版本适用于 `bootstrap@4.x` 和 `react-bootstrap@1.x`。**如果你项目中使用的是 `bootstrap@3.x` 和 `react-bootstrap@0.32.x`，请查看 [react-bootstrap-formutil v3](https://github.com/qiqiboy/react-bootstrap-formutil/tree/v3)**。
 
 ```bash
 # npm
@@ -79,20 +78,12 @@ npm install react-bootstrap-formutil --save
 yarn install react-bootstrap-formutil
 ```
 
-安装适用于`bootstrap v3`的`react-bootstrap`:
-
-```bash
-# npm
-npm install react-bootstrap@0.32 --save
-
-# yarn
-yarn install react-bootstrap@0.32
-```
-
 ### 使用 Usage
 
 > `react-bootstrap-formutil` 整合了 `react-formutil` 的组件，所以可以直接从`react-bootstrap-formutil`中导出所需要的
 > `react-formutil` 组件。不用单独从 `react-formutil` 中导出。
+
+**本文档适用于 `bootstrap@4.x` 和 `react-bootstrap@1.x` 版本，如果你要查看早期`react-bootstrap@0.32`的文档，请查看 [react-bootstrap-formutil v3](https://github.com/qiqiboy/react-bootstrap-formutil/tree/v3)**
 
 先看一个使用示例（点击查看在线完整示例 :
 [react-bootstrap-formutil on codesandbox.io](https://codesandbox.io/s/rmj2l1o80o)）：
@@ -146,23 +137,23 @@ class MyForm extends Component {
 
 ##### `$defaultValue`
 
-设置该表单项的默认值 _（同`react-formutil`的`Field`同名参数，可以参考[$defaultvalue](https://github.com/qiqiboy/react-formutil#defaultvalue)）_
+设置该表单项的默认值 _（同`react-formutil`的`Field`同名参数，可以参考[\$defaultvalue](https://github.com/qiqiboy/react-formutil#defaultvalue)）_
 
 ##### `$validators`
 
 设置校验方法 _（同`react-formutil`的`Field`同名参数 , 可以参考
-[$validators](https://github.com/qiqiboy/react-formutil#validators)）_
+[\$validators](https://github.com/qiqiboy/react-formutil#validators)）_
 
 > 同 react-formutil 的 EasyField，FormControl 也内置了同样的校验规则：
 
-> *   `required` 必填 `required`
-> *   `maxLength` 。最大输入长度，有效输入时才会校验 `maxLength="100"`
-> *   `minLength` 最小输入长度，有效输入时才会校验 `minLength="10"`
-> *   `max` 最大输入数值，仅支持 Number 比较。有效输入时才会校验 `max="100"`
-> *   `min` 最小输入数值，仅支持 Number 比较。有效输入时才会校验 `min="10"`
-> *   `pattern` 正则匹配。有效输入时才会校验 `pattern={/^\d+$/}`
-> *   `enum` 枚举值检测。有效输入时才会校验 `enum={[1,2,3]}`
-> *   `checker` 自定义校验函数。`checker={value => value > 10 && value < 100 || ' 输入比如大于 10 小与 100'}`
+> -   `required` 必填 `required`
+> -   `maxLength` 。最大输入长度，有效输入时才会校验 `maxLength="100"`
+> -   `minLength` 最小输入长度，有效输入时才会校验 `minLength="10"`
+> -   `max` 最大输入数值，仅支持 Number 比较。有效输入时才会校验 `max="100"`
+> -   `min` 最小输入数值，仅支持 Number 比较。有效输入时才会校验 `min="10"`
+> -   `pattern` 正则匹配。有效输入时才会校验 `pattern={/^\d+$/}`
+> -   `enum` 枚举值检测。有效输入时才会校验 `enum={[1,2,3]}`
+> -   `checker` 自定义校验函数。`checker={value => value > 10 && value < 100 || ' 输入比如大于 10 小与 100'}`
 
 注：校验属性的值为 `null` 时表示不进行该校验
 
@@ -170,17 +161,17 @@ class MyForm extends Component {
 
 ##### `label`
 
-如果表单项需要 label，应该通过该属性设置。你可以传入字符串，或者直接传入`ControlLabel`节点：
+如果表单项需要 label，应该通过该属性设置。你可以传入字符串，或者直接传入`Form.Label`节点：
 
 ```javascript
 <FormGroup name="name" label="Username">
-    <FormControl />
+    <Form.Control />
 </FormGroup>
 
 //or
 
-<FormGroup name="name" label={<ControlLabel>Username</ControlLabel>}>
-    <FormControl />
+<FormGroup name="name" label={<Form.Label>Username</Form.Label>}>
+    <Form.Control />
 </FormGroup>
 ```
 
@@ -195,7 +186,7 @@ class MyForm extends Component {
 
 //or
 
-<FormGroup name="name" helper={<HelpBlock>Please type your name</HelpBlock>}>
+<FormGroup name="name" helper={<Form.Text className="text-muted">Please type your name</Form.Text>}>
     <FormControl />
 </FormGroup>
 ```
@@ -226,22 +217,49 @@ class MyForm extends Component {
 
 ##### `addons`
 
-该属性可以用来实现`InputGroup`布局，该属性包含两个字段`pre` `end`，可以分别用来添加前后`addons`。
+该属性可以用来实现`InputGroup`布局，该属性包含三个字段`pre` `end` `size`，可以分别用来添加前后`addons`以及设置`InputGroup`的尺寸大小。
 
-如果`pre` `end`的值为字符串，则会自动添加`InputGroup.Addon`组件。当然，你也可以执行定义要添加的节点。
+如果`pre` `end`的值为字符串，则会自动添加`InputGroup.Prepend` `InputGroup.Append`组件。当然，你也可以自行定义要添加的节点。
 
 ```javascript
 <FormGroup
     name="email"
     addons={{
+        size: 'lg',
         pre: 'Email',
-        end: <InputGroup.Addon>@apple.com</InputGroup.Addon>
+        end: (
+            <InputGroup.Append>
+                <InputGroup.Text>@apple.com</InputGroup.Text>
+            </InputGroup.Append>
+        )
     }}>
     <FormControl />
 </FormGroup>
 ```
 
-#### `$parser`
+##### `extra`
+
+该属性用来添加一个额外的节点内容。
+
+```javascript
+<FormGroup name="email" extra={<div>其他内容</div>}>
+    <FormControl />
+</FormGroup>
+
+// 你可以利用 Fragment 添加多个其他节点内容
+<FormGroup
+    name="email"
+    extra={
+        <Fragment>
+            <p>...</p>
+            <div>...</div>
+        </Fragment>
+    }>
+    <FormControl />
+</FormGroup>
+```
+
+##### `$parser`
 
 **注意：** 这里介绍的`$parser`和`$formatter`为`react-formutil@>0.5.0`的用法。如果你还在使用`0.5.0`以前的版本，请参考[安装`0.5.0`版本以上的`react-formutil`](https://github.com/qiqiboy/react-formutil#安装-installation);
 
@@ -261,7 +279,7 @@ class MyForm extends Component {
 <FormGroup name="fieldName" $parser={(viewValue, $setViewValue) => $setViewValue(viewValue.trim())} />
 ```
 
-#### `$formatter`
+##### `$formatter`
 
 当在表单模型中主动更新模型值时，会通过 `$formatter` 将模型中的值转换为`$viewValue`后传递给视图渲染。
 
@@ -274,12 +292,11 @@ class MyForm extends Component {
 
 ##### `checked` `unchecked`
 
-对于 `<Switch />` `<Checkbox />` `<Radio />` 这三种组件，其值默认是 checked 属性，为布尔值。可以通过`checked`
-`unchecked`来设置 checked 状态时所要映射的值：
+对于 `<Form.Check />`，其值默认是 checked 属性，为布尔值。可以通过`checked` `unchecked`来设置 checked 状态时所要映射的值：
 
 ```javascript
 <FormGroup checked="yes" unchecked="no">
-    <Checkbox />
+    <Form.Check type="checkbox" />
 </FormGroup>
 ```
 
@@ -302,14 +319,10 @@ class MyForm extends Component {
 
 ##### `feedback`
 
-设置额外的状态 icon。支持布尔值，或者自定义的节点
+布尔值。设置是否要支持额外的状态，如果设置为`true`，这表单项正确时将会显示 绿色的`valid`状态
 
 ```javascript
 <FormGroup name="username" feedback>
-    <FormControl />
-</FormGroup>
-
-<FormGroup name="username" feedback={<Glyphicon glyph="music" />}>
     <FormControl />
 </FormGroup>
 ```
@@ -328,9 +341,9 @@ class MyForm extends Component {
 </FormGroup>
 ```
 
-##### `controlId` `bsSize` `bsClass`
+##### `controlId` `as` `xs` `sm` `md` `lg` 等
 
-这三个属性同`react-bootstrap`中 FormGroup 组件的同名属性
+这几个属性同`react-bootstrap`中 `FormGroup` 组件的同名属性，事实上任何可以传递给`Form.Group`的属性都可以传递。
 
 ##### `errorLevel`
 
@@ -340,31 +353,14 @@ class MyForm extends Component {
 
 该组件用来同步多选组，需要嵌套在`FormGroup`下配合使用：
 
-> 每个子项`Checkbox`组件必须显式设置`value`属性值
+> 每个子项`Form.Check`组件必须显式设置`value`属性值
 
 ```javascript
-<FormGroup
-    name="group.checkbox"
-    required
-    label="Checkbox group"
-    wrapperCol={{
-        xs: 12,
-        md: 10
-    }}
-    labelCol={{
-        xs: 12,
-        md: 2
-    }}>
+<FormGroup name="group.checkbox" required label="Checkbox group">
     <CheckboxGroup>
-        <Checkbox inline value="1">
-            1
-        </Checkbox>
-        <Checkbox inline value="2">
-            2
-        </Checkbox>
-        <Checkbox inline value="3">
-            3
-        </Checkbox>
+        <Form.Check inline type="checkbox" value="1" label="1" />
+        <Form.Check inline type="checkbox" value="2" label="2" />
+        <Form.Check inline type="checkbox" value="2" label="3" />
     </CheckboxGroup>
 </FormGroup>
 ```
@@ -373,26 +369,31 @@ class MyForm extends Component {
 
 该组件用来同步单选组，需要嵌套在`FormGroup`下配合使用：
 
-> 每个子项`Radio`组件必须显式设置`value`属性值
+> 每个子项`Form.Check`组件必须显式设置`value`属性值
 
 ```javascript
-<FormGroup
-    name="group.radio"
-    required
-    label="Radio group"
-    wrapperCol={{
-        xs: 12,
-        md: 10
-    }}
-    labelCol={{
-        xs: 12,
-        md: 2
-    }}>
+<FormGroup name="group.radio" required label="Radio group">
     <RadioGroup>
-        <Radio value="1">1</Radio>
-        <Radio value="2">2</Radio>
-        <Radio value="3">3</Radio>
+        <Form.Check inline type="radio" value="1" label="1" />
+        <Form.Check inline type="radio" value="2" label="2" />
+        <Form.Check inline type="radio" value="2" label="3" />
     </RadioGroup>
+</FormGroup>
+```
+
+#### `<SwitchGroup />`
+
+该组件用来同步单选组，需要嵌套在`FormGroup`下配合使用：
+
+> 每个子项`Form.Check`组件必须显式设置`value`属性值
+
+```javascript
+<FormGroup name="group.switch" required label="Switch group">
+    <SwitchGroup>
+        <Form.Check inline type="switch" value="1" label="1" />
+        <Form.Check inline type="switch" value="2" label="2" />
+        <Form.Check inline type="switch" value="2" label="3" />
+    </SwitchGroup>
 </FormGroup>
 ```
 
@@ -400,10 +401,10 @@ class MyForm extends Component {
 
 `setErrorLevel` 该方法可以用来全局设置错误信息何时出现，有三个级别可以设置：
 
-*   `0` 当`$dirty` `$touched` `invalid` 都为 true 时
-*   `1` 当`$dirty` `invalid` 都为 true 时
-*   `2` 当`invalid` 为 true 时
-*   `off` 关闭错误显示
+-   `0` 当`$dirty` `$touched` `invalid` 都为 true 时
+-   `1` 当`$dirty` `invalid` 都为 true 时
+-   `2` 当`invalid` 为 true 时
+-   `off` 关闭错误显示
 
 默认值为 `1`
 
@@ -426,7 +427,7 @@ setErrorLevel(0);
 
 #### `支持的组件`
 
-##### [`FormControl`](https://react-bootstrap.github.io/components/forms/#forms-props-form-control)
+##### [`FormControl` `Form.Control`](https://react-bootstrap.github.io/components/forms/#forms-props-form-control)
 
 ```javascript
 <FormGroup name="pwd">
@@ -434,30 +435,32 @@ setErrorLevel(0);
 </FormGroup>
 
 <FormGroup name="pwd">
-    <FormControl type="select">
+    <FormControl as="select">
         <option value="1">1</option>
         <option value="2">2</option>
     </FormControl>
 </FormGroup>
 ```
 
-##### [`Checkbox`](https://react-bootstrap.github.io/components/forms/#forms-props-checkbox)
+##### [`Form.Check` `FormCheck`](https://react-bootstrap.github.io/components/forms/#forms-props-checkbox)
 
 ```javascript
 <FormGroup name="agree">
-    <Checkbox />
+    <Form.Check type="checkbox" />
 </FormGroup>
-```
 
-##### [`Radio`](https://react-bootstrap.github.io/components/forms/#forms-props-radio)
-
-```javascript
 <FormGroup name="agree">
-    <Radio />
+    <Form.Check type="radio" />
+</FormGroup>
+
+<FormGroup name="agree">
+    <Form.Check type="switch" />
 </FormGroup>
 ```
 
 ##### [`InputGroup`](https://react-bootstrap.github.io/components/forms/#forms-props-input-group)
+
+需要通过 `addons` 属性调用
 
 ```javascript
 <FormGroup name="name" addons={{ pre: '@' }}>
@@ -477,12 +480,12 @@ setErrorLevel(0);
 </FormGroup>
 ```
 
-##### [`CheckboxGroup`](#checkboxgroup-) [`RadioGroup`](#radiogroup-)
+##### [`CheckboxGroup`](#checkboxgroup-) [`RadioGroup`](#radiogroup-) [`SwitchGroup`](#switchgroup-)
 
-**注意**：这两个组件并不是`react-bootstrap`提供的组件，而是`react-bootstrap-formutil`提供的。
+**注意**：这三个组件并不是`react-bootstrap`提供的组件，而是`react-bootstrap-formutil`提供的。
 
 ```javascript
-import { CheckboxGroup, RadioGroup } from 'react-bootstrap-formutil';
+import { CheckboxGroup, RadioGroup, SwitchGroup } from 'react-bootstrap-formutil';
 ```
 
 ### FAQ

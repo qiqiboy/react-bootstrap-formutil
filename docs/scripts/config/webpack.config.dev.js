@@ -1,9 +1,11 @@
+/* eslint @typescript-eslint/no-var-requires: 0 */
 const fs = require('fs');
 const path = require('path');
 const resolve = require('resolve');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
@@ -11,13 +13,12 @@ const DirectoryNamedWebpackPlugin = require('directory-named-webpack-plugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin-alt');
-const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
+const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const pkg = require(paths.appPackageJson);
-const isBuilding = process.env.NODE_ENV === 'production';
+const isBuilding = process.env.WEBPACK_BUILDING === 'true';
 
-const publicPath = '/';
-const publicUrl = '';
+const publicPath = isBuilding ? path.join(pkg.noRewrite ? '.' : process.env.BASE_NAME || '', '/') : '/';
+const publicUrl = publicPath.slice(0, -1);
 const env = getClientEnvironment(publicUrl);
 const injects = [];
 
@@ -70,6 +71,7 @@ module.exports = {
         paths.entries
     ),
     output: {
+        path: paths.appBuild,
         pathinfo: true,
         filename: 'static/js/[name].[hash:8].js',
         chunkFilename: 'static/js/[name].[hash:8].js',
@@ -86,8 +88,13 @@ module.exports = {
                 vendors: {
                     chunks: 'all',
                     test: '_vendor_',
-                    name: 'vendor',
-                    reuseExistingChunk: true
+                    name: 'vendor'
+                },
+                i18n: {
+                    chunks: 'all',
+                    test: /utils\/i18n|locals\/\w+\.json/,
+                    enforce: true,
+                    name: 'i18n'
                 }
             }
         }
@@ -115,13 +122,15 @@ module.exports = {
             { parser: { requireEnsure: false } },
 
             {
-                test: /\.(js|mjs|jsx)$/,
+                test: /\.(js|mjs|jsx|ts|tsx)$/,
                 enforce: 'pre',
                 use: [
                     {
                         options: {
+                            cache: true,
                             formatter: require.resolve('react-dev-utils/eslintFormatter'),
-                            eslintPath: require.resolve('eslint')
+                            eslintPath: require.resolve('eslint'),
+                            resolvePluginsRelativeTo: __dirname
                         },
                         loader: require.resolve('eslint-loader')
                     }
@@ -154,22 +163,15 @@ module.exports = {
                         loader: require.resolve('babel-loader'),
                         options: {
                             customize: require.resolve('babel-preset-react-app/webpack-overrides'),
-                            presets: ['react-app'],
                             plugins: [
                                 [
                                     require.resolve('babel-plugin-named-asset-import'),
                                     {
                                         loaderMap: {
                                             svg: {
-                                                ReactComponent: '@svgr/webpack?-prettier,-svgo![path]'
+                                                ReactComponent: '@svgr/webpack?-svgo,+titleProp,+ref![path]'
                                             }
                                         }
-                                    }
-                                ],
-                                [
-                                    '@babel/plugin-proposal-decorators',
-                                    {
-                                        legacy: true
                                     }
                                 ]
                             ],
@@ -196,8 +198,9 @@ module.exports = {
                         test: /\.module\.css$/,
                         use: getStyleLoaders({
                             importLoaders: 1,
-                            modules: true,
-                            getLocalIdent: getCSSModuleLocalIdent
+                            modules: {
+                                getLocalIdent: getCSSModuleLocalIdent
+                            }
                         })
                     },
                     {
@@ -210,8 +213,9 @@ module.exports = {
                         use: getStyleLoaders(
                             {
                                 importLoaders: 2,
-                                modules: true,
-                                getLocalIdent: getCSSModuleLocalIdent
+                                modules: {
+                                    getLocalIdent: getCSSModuleLocalIdent
+                                }
                             },
                             'sass-loader'
                         )
@@ -226,8 +230,9 @@ module.exports = {
                         use: getStyleLoaders(
                             {
                                 importLoaders: 2,
-                                modules: true,
-                                getLocalIdent: getCSSModuleLocalIdent
+                                modules: {
+                                    getLocalIdent: getCSSModuleLocalIdent
+                                }
                             },
                             'less-loader'
                         )
@@ -256,10 +261,13 @@ module.exports = {
     },
     plugins: injects
         .concat([
+            isBuilding &&
+                new MiniCssExtractPlugin({
+                    filename: 'static/css/[name].[hash:8].css'
+                }),
             new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
             new ModuleNotFoundPlugin(paths.root),
             new webpack.EnvironmentPlugin(env.raw),
-            new webpack.HotModuleReplacementPlugin(),
             new CaseSensitivePathsPlugin(),
             new WatchMissingNodeModulesPlugin(paths.appNodeModules),
             new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
@@ -267,8 +275,9 @@ module.exports = {
                 typescript: resolve.sync('typescript', {
                     basedir: paths.appNodeModules
                 }),
-                tslint: true,
-                async: false,
+                tslint: false,
+                async: true,
+                useTypescriptIncrementalApi: true,
                 checkSyntacticErrors: true,
                 tsconfig: paths.appTsConfig,
                 compilerOptions: {
@@ -277,10 +286,12 @@ module.exports = {
                 },
                 reportFiles: ['**/*.(ts|tsx)', '!**/__tests__/**', '!**/?(*.)(spec|test).*'],
                 watch: paths.appSrc,
-                silent: true,
-                formatter: typescriptFormatter
+                silent: true
             }),
-            new webpack.BannerPlugin('@author ' + pkg.author)
+            new webpack.BannerPlugin({
+                banner: '@author ' + pkg.author,
+                entryOnly: true
+            })
         ])
         .filter(Boolean),
 
@@ -297,10 +308,15 @@ module.exports = {
 
 function getStyleLoaders(cssOptions, preProcessor) {
     const loaders = [
-        require.resolve('style-loader'),
+        isBuilding
+            ? {
+                  loader: MiniCssExtractPlugin.loader,
+                  options: { publicPath: '../../', sourceMap: true }
+              }
+            : require.resolve('style-loader'),
         {
             loader: require.resolve('css-loader'),
-            options: cssOptions
+            options: Object.assign({ sourceMap: true }, cssOptions)
         },
         {
             loader: require.resolve('postcss-loader'),
@@ -314,7 +330,8 @@ function getStyleLoaders(cssOptions, preProcessor) {
                         },
                         stage: 3
                     })
-                ]
+                ],
+                sourceMap: true
             }
         }
     ];
@@ -322,9 +339,17 @@ function getStyleLoaders(cssOptions, preProcessor) {
     if (preProcessor) {
         loaders.push({
             loader: require.resolve(preProcessor),
-            options: {
-                javascriptEnabled: true
-            }
+            options: Object.assign(
+                {},
+                { sourceMap: true },
+                preProcessor === 'less-loader'
+                    ? {
+                          javascriptEnabled: true
+                      }
+                    : {
+                          implementation: require('sass')
+                      }
+            )
         });
     }
 

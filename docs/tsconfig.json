@@ -1,18 +1,18 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES5",
     "allowJs": true,
     "checkJs": true,
-    "module": "esnext",
+    "module": "ESNext",
     "lib": ["esnext", "dom"],
-    "sourceMap": true,
     "jsx": "react",
     "resolveJsonModule": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "allowUnreachableCode": true,
+    "allowUnreachableCode": false,
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
     "noEmit": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -20,7 +20,7 @@
     "importHelpers": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "baseUrl": ".",
     "paths": {
       "*": ["*", "app/*"]

@@ -1,21 +1,7 @@
 import React, { Component } from 'react';
-import { withForm, FormGroup, CheckboxGroup, RadioGroup, setErrorLevel } from '../../../src';
-import {
-    Grid,
-    Row,
-    Col,
-    Form,
-    FormControl,
-    Checkbox,
-    Radio,
-    Button,
-    ToggleButtonGroup,
-    ToggleButton
-} from 'react-bootstrap';
+import { withForm, FormGroup, CheckboxGroup, RadioGroup, SwitchGroup } from '../src';
+import { Container, Form, Button, Card, CardColumns, Col, ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
 
-setErrorLevel(0);
-
-@withForm
 class App extends Component {
     submit = ev => {
         ev.preventDefault();
@@ -33,202 +19,320 @@ class App extends Component {
 
     render() {
         return (
-            <Grid fluid>
-                <Row>
-                    <Col xs={12}>
-                        <h3 style={{ textAlign: 'center' }}>react-bootstrap-formutil</h3>
-                    </Col>
-                    <Col xs={12} md={6}>
-                        <Form onSubmit={this.submit}>
-                            <FormGroup name="text" required>
-                                <FormControl type="text" placeholder="enter text" />
-                            </FormGroup>
-
-                            <FormGroup name="pwd" required validMessage={{ required: 'enter password' }}>
-                                <FormControl type="password" placeholder="enter password" />
-                            </FormGroup>
-
-                            <FormGroup name="name" required label="Name" controlId="text">
-                                <FormControl type="text" />
-                            </FormGroup>
-
-                            <FormGroup name="age" required label="Age" helper="Your age">
-                                <FormControl type="number" />
-                            </FormGroup>
-
-                            <FormGroup name="select" required label="Select">
-                                <FormControl componentClass="select" placeholder="select">
-                                    <option value="">select</option>
-                                    <option value="select1">option 1</option>
-                                    <option value="select2">opton 2</option>
-                                    <option value="other">...</option>
-                                </FormControl>
-                            </FormGroup>
-
-                            <FormGroup
-                                name="addon"
-                                required
-                                label="Addon"
-                                addons={{
-                                    pre: '@'
-                                }}>
-                                <FormControl type="text" />
-                            </FormGroup>
-
-                            <div className="form-horizontal">
+            <Container fluid style={{ margin: '20px 0' }}>
+                <h3 className="text-center">react-bootstrap-formutil</h3>
+                <p />
+                <Form noValidate onSubmit={this.submit}>
+                    <CardColumns>
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>登录表单 - 纵向 - demo1</Card.Title>
                                 <FormGroup
-                                    name="job"
+                                    label="Email address"
+                                    name="demo1.email"
+                                    helper="We'll never share your email with anyone else."
                                     required
-                                    label="Job"
-                                    controlId="job"
-                                    helper="Your Job"
-                                    labelCol={{
-                                        xs: 12,
-                                        md: 2
-                                    }}
-                                    wrapperCol={{
-                                        xs: 12,
-                                        md: 10
-                                    }}>
-                                    <FormControl type="text" />
+                                    controlId="demo1.formBasicEmail">
+                                    <Form.Control type="email" placeholder="Enter email" />
                                 </FormGroup>
 
                                 <FormGroup
-                                    name="agree"
-                                    checked="yes"
-                                    unchecked="no"
+                                    label="Password"
+                                    name="demo1.password"
                                     required
-                                    label="Checkbox"
-                                    wrapperCol={{
-                                        xs: 12,
-                                        md: 10
-                                    }}
-                                    labelCol={{
-                                        xs: 12,
-                                        md: 2
-                                    }}>
-                                    <Checkbox>Checkbox</Checkbox>
+                                    controlId="demo1.formBasicPassword">
+                                    <Form.Control type="password" placeholder="Password" />
+                                </FormGroup>
+
+                                <FormGroup name="demo1.checkme" controlId="demo1.formBasicCheckbox">
+                                    <Form.Check type="checkbox" label="Check me out" />
+                                </FormGroup>
+                                <pre>{JSON.stringify(this.props.$formutil.$params.demo1, null, 2)}</pre>
+                            </Card.Body>
+                        </Card>
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>登录表单 - 横向 - demo2</Card.Title>
+                                <FormGroup
+                                    labelCol={{ sm: 4 }}
+                                    wrapperCol={{ sm: 8 }}
+                                    label="Email address"
+                                    name="demo2.email"
+                                    helper="We'll never share your email with anyone else."
+                                    required
+                                    controlId="demo2.formBasicEmail">
+                                    <Form.Control type="email" placeholder="Enter email" />
                                 </FormGroup>
 
                                 <FormGroup
-                                    name="radio"
-                                    checked="yes"
-                                    unchecked="no"
+                                    labelCol={{ sm: 4 }}
+                                    wrapperCol={{ sm: 8 }}
+                                    label="Password"
+                                    name="demo2.password"
                                     required
-                                    label="Radio"
-                                    wrapperCol={{
-                                        xs: 12,
-                                        md: 10
-                                    }}
-                                    labelCol={{
-                                        xs: 12,
-                                        md: 2
-                                    }}>
-                                    <Radio>Radio</Radio>
+                                    controlId="demo2.formBasicPassword">
+                                    <Form.Control type="password" placeholder="Password" />
                                 </FormGroup>
 
                                 <FormGroup
-                                    name="group.checkbox"
-                                    required
-                                    label="Checkbox group"
                                     wrapperCol={{
-                                        xs: 12,
-                                        md: 10
+                                        sm: {
+                                            offset: 4
+                                        }
                                     }}
-                                    labelCol={{
-                                        xs: 12,
-                                        md: 2
-                                    }}>
+                                    name="demo2.checkme"
+                                    controlId="demo2.formBasicCheckbox">
+                                    <Form.Check type="checkbox" label="Check me out" />
+                                </FormGroup>
+                                <pre>{JSON.stringify(this.props.$formutil.$params.demo2, null, 2)}</pre>
+                            </Card.Body>
+                        </Card>
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>登录表单 - 内嵌 - demo3</Card.Title>
+                                <FormGroup
+                                    addons={{
+                                        pre: 'Email address'
+                                    }}
+                                    name="demo3.email"
+                                    helper="We'll never share your email with anyone else."
+                                    required
+                                    controlId="demo3.formBasicEmail">
+                                    <Form.Control type="email" placeholder="Enter email" />
+                                </FormGroup>
+
+                                <FormGroup
+                                    addons={{
+                                        pre: 'Password'
+                                    }}
+                                    name="demo3.password"
+                                    required
+                                    controlId="demo3.formBasicPassword">
+                                    <Form.Control type="password" placeholder="Password" />
+                                </FormGroup>
+
+                                <FormGroup name="demo3.checkme" controlId="demo3.formBasicCheckbox">
+                                    <Form.Check type="checkbox" label="Check me out" />
+                                </FormGroup>
+                                <pre>{JSON.stringify(this.props.$formutil.$params.demo3, null, 2)}</pre>
+                            </Card.Body>
+                        </Card>
+
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>登录表单 - 行内 - demo4</Card.Title>
+                                <Form.Row>
+                                    <FormGroup
+                                        as={Col}
+                                        name="demo4.email"
+                                        helper="We'll never share your email with anyone else."
+                                        required
+                                        controlId="demo4.formBasicEmail">
+                                        <Form.Control type="email" placeholder="Enter email" />
+                                    </FormGroup>
+
+                                    <FormGroup
+                                        as={Col}
+                                        name="demo4.password"
+                                        required
+                                        controlId="demo4.formBasicPassword">
+                                        <Form.Control type="password" placeholder="Password" />
+                                    </FormGroup>
+
+                                    <FormGroup as={Col} name="demo4.checkme" controlId="demo4.formBasicCheckbox">
+                                        <Form.Check type="checkbox" label="Check" />
+                                    </FormGroup>
+                                </Form.Row>
+
+                                <pre>{JSON.stringify(this.props.$formutil.$params.demo4, null, 2)}</pre>
+                            </Card.Body>
+                        </Card>
+
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>单选组和多选组 - demo5</Card.Title>
+                                <FormGroup name="demo5.checkbox" required>
                                     <CheckboxGroup>
-                                        <Checkbox inline value="1">
-                                            1
-                                        </Checkbox>
-                                        <Checkbox inline value="2">
-                                            2
-                                        </Checkbox>
-                                        <Checkbox inline value="3">
-                                            3
-                                        </Checkbox>
+                                        <Form.Check
+                                            custom
+                                            checked
+                                            value="1"
+                                            type="checkbox"
+                                            id="demo5.checkbox.1"
+                                            label={`Check this custom checkbox`}
+                                        />
+
+                                        <Form.Check
+                                            custom
+                                            disabled
+                                            value="2"
+                                            type="checkbox"
+                                            label="disabled checkbox"
+                                            id="demo5.checkbox.2"
+                                        />
+                                    </CheckboxGroup>
+                                </FormGroup>
+                                <FormGroup name="demo5.radio" required>
+                                    <RadioGroup>
+                                        <Form.Check
+                                            custom
+                                            checked
+                                            value="1"
+                                            type="radio"
+                                            id="demo5.radio.1"
+                                            label={`Check this custom radio`}
+                                        />
+
+                                        <Form.Check
+                                            custom
+                                            disabled
+                                            value="2"
+                                            type="radio"
+                                            label="disabled radio"
+                                            id="demo5.radio.2"
+                                        />
+                                    </RadioGroup>
+                                </FormGroup>
+                                <FormGroup name="demo5.switch" required>
+                                    <SwitchGroup>
+                                        <Form.Check
+                                            custom
+                                            value="1"
+                                            checked
+                                            type="switch"
+                                            id="demo5.switch.1"
+                                            label={`Check this custom switch`}
+                                        />
+
+                                        <Form.Check
+                                            custom
+                                            disabled
+                                            value="2"
+                                            type="switch"
+                                            label="disabled switch"
+                                            id="demo5.switch.2"
+                                        />
+                                    </SwitchGroup>
+                                </FormGroup>
+
+                                <FormGroup name="demo5.inlineSwitch" required>
+                                    <CheckboxGroup>
+                                        <Form.Check
+                                            inline
+                                            value="1"
+                                            checked
+                                            type="switch"
+                                            id="demo5.inlineSwitch.1"
+                                            label="inline 1"
+                                        />
+
+                                        <Form.Check
+                                            inline
+                                            disabled
+                                            value="2"
+                                            type="switch"
+                                            label="inline 2"
+                                            id="demo5.inlineSwitch.2"
+                                        />
                                     </CheckboxGroup>
                                 </FormGroup>
 
-                                <FormGroup
-                                    name="group.radio"
-                                    required
-                                    label="Radio group"
-                                    wrapperCol={{
-                                        xs: 12,
-                                        md: 10
-                                    }}
-                                    labelCol={{
-                                        xs: 12,
-                                        md: 2
-                                    }}>
-                                    <RadioGroup>
-                                        <Radio value="1">1</Radio>
-                                        <Radio value="2">2</Radio>
-                                        <Radio value="3">3</Radio>
-                                    </RadioGroup>
+                                <pre>{JSON.stringify(this.props.$formutil.$params.demo5, null, 2)}</pre>
+                            </Card.Body>
+                        </Card>
+
+                        <Card>
+                            <Card.Body>
+                                <Card.Title>其他组件 - demo6</Card.Title>
+                                <FormGroup label="input" name="demo6.input" required controlId="demo6.input">
+                                    <Form.Control type="email" placeholder="Enter email" />
+                                </FormGroup>
+
+                                <FormGroup label="textarea" name="demo6.textarea" required controlId="demo6.textarea">
+                                    <Form.Control as="textarea" />
                                 </FormGroup>
 
                                 <FormGroup
-                                    name="group.buttonCheckbox"
+                                    label="select"
+                                    name="demo6.select"
+                                    helper="We'll never share your email with anyone else."
                                     required
-                                    label="ButtonGroup"
-                                    $defaultValue={[1, 2]}
-                                    wrapperCol={{
-                                        xs: 12,
-                                        md: 10
-                                    }}
-                                    labelCol={{
-                                        xs: 12,
-                                        md: 2
-                                    }}>
+                                    controlId="demo6.select">
+                                    <Form.Control as="select">
+                                        <option disabled value="">
+                                            请选择
+                                        </option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </Form.Control>
+                                </FormGroup>
+
+                                <FormGroup
+                                    label="select"
+                                    name="demo6.multipleSelect"
+                                    helper="We'll never share your email with anyone else."
+                                    required
+                                    controlId="demo6.select">
+                                    <Form.Control as="select" multiple>
+                                        <option disabled value="">
+                                            请选择
+                                        </option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                    </Form.Control>
+                                </FormGroup>
+
+
+                                <FormGroup
+                                    name="demo6.toggleButtonCheckbox"
+                                    required
+                                    controlId="demo6.toggleButtonCheckbox"
+                                    $defaultValue={[2]}>
                                     <ToggleButtonGroup type="checkbox">
-                                        <ToggleButton value={1}>option 1</ToggleButton>
-                                        <ToggleButton value={2}>option 2</ToggleButton>
-                                        <ToggleButton value={3}>option 3</ToggleButton>
+                                        <ToggleButton value={1}>Option 1</ToggleButton>
+                                        <ToggleButton value={2}>Option 2</ToggleButton>
+                                        <ToggleButton value={3}>Option 3</ToggleButton>
                                     </ToggleButtonGroup>
                                 </FormGroup>
 
                                 <FormGroup
-                                    name="group.buttonRadio"
+                                    name="demo6.toggleButtonRadio"
                                     required
-                                    $defaultValue={3}
-                                    label="ButtonGroup"
-                                    wrapperCol={{
-                                        xs: 12,
-                                        md: 10
-                                    }}
-                                    labelCol={{
-                                        xs: 12,
-                                        md: 2
-                                    }}>
+                                    controlId="demo6.toggleButtonRadio"
+                                    $defaultValue={2}>
                                     <ToggleButtonGroup type="radio">
-                                        <ToggleButton value={1}>option 1</ToggleButton>
-                                        <ToggleButton value={2}>option 2</ToggleButton>
-                                        <ToggleButton value={3}>option 3</ToggleButton>
+                                        <ToggleButton value={1}>Option 1</ToggleButton>
+                                        <ToggleButton value={2}>Option 2</ToggleButton>
+                                        <ToggleButton value={3}>Option 3</ToggleButton>
                                     </ToggleButtonGroup>
                                 </FormGroup>
-                            </div>
 
-                            <Button block bsStyle="primary" type="submit">
-                                Submit
-                            </Button>
-                        </Form>
-                    </Col>
-                    <Col xs={12} md={3}>
-                        <h4>$params</h4>
-                        <pre>{JSON.stringify(this.props.$formutil.$params, null, 2)}</pre>
-                    </Col>
-                    <Col xs={12} md={3}>
-                        <h4>$errors</h4>
-                        <pre>{JSON.stringify(this.props.$formutil.$errors, null, 2)}</pre>
-                    </Col>
-                </Row>
-            </Grid>
+                                <FormGroup name="demo6.checkbox" required controlId="demo6.checkbox">
+                                    <Form.Check custom type="checkbox" label="checkbox" />
+                                </FormGroup>
+
+                                <FormGroup name="demo6.radio" required controlId="demo6.radio">
+                                    <Form.Check custom type="radio" label="radio" />
+                                </FormGroup>
+
+                                <FormGroup name="demo6.switch" required controlId="demo6.switch">
+                                    <Form.Check type="switch" label="switch" />
+                                </FormGroup>
+
+                                <pre>{JSON.stringify(this.props.$formutil.$params.demo6, null, 2)}</pre>
+                            </Card.Body>
+                        </Card>
+                    </CardColumns>
+                    <Button variant="primary" type="submit" block>
+                        Submit
+                    </Button>
+                    <pre>{JSON.stringify(this.props.$formutil.$params, null, 2)}</pre>
+                </Form>
+            </Container>
         );
     }
 }
 
-export default App;
+export default withForm(App);
