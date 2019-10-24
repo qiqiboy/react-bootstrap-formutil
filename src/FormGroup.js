@@ -1,4 +1,5 @@
 import React, { Component, cloneElement, isValidElement, Children, Fragment } from 'react';
+import { isValidElementType } from 'react-is';
 import PropTypes from 'prop-types';
 import { EasyField } from 'react-formutil';
 import {
@@ -34,21 +35,21 @@ const _ToggleButtonGroup = isUglify ? ToggleButtonGroup : 'Uncontrolled(ToggleBu
 
 function getChildComponent(children) {
     if (children) {
-        if (typeof children.type === 'function') {
-            const func = children.type;
+        const childrenType = children.type;
 
-            if (func.formutilType) {
-                return func.formutilType;
+        if (typeof childrenType !== 'string' && isValidElementType(childrenType)) {
+            if (childrenType.formutilType) {
+                return childrenType.formutilType;
             }
 
             if (isUglify) {
-                return func;
+                return childrenType;
             }
 
-            return func.displayName || func.name;
-        } else {
-            return children.props.type || children.type;
+            return childrenType.displayName || childrenType.name;
         }
+
+        return children.props.type || children.type;
     }
 }
 

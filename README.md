@@ -24,7 +24,8 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
 > 1.  react-md [`react-md-formutil`](https://github.com/qiqiboy/react-md-formutil) [![npm](https://img.shields.io/npm/v/react-md-formutil.svg?style=flat)](https://npm.im/react-md-formutil)
 > 1.  Material-UI [`react-material-formutil`](https://github.com/qiqiboy/react-material-formutil) [![npm](https://img.shields.io/npm/v/react-material-formutil.svg?style=flat)](https://npm.im/react-material-formutil)
 
-**`react-boostrap-formutil`只适用于基于`bootstrap v3`版本的[`react-boostrap`组件库](https://5c507d49471426000887a6a7--react-bootstrap.netlify.com/getting-started/introduction)！并且目前没有更新支持`bootstrap v4`以及`react-bootstrap v1`的计划。**
+**当前版本的`react-boostrap-formutil`只适用于基于`bootstrap v3`版本的[`react-boostrap`组件库](https://5c507d49471426000887a6a7--react-bootstrap.netlify.com/getting-started/introduction)！
+如果你在使用`bootstrap v4`和`react-bootstrap v1.x`，请查看 [最新版react-bootstrap-formutil](https://github.com/qiqiboy/react-bootstrap-formutil)**
 
 你可以点此查看该版本的[`react-boostrap`组件库](https://5c507d49471426000887a6a7--react-bootstrap.netlify.com/getting-started/introduction)的文档！
 
@@ -73,10 +74,10 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
 
 ```bash
 # npm
-npm install react-bootstrap-formutil --save
+npm install react-bootstrap-formutil@v3 --save
 
 # yarn
-yarn install react-bootstrap-formutil
+yarn install react-bootstrap-formutil@v3
 ```
 
 安装适用于`bootstrap v3`的`react-bootstrap`:

@@ -7,6 +7,7 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 var reactFormutil = require('react-formutil');
 var React = require('react');
 var React__default = _interopDefault(React);
+var reactIs = require('react-is');
 var PropTypes = _interopDefault(require('prop-types'));
 var reactBootstrap = require('react-bootstrap');
 
@@ -226,21 +227,21 @@ var _ToggleButtonGroup = isUglify ? reactBootstrap.ToggleButtonGroup : 'Uncontro
 
 function getChildComponent(children) {
   if (children) {
-    if (typeof children.type === 'function') {
-      var func = children.type;
+    var childrenType = children.type;
 
-      if (func.formutilType) {
-        return func.formutilType;
+    if (typeof childrenType !== 'string' && reactIs.isValidElementType(childrenType)) {
+      if (childrenType.formutilType) {
+        return childrenType.formutilType;
       }
 
       if (isUglify) {
-        return func;
+        return childrenType;
       }
 
-      return func.displayName || func.name;
-    } else {
-      return children.props.type || children.type;
+      return childrenType.displayName || childrenType.name;
     }
+
+    return children.props.type || children.type;
   }
 }
 
@@ -341,9 +342,6 @@ function (_Component) {
         case 'number':
         case 'empty':
           fieldProps.__TYPE__ = component;
-          break;
-
-        default:
           break;
       }
 
@@ -520,11 +518,11 @@ RadioGroup.propTypes = {
   value: PropTypes.string
 };
 
-Object.keys(reactFormutil).forEach(function (key) {
-  Object.defineProperty(exports, key, {
+Object.keys(reactFormutil).forEach(function (k) {
+  if (k !== 'default') Object.defineProperty(exports, k, {
     enumerable: true,
     get: function () {
-      return reactFormutil[key];
+      return reactFormutil[k];
     }
   });
 });

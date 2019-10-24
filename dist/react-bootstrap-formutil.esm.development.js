@@ -1,6 +1,7 @@
 import { EasyField } from 'react-formutil';
 export * from 'react-formutil';
 import React, { Fragment, Children, cloneElement, Component, isValidElement } from 'react';
+import { isValidElementType } from 'react-is';
 import PropTypes from 'prop-types';
 import { FormControl, Col, ControlLabel, InputGroup, HelpBlock, FormGroup, Checkbox, Radio, ToggleButtonGroup } from 'react-bootstrap';
 
@@ -220,21 +221,21 @@ var _ToggleButtonGroup = isUglify ? ToggleButtonGroup : 'Uncontrolled(ToggleButt
 
 function getChildComponent(children) {
   if (children) {
-    if (typeof children.type === 'function') {
-      var func = children.type;
+    var childrenType = children.type;
 
-      if (func.formutilType) {
-        return func.formutilType;
+    if (typeof childrenType !== 'string' && isValidElementType(childrenType)) {
+      if (childrenType.formutilType) {
+        return childrenType.formutilType;
       }
 
       if (isUglify) {
-        return func;
+        return childrenType;
       }
 
-      return func.displayName || func.name;
-    } else {
-      return children.props.type || children.type;
+      return childrenType.displayName || childrenType.name;
     }
+
+    return children.props.type || children.type;
   }
 }
 
@@ -335,9 +336,6 @@ function (_Component) {
         case 'number':
         case 'empty':
           fieldProps.__TYPE__ = component;
-          break;
-
-        default:
           break;
       }
 
