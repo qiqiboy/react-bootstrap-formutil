@@ -122,7 +122,7 @@ class _FormGroup extends Component {
             ? {
                   size: addons.size
               }
-            : {};
+            : undefined;
 
         if (addons) {
             if (addons.pre && !isValidElement(addons.pre)) {
@@ -209,7 +209,7 @@ class _FormGroup extends Component {
 
                         ...restProps
                     } = $handleProps;
-                    const { $invalid, $dirty, $touched, $getFirstError } = $fieldutil;
+                    const { $invalid, $dirty, $touched, $focused, $getFirstError } = $fieldutil;
 
                     /** @type {any} */
                     let childProps;
@@ -246,7 +246,8 @@ class _FormGroup extends Component {
                                                   [].slice
                                                       .call(ev.target.options)
                                                       .filter(option => option.selected)
-                                                      .map(option => option.value), ev
+                                                      .map(option => option.value),
+                                                  ev
                                               );
                                           }
                                         : (ev, ...rest) => {
@@ -288,11 +289,27 @@ class _FormGroup extends Component {
 
                     if (hasError) {
                         childProps.isInvalid = true;
+                        childProps.feedback = <FormText>{$getFirstError()}</FormText>;
+
+                        if (addonWrapperProps) {
+                            addonWrapperProps.className = 'is-invalid';
+                        }
                     }
 
                     if (feedback && !$invalid) {
                         childProps.isValid = true;
                     }
+
+                    groupProps.className = [
+                        groupProps.className,
+                        hasError && 'has-error',
+                        $invalid && 'is-invalid',
+                        $dirty && 'is-dirty',
+                        $touched && 'is-touched',
+                        $focused && 'is-focused'
+                    ]
+                        .filter(Boolean)
+                        .join(' ');
 
                     return (
                         <FormGroup {...restProps} {...groupProps}>

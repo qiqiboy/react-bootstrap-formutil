@@ -57,6 +57,7 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
         * [`ToggleButtonGroup`](#togglebuttongroup)
         * [`CheckboxGroup` `RadioGroup` `SwitchGroup`](#checkboxgroup-radiogroup-switchgroup)
 - [FAQ](#faq)
+    + [`使用 addons/InputGroup 时错误提示不显示`](#使用-addonsinputgroup-时错误提示不显示)
     + [`给组件设置的 onChange、onFocus 等方法无效、不执行`](#给组件设置的-onchangeonfocus-等方法无效不执行)
     + [`在生产环境(NODE_ENV==='production')部分组件调用有异常？`](#在生产环境node_envproduction部分组件调用有异常)
 
@@ -68,14 +69,14 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
 
 由于目前流行的`bootstrap`版本主要有`v3`和`v4`，其对应的`react-bootstrap`也有两个相对应的版本，所以我们也提供了两个版本供选择下载。
 
-该版本适用于 `bootstrap@4.x` 和 `react-bootstrap@1.x`。**如果你项目中使用的是 `bootstrap@3.x` 和 `react-bootstrap@0.32.x`，请查看 [react-bootstrap-formutil v3](https://github.com/qiqiboy/react-bootstrap-formutil/tree/v3)**。
+该版本适用于 `bootstrap@4.x` 和 `react-bootstrap@1.x`。**如果你项目中使用的是 `bootstrap@3.x` 和 `react-bootstrap@0.32.x`，请查看 [react-bootstrap-formutil@classic](https://github.com/qiqiboy/react-bootstrap-formutil/tree/v3)**。
 
 ```bash
 # npm
-npm install react-bootstrap-formutil --save
+npm install react-bootstrap-formutil@next --save
 
 # yarn
-yarn install react-bootstrap-formutil
+yarn install react-bootstrap-formutil@next
 ```
 
 ### 使用 Usage
@@ -83,7 +84,7 @@ yarn install react-bootstrap-formutil
 > `react-bootstrap-formutil` 整合了 `react-formutil` 的组件，所以可以直接从`react-bootstrap-formutil`中导出所需要的
 > `react-formutil` 组件。不用单独从 `react-formutil` 中导出。
 
-**本文档适用于 `bootstrap@4.x` 和 `react-bootstrap@1.x` 版本，如果你要查看早期`react-bootstrap@0.32`的文档，请查看 [react-bootstrap-formutil v3](https://github.com/qiqiboy/react-bootstrap-formutil/tree/v3)**
+**本文档适用于 `bootstrap@4.x` 和 `react-bootstrap@1.x` 版本，如果你要查看早期`react-bootstrap@0.32`的文档，请查看 [react-bootstrap-formutil@classic](https://github.com/qiqiboy/react-bootstrap-formutil/tree/v3)**
 
 先看一个使用示例（点击查看在线完整示例 :
 [react-bootstrap-formutil on codesandbox.io](https://codesandbox.io/s/rmj2l1o80o)）：
@@ -490,6 +491,16 @@ import { CheckboxGroup, RadioGroup, SwitchGroup } from 'react-bootstrap-formutil
 
 ### FAQ
 
+#### `使用 addons/InputGroup 时错误提示不显示`
+
+请添加以下 css 即可：
+
+```css
+.input-group.is-invalid ~ .invalid-feedback {
+    display: block;
+}
+```
+
 #### `给组件设置的 onChange、onFocus 等方法无效、不执行`
 
 `FormGroup`会覆盖掉直接添加到 react-bootstrap 组件上的`onFocus` `onBlur` `onChange`方法，所以如果需要这三个事件方法，需要添加到
@@ -503,7 +514,7 @@ import { CheckboxGroup, RadioGroup, SwitchGroup } from 'react-bootstrap-formutil
 
 #### `在生产环境(NODE_ENV==='production')部分组件调用有异常？`
 
-如果在生产环境，发现例如`Checkbox` `Radio` `Switch`等组件无法正确捕获用户输入的值，这种情况一般是由于项目中使用了`babel-plugin-import`插件。
+如果在生产环境，发现例如`Form.Check` `ToggleButtonGroup` 等组件无法正确捕获用户输入的值，这种情况一般是由于项目中使用了`babel-plugin-import`插件。
 
 `react-bootstrap-formutil`中是使用 `import { FormControl } from 'react-bootstrap'` 这种写法来调用 `FormControl` 组件的，而`babel-plugin-import`插件会将项目源代码中的类似语句，替换成`import FormControl from 'react-bootstrap/lib/FormControl'`。这两种写法获取到的`Switch`其实并不是严格意义上的相等，前者是对后者的又一层导出封装。
 

@@ -340,7 +340,7 @@ function (_Component) {
       var AddonWrapper = addons ? InputGroup : Fragment;
       var addonWrapperProps = addons ? {
         size: addons.size
-      } : {};
+      } : undefined;
 
       if (addons) {
         if (addons.pre && !isValidElement(addons.pre)) {
@@ -421,6 +421,7 @@ function (_Component) {
           var $invalid = $fieldutil.$invalid,
               $dirty = $fieldutil.$dirty,
               $touched = $fieldutil.$touched,
+              $focused = $fieldutil.$focused,
               $getFirstError = $fieldutil.$getFirstError;
           /** @type {any} */
 
@@ -500,12 +501,18 @@ function (_Component) {
 
           if (hasError) {
             childProps.isInvalid = true;
+            childProps.feedback = React.createElement(FormText, null, $getFirstError());
+
+            if (addonWrapperProps) {
+              addonWrapperProps.className = 'is-invalid';
+            }
           }
 
           if (feedback && !$invalid) {
             childProps.isValid = true;
           }
 
+          groupProps.className = [groupProps.className, hasError && 'has-error', $invalid && 'is-invalid', $dirty && 'is-dirty', $touched && 'is-touched', $focused && 'is-focused'].filter(Boolean).join(' ');
           return React.createElement(FormGroup, Object.assign({}, restProps, groupProps), label, React.createElement(Wrapper, wrapperCol, React.createElement(AddonWrapper, addonWrapperProps, addons.pre, cloneElement(children, childProps), addons.end), hasError ? React.createElement(HelpBlock, {
             type: "invalid"
           }, React.createElement(FormText, null, $getFirstError())) : helper), extraNode);
