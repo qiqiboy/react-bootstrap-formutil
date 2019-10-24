@@ -1,10 +1,10 @@
-# react-bootstrap-formutil
+# react-bootstrap-formutil@classic
 
-[![npm](https://img.shields.io/npm/v/react-bootstrap-formutil.svg?style=flat)](https://npm.im/react-bootstrap-formutil)
+[![npm](https://img.shields.io/npm/v/react-bootstrap-formutil/classic.svg?style=flat)](https://www.npmjs.com/package/react-bootstrap-formutil/v/classic)
 [![peerDependencies](https://img.shields.io/npm/dependency-version/react-bootstrap-formutil/peer/react.svg?color=yellowgreen)](https://reactjs.org)
 [![definitionTypes](https://img.shields.io/npm/types/react-bootstrap-formutil.svg)](https://github.com/qiqiboy/react-bootstrap-formutil/blob/master/index.d.ts)
-[![gzip](https://img.shields.io/bundlephobia/minzip/react-bootstrap-formutil.svg)](https://npm.im/react-bootstrap-formutil)
-[![download](https://img.shields.io/npm/dm/react-bootstrap-formutil.svg)](https://npm.im/react-bootstrap-formutil)
+[![gzip](https://img.shields.io/bundlephobia/minzip/react-bootstrap-formutil.svg)](https://www.npmjs.com/package/react-bootstrap-formutil/v/classic)
+[![download](https://img.shields.io/npm/dm/react-bootstrap-formutil.svg)](https://www.npmjs.com/package/react-bootstrap-formutil/v/classic)
 [![issues](https://img.shields.io/github/issues/qiqiboy/react-bootstrap-formutil.svg)](https://github.com/qiqiboy/react-bootstrap-formutil/issues)
 [![license](https://img.shields.io/github/license/qiqiboy/react-bootstrap-formutil.svg)](https://github.com/qiqiboy/react-bootstrap-formutil/blob/master/LICENSE)
 [![github](https://img.shields.io/github/last-commit/qiqiboy/react-bootstrap-formutil.svg)](https://github.com/qiqiboy/react-bootstrap-formutil)
@@ -25,7 +25,7 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
 > 1.  Material-UI [`react-material-formutil`](https://github.com/qiqiboy/react-material-formutil) [![npm](https://img.shields.io/npm/v/react-material-formutil.svg?style=flat)](https://npm.im/react-material-formutil)
 
 **当前版本的`react-boostrap-formutil`只适用于基于`bootstrap v3`版本的[`react-boostrap`组件库](https://5c507d49471426000887a6a7--react-bootstrap.netlify.com/getting-started/introduction)！
-如果你在使用`bootstrap v4`和`react-bootstrap v1.x`，请查看 [最新版react-bootstrap-formutil](https://github.com/qiqiboy/react-bootstrap-formutil)**
+如果你在使用`bootstrap v4`和`react-bootstrap v1.x`，请查看 [最新版 react-bootstrap-formutil](https://github.com/qiqiboy/react-bootstrap-formutil)**
 
 你可以点此查看该版本的[`react-boostrap`组件库](https://5c507d49471426000887a6a7--react-bootstrap.netlify.com/getting-started/introduction)的文档！
 
@@ -70,14 +70,14 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
 
 [![react-bootstrap-formutil](https://nodei.co/npm/react-bootstrap-formutil.png?compact=true)](https://npm.im/react-bootstrap-formutil)
 
-安装最新版的`react-bootstrap-formutil`:
+安装适用于 `bootstrap v3` 的`react-bootstrap-formutil@classic`:
 
 ```bash
 # npm
-npm install react-bootstrap-formutil@v3 --save
+npm install react-bootstrap-formutil@classic --save
 
 # yarn
-yarn install react-bootstrap-formutil@v3
+yarn install react-bootstrap-formutil@classic
 ```
 
 安装适用于`bootstrap v3`的`react-bootstrap`:
@@ -147,23 +147,23 @@ class MyForm extends Component {
 
 ##### `$defaultValue`
 
-设置该表单项的默认值 _（同`react-formutil`的`Field`同名参数，可以参考[$defaultvalue](https://github.com/qiqiboy/react-formutil#defaultvalue)）_
+设置该表单项的默认值 _（同`react-formutil`的`Field`同名参数，可以参考[\$defaultvalue](https://github.com/qiqiboy/react-formutil#defaultvalue)）_
 
 ##### `$validators`
 
 设置校验方法 _（同`react-formutil`的`Field`同名参数 , 可以参考
-[$validators](https://github.com/qiqiboy/react-formutil#validators)）_
+[\$validators](https://github.com/qiqiboy/react-formutil#validators)）_
 
 > 同 react-formutil 的 EasyField，FormControl 也内置了同样的校验规则：
 
-> *   `required` 必填 `required`
-> *   `maxLength` 。最大输入长度，有效输入时才会校验 `maxLength="100"`
-> *   `minLength` 最小输入长度，有效输入时才会校验 `minLength="10"`
-> *   `max` 最大输入数值，仅支持 Number 比较。有效输入时才会校验 `max="100"`
-> *   `min` 最小输入数值，仅支持 Number 比较。有效输入时才会校验 `min="10"`
-> *   `pattern` 正则匹配。有效输入时才会校验 `pattern={/^\d+$/}`
-> *   `enum` 枚举值检测。有效输入时才会校验 `enum={[1,2,3]}`
-> *   `checker` 自定义校验函数。`checker={value => value > 10 && value < 100 || ' 输入比如大于 10 小与 100'}`
+> -   `required` 必填 `required`
+> -   `maxLength` 。最大输入长度，有效输入时才会校验 `maxLength="100"`
+> -   `minLength` 最小输入长度，有效输入时才会校验 `minLength="10"`
+> -   `max` 最大输入数值，仅支持 Number 比较。有效输入时才会校验 `max="100"`
+> -   `min` 最小输入数值，仅支持 Number 比较。有效输入时才会校验 `min="10"`
+> -   `pattern` 正则匹配。有效输入时才会校验 `pattern={/^\d+$/}`
+> -   `enum` 枚举值检测。有效输入时才会校验 `enum={[1,2,3]}`
+> -   `checker` 自定义校验函数。`checker={value => value > 10 && value < 100 || ' 输入比如大于 10 小与 100'}`
 
 注：校验属性的值为 `null` 时表示不进行该校验
 
@@ -401,10 +401,10 @@ class MyForm extends Component {
 
 `setErrorLevel` 该方法可以用来全局设置错误信息何时出现，有三个级别可以设置：
 
-*   `0` 当`$dirty` `$touched` `invalid` 都为 true 时
-*   `1` 当`$dirty` `invalid` 都为 true 时
-*   `2` 当`invalid` 为 true 时
-*   `off` 关闭错误显示
+-   `0` 当`$dirty` `$touched` `invalid` 都为 true 时
+-   `1` 当`$dirty` `invalid` 都为 true 时
+-   `2` 当`invalid` 为 true 时
+-   `off` 关闭错误显示
 
 默认值为 `1`
 
