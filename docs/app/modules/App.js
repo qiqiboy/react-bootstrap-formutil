@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { withForm, FormGroup, CheckboxGroup, RadioGroup, SwitchGroup } from '../src';
 import { Container, Form, Button, Card, CardColumns, Col, ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
-import './style.scss';
 
 class App extends Component {
     submit = ev => {

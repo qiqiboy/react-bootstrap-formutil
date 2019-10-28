@@ -16,6 +16,7 @@ import {
     ToggleButtonGroup
 } from 'react-bootstrap';
 import CheckboxGroup from './CheckboxGroup';
+import { insertRule } from './helper';
 
 let errorLevelGlobal = 1;
 
@@ -289,7 +290,6 @@ class _FormGroup extends Component {
 
                     if (hasError) {
                         childProps.isInvalid = true;
-                        childProps.feedback = <FormText>{$getFirstError()}</FormText>;
 
                         if (addonWrapperProps) {
                             addonWrapperProps.className = 'is-invalid';
@@ -338,3 +338,6 @@ class _FormGroup extends Component {
 }
 
 export default _FormGroup;
+
+insertRule('.valid-feedback:empty,.invalid-feedback:empty', 'display: none !important');
+insertRule('.has-error .invalid-feedback', 'display: block');

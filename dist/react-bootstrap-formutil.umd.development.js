@@ -513,6 +513,25 @@
     value: PropTypes.array
   };
 
+  var styleSheet;
+
+  try {
+    var style = document.createElement('style');
+    style.type = 'text/css';
+    document.getElementsByTagName('head')[0].appendChild(style);
+    styleSheet = document.styleSheets[document.styleSheets.length - 1];
+  } catch (err) {}
+
+  function insertRule(selector, content) {
+    if (styleSheet) {
+      if (styleSheet.insertRule) {
+        styleSheet.insertRule("".concat(selector, " { ").concat(content, " }"), 0);
+      } else if (styleSheet.addRule) {
+        styleSheet.addRule(selector, content, 0);
+      }
+    }
+  }
+
   var errorLevelGlobal = 1;
   /**
    * 0 dirty & invalid & touched
@@ -777,7 +796,6 @@
 
             if (hasError) {
               childProps.isInvalid = true;
-              childProps.feedback = React__default.createElement(reactBootstrap.FormText, null, $getFirstError());
 
               if (addonWrapperProps) {
                 addonWrapperProps.className = 'is-invalid';
@@ -812,6 +830,8 @@
     errorLevel: PropTypes.oneOf([0, 1, 2, 'off']) // $parser $formatter checked unchecked $validators validMessage等传递给 EasyField 组件的额外参数
 
   };
+  insertRule('.valid-feedback:empty,.invalid-feedback:empty', 'display: none !important');
+  insertRule('.has-error .invalid-feedback', 'display: block');
 
   var RadioGroup =
   /*#__PURE__*/

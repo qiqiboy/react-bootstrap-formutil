@@ -57,7 +57,6 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
         * [`ToggleButtonGroup`](#togglebuttongroup)
         * [`CheckboxGroup` `RadioGroup` `SwitchGroup`](#checkboxgroup-radiogroup-switchgroup)
 - [FAQ](#faq)
-    + [`使用 addons/InputGroup 时错误提示不显示`](#使用-addonsinputgroup-时错误提示不显示)
     + [`给组件设置的 onChange、onFocus 等方法无效、不执行`](#给组件设置的-onchangeonfocus-等方法无效不执行)
     + [`在生产环境(NODE_ENV==='production')部分组件调用有异常？`](#在生产环境node_envproduction部分组件调用有异常)
 
@@ -490,16 +489,6 @@ import { CheckboxGroup, RadioGroup, SwitchGroup } from 'react-bootstrap-formutil
 ```
 
 ### FAQ
-
-#### `使用 addons/InputGroup 时错误提示不显示`
-
-请添加以下 css 即可：
-
-```css
-.input-group.is-invalid ~ .invalid-feedback {
-    display: block;
-}
-```
 
 #### `给组件设置的 onChange、onFocus 等方法无效、不执行`
 
