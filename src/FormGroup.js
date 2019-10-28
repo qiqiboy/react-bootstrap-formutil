@@ -126,18 +126,18 @@ class _FormGroup extends Component {
             : undefined;
 
         if (addons) {
-            if (addons.pre && !isValidElement(addons.pre)) {
+            if (addons.pre) {
                 addons.pre = (
                     <InputGroup.Prepend>
-                        <InputGroup.Text>{addons.pre}</InputGroup.Text>
+                        {isValidElement(addons.pre) ? addons.pre : <InputGroup.Text>{addons.pre}</InputGroup.Text>}
                     </InputGroup.Prepend>
                 );
             }
 
-            if (addons.end && !isValidElement(addons.end)) {
+            if (addons.end) {
                 addons.end = (
                     <InputGroup.Append>
-                        <InputGroup.Text>{addons.end}</InputGroup.Text>
+                        {isValidElement(addons.end) ? addons.end : <InputGroup.Text>{addons.end}</InputGroup.Text>}
                     </InputGroup.Append>
                 );
             }

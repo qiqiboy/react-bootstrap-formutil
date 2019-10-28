@@ -362,12 +362,12 @@ function (_Component) {
       } : undefined;
 
       if (addons) {
-        if (addons.pre && !isValidElement(addons.pre)) {
-          addons.pre = React.createElement(InputGroup.Prepend, null, React.createElement(InputGroup.Text, null, addons.pre));
+        if (addons.pre) {
+          addons.pre = React.createElement(InputGroup.Prepend, null, isValidElement(addons.pre) ? addons.pre : React.createElement(InputGroup.Text, null, addons.pre));
         }
 
-        if (addons.end && !isValidElement(addons.end)) {
-          addons.end = React.createElement(InputGroup.Append, null, React.createElement(InputGroup.Text, null, addons.end));
+        if (addons.end) {
+          addons.end = React.createElement(InputGroup.Append, null, isValidElement(addons.end) ? addons.end : React.createElement(InputGroup.Text, null, addons.end));
         }
       } else {
         addons = {};

@@ -368,12 +368,12 @@ function (_Component) {
       } : undefined;
 
       if (addons) {
-        if (addons.pre && !React.isValidElement(addons.pre)) {
-          addons.pre = React__default.createElement(reactBootstrap.InputGroup.Prepend, null, React__default.createElement(reactBootstrap.InputGroup.Text, null, addons.pre));
+        if (addons.pre) {
+          addons.pre = React__default.createElement(reactBootstrap.InputGroup.Prepend, null, React.isValidElement(addons.pre) ? addons.pre : React__default.createElement(reactBootstrap.InputGroup.Text, null, addons.pre));
         }
 
-        if (addons.end && !React.isValidElement(addons.end)) {
-          addons.end = React__default.createElement(reactBootstrap.InputGroup.Append, null, React__default.createElement(reactBootstrap.InputGroup.Text, null, addons.end));
+        if (addons.end) {
+          addons.end = React__default.createElement(reactBootstrap.InputGroup.Append, null, React.isValidElement(addons.end) ? addons.end : React__default.createElement(reactBootstrap.InputGroup.Text, null, addons.end));
         }
       } else {
         addons = {};
