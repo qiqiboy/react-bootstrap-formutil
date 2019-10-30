@@ -56,6 +56,7 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
         * [`InputGroup`](#inputgroup)
         * [`ToggleButtonGroup`](#togglebuttongroup)
         * [`CheckboxGroup` `RadioGroup` `SwitchGroup`](#checkboxgroup-radiogroup-switchgroup)
+    + [`动态className`](#动态classname)
 - [FAQ](#faq)
     + [`给组件设置的 onChange、onFocus 等方法无效、不执行`](#给组件设置的-onchangeonfocus-等方法无效不执行)
     + [`在生产环境(NODE_ENV==='production')部分组件调用有异常？`](#在生产环境node_envproduction部分组件调用有异常)
@@ -68,7 +69,7 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
 
 由于目前流行的`bootstrap`版本主要有`v3`和`v4`，其对应的`react-bootstrap`也有两个相对应的版本，所以我们也提供了两个版本供选择下载。
 
-该版本适用于 `bootstrap@4.x` 和 `react-bootstrap@1.x`。**如果你项目中使用的是 `bootstrap@3.x` 和 `react-bootstrap@0.32.x`，请查看 [react-bootstrap-formutil@classic](https://github.com/qiqiboy/react-bootstrap-formutil/tree/v3)**。
+该版本适用于 `bootstrap@4.x` 和 `react-bootstrap@1.x`。**如果你项目中使用的是 `bootstrap@3.x` 和 `react-bootstrap@0.32.x`，请查看 [react-bootstrap-formutil@classic](https://github.com/qiqiboy/react-bootstrap-formutil/tree/classic)**。
 
 ```bash
 # npm
@@ -83,7 +84,7 @@ yarn install react-bootstrap-formutil@next
 > `react-bootstrap-formutil` 整合了 `react-formutil` 的组件，所以可以直接从`react-bootstrap-formutil`中导出所需要的
 > `react-formutil` 组件。不用单独从 `react-formutil` 中导出。
 
-**本文档适用于 `bootstrap@4.x` 和 `react-bootstrap@1.x` 版本，如果你要查看早期`react-bootstrap@0.32`的文档，请查看 [react-bootstrap-formutil@classic](https://github.com/qiqiboy/react-bootstrap-formutil/tree/v3)**
+**本文档适用于 `bootstrap@4.x` 和 `react-bootstrap@1.x` 版本，如果你要查看早期`react-bootstrap@0.32`的文档，请查看 [react-bootstrap-formutil@classic](https://github.com/qiqiboy/react-bootstrap-formutil/tree/classic)**
 
 先看一个使用示例（点击查看在线完整示例 :
 [react-bootstrap-formutil on codesandbox.io](https://codesandbox.io/s/rmj2l1o80o)）：
@@ -487,6 +488,20 @@ setErrorLevel(0);
 ```javascript
 import { CheckboxGroup, RadioGroup, SwitchGroup } from 'react-bootstrap-formutil';
 ```
+
+#### `动态className`
+
+`FormGroup`会自动给表单节点增加与该表单项校验状态相关的 className：
+
+-   `has-error`
+-   `is-invalid`
+-   `is-valid`
+-   `is-touched`
+-   `is-untouched`
+-   `is-focused`
+-   `is-unfocused`
+-   `is-dirty`
+-   `is-pristine`
 
 ### FAQ
 

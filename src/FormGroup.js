@@ -290,10 +290,6 @@ class _FormGroup extends Component {
 
                     if (hasError) {
                         childProps.isInvalid = true;
-
-                        if (addonWrapperProps) {
-                            addonWrapperProps.className = 'is-invalid';
-                        }
                     }
 
                     if (feedback && !$invalid) {
@@ -303,10 +299,10 @@ class _FormGroup extends Component {
                     groupProps.className = [
                         groupProps.className,
                         hasError && 'has-error',
-                        $invalid && 'is-invalid',
-                        $dirty && 'is-dirty',
-                        $touched && 'is-touched',
-                        $focused && 'is-focused'
+                        $invalid ? 'is-invalid' : 'is-valid',
+                        $dirty ? 'is-dirty' : 'is-pristine',
+                        $touched ? 'is-touched' : 'is-untouched',
+                        $focused ? 'is-focused' : 'is-unfocused'
                     ]
                         .filter(Boolean)
                         .join(' ');

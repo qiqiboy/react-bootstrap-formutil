@@ -526,17 +526,13 @@ function (_Component) {
 
           if (hasError) {
             childProps.isInvalid = true;
-
-            if (addonWrapperProps) {
-              addonWrapperProps.className = 'is-invalid';
-            }
           }
 
           if (feedback && !$invalid) {
             childProps.isValid = true;
           }
 
-          groupProps.className = [groupProps.className, hasError && 'has-error', $invalid && 'is-invalid', $dirty && 'is-dirty', $touched && 'is-touched', $focused && 'is-focused'].filter(Boolean).join(' ');
+          groupProps.className = [groupProps.className, hasError && 'has-error', $invalid ? 'is-invalid' : 'is-valid', $dirty ? 'is-dirty' : 'is-pristine', $touched ? 'is-touched' : 'is-untouched', $focused ? 'is-focused' : 'is-unfocused'].filter(Boolean).join(' ');
           return React__default.createElement(reactBootstrap.FormGroup, Object.assign({}, restProps, groupProps), label, React__default.createElement(Wrapper, wrapperCol, React__default.createElement(AddonWrapper, addonWrapperProps, addons.pre, React.cloneElement(children, childProps), addons.end), hasError ? React__default.createElement(HelpBlock, {
             type: "invalid"
           }, React__default.createElement(reactBootstrap.FormText, null, $getFirstError())) : helper), extraNode);
