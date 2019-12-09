@@ -318,7 +318,7 @@ class _FormGroup extends Component {
                                 </AddonWrapper>
                                 {hasError ? (
                                     <HelpBlock type="invalid">
-                                        <FormText>{$getFirstError()}</FormText>
+                                        {$getFirstError()}
                                     </HelpBlock>
                                 ) : (
                                     helper

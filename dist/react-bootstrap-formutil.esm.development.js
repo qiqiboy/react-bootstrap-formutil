@@ -529,7 +529,7 @@ function (_Component) {
           groupProps.className = [groupProps.className, hasError && 'has-error', $invalid ? 'is-invalid' : 'is-valid', $dirty ? 'is-dirty' : 'is-pristine', $touched ? 'is-touched' : 'is-untouched', $focused ? 'is-focused' : 'is-unfocused'].filter(Boolean).join(' ');
           return React.createElement(FormGroup, Object.assign({}, restProps, groupProps), label, React.createElement(Wrapper, wrapperCol, React.createElement(AddonWrapper, addonWrapperProps, addons.pre, cloneElement(children, childProps), addons.end), hasError ? React.createElement(HelpBlock, {
             type: "invalid"
-          }, React.createElement(FormText, null, $getFirstError())) : helper), extraNode);
+          }, $getFirstError()) : helper), extraNode);
         }
       }));
     }
