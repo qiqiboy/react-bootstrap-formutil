@@ -74,10 +74,10 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
 
 ```bash
 # npm
-npm install react-bootstrap-formutil@next --save
+npm install react-bootstrap-formutil --save
 
 # yarn
-yarn install react-bootstrap-formutil@next
+yarn install react-bootstrap-formutil
 ```
 
 ### 使用 Usage
