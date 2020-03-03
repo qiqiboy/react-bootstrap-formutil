@@ -60,6 +60,7 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
 - [FAQ](#faq)
     + [`给组件设置的 onChange、onFocus 等方法无效、不执行`](#给组件设置的-onchangeonfocus-等方法无效不执行)
     + [`在生产环境(NODE_ENV==='production')部分组件调用有异常？`](#在生产环境node_envproduction部分组件调用有异常)
+    + [`如何正确的使用FormGroup嵌套渲染多个节点元素？`](#如何正确的使用formgroup嵌套渲染多个节点元素)
 
 <!-- vim-markdown-toc -->
 
@@ -128,7 +129,7 @@ class MyForm extends Component {
 
 `FormGroup`提供了与`react-bootstrap`中同名组件一样的 UI 与状态展示功能，所以你完全可以使用`react-bootstrap-formutil`中的`FormGroup`替代`react-bootstrap`中的该组件。
 
-> `FormGroup`下只允许放置一个表单组件，不允许多个。
+> 如果给 `FormGroup` 传递了多个子节点，可能会出现无法非预期的异常情况。你可以了解[`如何正确的使用FormGroup嵌套渲染多个节点元素？`](#如何正确的使用formgroup嵌套渲染多个节点元素)。
 
 `FormGroup`基于`react-formutil`中的[`<EasyField />`](https://github.com/qiqiboy/react-formutil#easyfield-)组件实现，同名属性参数用法可以更多参考[`<EasyField />`](https://github.com/qiqiboy/react-formutil#easyfield-)。
 
@@ -542,4 +543,23 @@ import { CheckboxGroup, RadioGroup, SwitchGroup } from 'react-bootstrap-formutil
         ]]
     }
 }
+```
+
+#### `如何正确的使用FormGroup嵌套渲染多个节点元素？`
+
+你可以通过给给`children`属性传递`render props`函数，来自由定义要渲染出的节点。但是请注意，当传递一个`render props`函数时，需要手动绑定相关绑定事件和 value 属性！
+
+该`children`函数接受一个`$fieldHandler`的对象，默认情况下其包含`value` `onChange` `onFocus` `onBlur`四个属性，但是如果你给`FormItem`传递了`valuePropName`等属性的话，这个值将会变为你通过`valuePropName`所定义的名字。
+
+更具体解释可以参考 [**react-formutil.\$fieldHandler**](https://github.com/qiqiboy/react-formutil#fieldhandler)
+
+```typescript
+<FormGroup name="username">
+    {$fieldHandler => (
+        <>
+            <FormControl {...$fieldHandler} />
+            <div>其它节点内容</div>
+        </>
+    )}
+</FormGroup>
 ```

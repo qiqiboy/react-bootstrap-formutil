@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { ColProps } from 'react-bootstrap';
-import { BaseEasyFieldComponentProps, OtherKeys } from 'react-formutil';
+import { BaseEasyFieldComponentProps, $FieldHandler, OtherKeys } from 'react-formutil';
 
 export * from 'react-formutil';
 
@@ -25,7 +25,7 @@ export interface FormGroupComponentProps<T = any, P = {}, Fields = {}, WeakField
     };
     feedback?: boolean;
     errorLevel?: ErrorLevel;
-    children: React.ReactElement<any>;
+    children: React.ReactElement<any> | (($fieldHandler: Partial<$FieldHandler<T>> & OtherKeys) => React.ReactNode);
 
     controlId?: string;
     className?: string;

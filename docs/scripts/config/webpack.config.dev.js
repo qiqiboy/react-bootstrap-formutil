@@ -7,7 +7,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
-const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 const DirectoryNamedWebpackPlugin = require('directory-named-webpack-plugin');
 const getClientEnvironment = require('./env');
@@ -77,7 +76,8 @@ module.exports = {
         chunkFilename: 'static/js/[name].[hash:8].js',
         publicPath: publicPath,
         crossOriginLoading: 'anonymous',
-        devtoolModuleFilenameTemplate: info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')
+        devtoolModuleFilenameTemplate: info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
+        globalObject: 'this'
     },
     optimization: {
         runtimeChunk: 'single',
@@ -135,7 +135,7 @@ module.exports = {
                         loader: require.resolve('eslint-loader')
                     }
                 ],
-                include: paths.appSrc
+                include: [paths.formutilSrc, paths.appSrc]
             },
             {
                 oneOf: [
@@ -150,7 +150,9 @@ module.exports = {
                                 loader: require.resolve('html-loader'),
                                 options: {
                                     url(url) {
-                                        return !/\.(webp|png|jpeg|jpg|gif|svg|mp3|wmv|mp4|ogg|webm)$/.test(url);
+                                        return !/\.(webp|png|jpeg|jpg|gif|svg|mp3|wmv|mp4|ogg|webm|s[ac]ss|css|less|m?[tj]sx?)$/.test(
+                                            url
+                                        );
                                     },
                                     import: true
                                 }
@@ -159,7 +161,7 @@ module.exports = {
                     },
                     {
                         test: /\.(js|mjs|jsx|ts|tsx)$/,
-                        include: paths.appSrc,
+                        include: [paths.formutilSrc, paths.appSrc],
                         loader: require.resolve('babel-loader'),
                         options: {
                             customize: require.resolve('babel-preset-react-app/webpack-overrides'),
@@ -176,7 +178,8 @@ module.exports = {
                                 ]
                             ],
                             cacheDirectory: true,
-                            cacheCompression: false
+                            cacheCompression: false,
+                            rootMode: 'upward'
                         }
                     },
                     {
@@ -244,7 +247,7 @@ module.exports = {
                     {
                         test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)$/,
                         loader: require.resolve('file-loader'),
-                        query: {
+                        options: {
                             name: 'static/media/[name].[hash:8].[ext]'
                         }
                     },
@@ -263,19 +266,21 @@ module.exports = {
         .concat([
             isBuilding &&
                 new MiniCssExtractPlugin({
-                    filename: 'static/css/[name].[hash:8].css'
+                    filename: 'static/css/[name].[hash:8].css',
+                    ignoreOrder: !!pkg.ignoreCssOrderWarnings || process.env.IGNORE_CSS_ORDER_WARNINGS === 'true'
                 }),
             new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
             new ModuleNotFoundPlugin(paths.root),
             new webpack.EnvironmentPlugin(env.raw),
             new CaseSensitivePathsPlugin(),
-            new WatchMissingNodeModulesPlugin(paths.appNodeModules),
-            new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+            new webpack.IgnorePlugin({
+                resourceRegExp: /^\.\/locale$/,
+                contextRegExp: /moment$/
+            }),
             new ForkTsCheckerWebpackPlugin({
                 typescript: resolve.sync('typescript', {
                     basedir: paths.appNodeModules
                 }),
-                tslint: false,
                 async: true,
                 useTypescriptIncrementalApi: true,
                 checkSyntacticErrors: true,
@@ -285,7 +290,6 @@ module.exports = {
                     checkJs: false
                 },
                 reportFiles: ['**/*.(ts|tsx)', '!**/__tests__/**', '!**/?(*.)(spec|test).*'],
-                watch: paths.appSrc,
                 silent: true
             }),
             new webpack.BannerPlugin({
@@ -311,7 +315,7 @@ function getStyleLoaders(cssOptions, preProcessor) {
         isBuilding
             ? {
                   loader: MiniCssExtractPlugin.loader,
-                  options: { publicPath: '../../', sourceMap: true }
+                  options: { publicPath: '../../', sourceMap: true, esModule: true }
               }
             : require.resolve('style-loader'),
         {

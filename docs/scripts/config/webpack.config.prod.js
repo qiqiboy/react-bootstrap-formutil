@@ -19,6 +19,7 @@ const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const pkg = require(paths.appPackageJson);
 
 const relativeRoot = path.join(pkg.noRewrite ? '.' : process.env.BASE_NAME || '/');
@@ -47,7 +48,7 @@ const babelOption = {
     compact: false,
     presets: [[require.resolve('babel-preset-react-app/dependencies'), { helpers: true }]],
     cacheDirectory: true,
-    cacheCompression: true,
+    cacheCompression: false,
     sourceMaps: false
 };
 
@@ -106,7 +107,8 @@ module.exports = {
         publicPath: publicPath,
         crossOriginLoading: 'anonymous',
         devtoolModuleFilenameTemplate: info =>
-            path.relative(paths.appSrc, info.absoluteResourcePath).replace(/\\/g, '/')
+            path.relative(paths.appSrc, info.absoluteResourcePath).replace(/\\/g, '/'),
+        globalObject: 'this'
     },
     optimization: {
         minimizer: [
@@ -144,6 +146,9 @@ module.exports = {
                               annotation: true
                           }
                         : false
+                },
+                cssProcessorPluginOptions: {
+                    preset: ['default', { minifyFontValues: { removeQuotes: false } }]
                 }
             })
         ],
@@ -202,7 +207,7 @@ module.exports = {
                         loader: require.resolve('eslint-loader')
                     }
                 ],
-                include: paths.appSrc
+                include: [paths.formutilSrc, paths.appSrc]
             },
             {
                 oneOf: [
@@ -217,7 +222,9 @@ module.exports = {
                                 loader: require.resolve('html-loader'),
                                 options: {
                                     url(url) {
-                                        return !/\.(webp|png|jpeg|jpg|gif|svg|mp3|wmv|mp4|ogg|webm)$/.test(url);
+                                        return !/\.(webp|png|jpeg|jpg|gif|svg|mp3|wmv|mp4|ogg|webm|s[ac]ss|css|less|m?[tj]sx?)$/.test(
+                                            url
+                                        );
                                     },
                                     import: true
                                 }
@@ -226,7 +233,7 @@ module.exports = {
                     },
                     {
                         test: /\.(js|mjs|jsx|ts|tsx)$/,
-                        include: paths.appSrc,
+                        include: [paths.formutilSrc, paths.appSrc],
                         loader: require.resolve('babel-loader'),
                         options: {
                             customize: require.resolve('babel-preset-react-app/webpack-overrides'),
@@ -244,8 +251,9 @@ module.exports = {
                                 ]
                             ],
                             cacheDirectory: true,
-                            cacheCompression: true,
-                            compact: true
+                            cacheCompression: false,
+                            compact: true,
+                            rootMode: 'upward'
                         }
                     },
                     {
@@ -267,8 +275,8 @@ module.exports = {
                         loader: getStyleLoaders({
                             importLoaders: 1,
                             modules: {
-                                    getLocalIdent: getCSSModuleLocalIdent
-                                }
+                                getLocalIdent: getCSSModuleLocalIdent
+                            }
                         })
                     },
                     {
@@ -324,7 +332,7 @@ module.exports = {
                     {
                         test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)$/,
                         loader: require.resolve('file-loader'),
-                        query: {
+                        options: {
                             name: 'static/media/[name].[hash:8].[ext]'
                         }
                     },
@@ -352,10 +360,15 @@ module.exports = {
                 }
             }),
             new MiniCssExtractPlugin({
-                filename: 'static/css/[name].[contenthash:8].css'
+                filename: 'static/css/[name].[contenthash:8].css',
+                ignoreOrder: !!pkg.ignoreCssOrderWarnings || process.env.IGNORE_CSS_ORDER_WARNINGS === 'true'
             }),
             new webpack.HashedModuleIdsPlugin(),
-            new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+            new webpack.IgnorePlugin({
+                resourceRegExp: /^\.\/locale$/,
+                contextRegExp: /moment$/
+            }),
+            new BundleAnalyzerPlugin(),
             shouldUseSW &&
                 new SWPrecacheWebpackPlugin({
                     cacheId: pkg.name,
@@ -395,7 +408,6 @@ module.exports = {
                 typescript: resolve.sync('typescript', {
                     basedir: paths.appNodeModules
                 }),
-                tslint: false,
                 async: false,
                 useTypescriptIncrementalApi: true,
                 checkSyntacticErrors: true,
@@ -405,7 +417,6 @@ module.exports = {
                     checkJs: false
                 },
                 reportFiles: ['**/*.(ts|tsx)', '!**/__tests__/**', '!**/?(*.)(spec|test).*'],
-                watch: paths.appSrc,
                 silent: true,
                 formatter: typescriptFormatter
             }),
@@ -429,7 +440,12 @@ function getStyleLoaders(cssOptions, preProcessor) {
     const loaders = [
         {
             loader: MiniCssExtractPlugin.loader,
-            options: Object.assign({}, shouldUseRelativeAssetPaths ? { publicPath: '../../' } : undefined)
+            options: Object.assign(
+                {
+                    esModule: true
+                },
+                shouldUseRelativeAssetPaths ? { publicPath: '../../' } : undefined
+            )
         },
         {
             loader: require.resolve('css-loader'),

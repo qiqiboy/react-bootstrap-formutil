@@ -61,7 +61,7 @@ function getChildComponent(children) {
 
 class _FormGroup extends Component {
     static propTypes = {
-        children: PropTypes.element.isRequired,
+        children: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
         label: PropTypes.any,
         helper: PropTypes.any,
         labelCol: PropTypes.object,
@@ -90,7 +90,7 @@ class _FormGroup extends Component {
             errorLevel = errorLevelGlobal,
             ...fieldProps
         } = props;
-        const children = Children.only(childList);
+        const children = typeof childList === 'function' ? childList : Children.only(childList);
 
         let Wrapper = wrapperCol ? Col : Fragment;
         const groupProps = {
@@ -313,16 +313,12 @@ class _FormGroup extends Component {
                             <Wrapper {...wrapperCol}>
                                 <AddonWrapper {...addonWrapperProps}>
                                     {addons.pre}
-                                    {cloneElement(children, childProps)}
+                                    {typeof children === 'function'
+                                        ? children(childProps)
+                                        : cloneElement(children, childProps)}
                                     {addons.end}
                                 </AddonWrapper>
-                                {hasError ? (
-                                    <HelpBlock type="invalid">
-                                        {$getFirstError()}
-                                    </HelpBlock>
-                                ) : (
-                                    helper
-                                )}
+                                {hasError ? <HelpBlock type="invalid">{$getFirstError()}</HelpBlock> : helper}
                             </Wrapper>
                             {extraNode}
                         </FormGroup>

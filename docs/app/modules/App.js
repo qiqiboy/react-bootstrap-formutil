@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withForm, FormGroup, CheckboxGroup, RadioGroup, SwitchGroup } from '../src';
+import { withForm, FormGroup, CheckboxGroup, RadioGroup, SwitchGroup } from 'app/../../src';
 import { Container, Form, Button, Card, CardColumns, Col, ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
 
 class App extends Component {
