@@ -55,7 +55,7 @@ function getChildComponent(children) {
             return childrenType.displayName || childrenType.name;
         }
 
-        return children.props.type || children.type;
+        return children.props?.type || children.type;
     }
 }
 
