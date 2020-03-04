@@ -44,6 +44,7 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
         * [`validMessage`](#validmessage)
         * [`feedback`](#feedback)
         * [`valuePropName` `changePropName` `focusPropName` `blurPropName`](#valuepropname-changepropname-focuspropname-blurpropname)
+        * [`getValueFromEvent`](#getvaluefromevent)
         * [`controlId` `as` `xs` `sm` `md` `lg` 等](#controlid-as-xs-sm-md-lg-等)
         * [`errorLevel`](#errorlevel)
     + [`<CheckboxGroup />`](#checkboxgroup-)
@@ -342,6 +343,10 @@ class MyForm extends Component {
     <FormControl />
 </FormGroup>
 ```
+
+##### `getValueFromEvent`
+
+请参考 [`getValueFromEvent()`](https://github.com/qiqiboy/react-formutil/blob/master/README.md#getvaluefromevent)
 
 ##### `controlId` `as` `xs` `sm` `md` `lg` 等
 
