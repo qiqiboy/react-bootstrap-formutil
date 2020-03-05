@@ -1,4 +1,4 @@
-import React, { Component, cloneElement, isValidElement, Children, Fragment } from 'react';
+import React, { Component, cloneElement, isValidElement, Children, Fragment, createContext } from 'react';
 import { isValidElementType } from 'react-is';
 import PropTypes from 'prop-types';
 import { EasyField } from 'react-formutil';
@@ -17,6 +17,9 @@ import {
 } from 'react-bootstrap';
 import CheckboxGroup from './CheckboxGroup';
 import { insertRule } from './helper';
+import isEqual from 'react-fast-compare';
+
+const { Consumer, Provider } = createContext({});
 
 let errorLevelGlobal = 1;
 
@@ -69,10 +72,92 @@ class _FormGroup extends Component {
         addons: PropTypes.object,
         extra: PropTypes.node,
         feedback: PropTypes.bool,
+        noStyle: PropTypes.bool,
         errorLevel: PropTypes.oneOf([0, 1, 2, 'off'])
 
         // $parser $formatter checked unchecked $validators validMessage等传递给 EasyField 组件的额外参数
     };
+
+    fields = {};
+    registerField = (name, $fieldutil) => ($fieldutil ? (this.fields[name] = $fieldutil) : delete this.fields[name]);
+    latestValidationProps = null;
+    checkHasError = (errorLevel, $invalid, $dirty, $touched, $focused) => {
+        switch (errorLevel) {
+            case 0:
+                return $invalid && $dirty && $touched;
+            case 1:
+                return $invalid && $dirty;
+            case 2:
+                return $invalid;
+            default:
+                return false;
+        }
+    };
+    fetchCurrentValidationProps = errorLevel => {
+        const allFieldutils = Object.keys(this.fields).map(name => this.fields[name].$new());
+        const errFieldutils = allFieldutils.filter($fieldutil => $fieldutil.$invalid);
+
+        const $invalid = errFieldutils.length > 0;
+        const $dirty = allFieldutils.some($fieldutil => $fieldutil.$dirty);
+        const $touched = allFieldutils.some($fieldutil => $fieldutil.$touched);
+        const $focused = allFieldutils.some($fieldutil => $fieldutil.$focused);
+        const $errors = errFieldutils
+            .map($fieldutil => {
+                const { $invalid, $focused, $touched, $dirty, $getFirstError } = $fieldutil;
+                const hasError = this.checkHasError(errorLevel, $invalid, $dirty, $touched, $focused);
+
+                return hasError && $getFirstError();
+            })
+            .filter(Boolean);
+
+        return this.getValidationProps(errorLevel, $invalid, $dirty, $touched, $focused, $errors);
+    };
+
+    getValidationProps = (errorLevel, $invalid, $dirty, $touched, $focused, $errors) => {
+        const hasError = this.checkHasError(errorLevel, $invalid, $dirty, $touched, $focused);
+
+        const groupProps = {
+            className: [
+                this.props.className,
+                hasError && 'has-error',
+                $invalid ? 'is-invalid' : 'is-valid',
+                $dirty ? 'is-dirty' : 'is-pristine',
+                $touched ? 'is-touched' : 'is-untouched',
+                $focused ? 'is-focused' : 'is-unfocused'
+            ]
+                .filter(Boolean)
+                .join(' ')
+        };
+        const validationProps = {};
+
+        if (hasError) {
+            validationProps.isInvalid = true;
+        }
+
+        if (this.props.feedback && !$invalid) {
+            validationProps.isValid = true;
+        }
+
+        return {
+            groupProps,
+            validationProps,
+            error: hasError ? (
+                <HelpBlock type="invalid">
+                    {Array.isArray($errors) ? $errors.map((err, index) => <div key={index}>{err}</div>) : $errors}
+                </HelpBlock>
+            ) : null
+        };
+    };
+
+    componentDidMount() {
+        // eslint-disable-next-line
+        this.registerAncestorField?.(this.props.name, this.$fieldutil);
+    }
+
+    componentWillUnmount() {
+        // eslint-disable-next-line
+        this.registerAncestorField?.(this.props.name, null);
+    }
 
     render() {
         const props = this.props;
@@ -85,17 +170,16 @@ class _FormGroup extends Component {
             wrapperCol,
             validationState,
             className,
+            as,
             feedback,
             extra: extraNode,
+            noStyle,
             errorLevel = errorLevelGlobal,
             ...fieldProps
         } = props;
-        const children = typeof childList === 'function' ? childList : Children.only(childList);
 
         let Wrapper = wrapperCol ? Col : Fragment;
-        const groupProps = {
-            className
-        };
+        const groupAsProps = !as && (labelCol || wrapperCol) ? Row : as;
 
         if (label) {
             if (isValidElement(label)) {
@@ -112,10 +196,6 @@ class _FormGroup extends Component {
                     </FormLabel>
                 );
             }
-        }
-
-        if (labelCol || wrapperCol) {
-            groupProps.as = Row;
         }
 
         let AddonWrapper = addons ? InputGroup : Fragment;
@@ -148,6 +228,38 @@ class _FormGroup extends Component {
         if (helper && !isValidElement(helper)) {
             helper = <FormText className="text-muted">{helper}</FormText>;
         }
+
+        if (!props.name) {
+            const { groupProps, error } = (this.latestValidationProps = this.fetchCurrentValidationProps(errorLevel));
+
+            /**
+             * 检查下最新的校验状态和当前是否一致，不一致的话需要强制刷新下
+             */
+            Promise.resolve().then(() => {
+                if (!isEqual(this.latestValidationProps, this.fetchCurrentValidationProps(errorLevel))) {
+                    this.forceUpdate();
+                }
+            });
+
+            return (
+                <Provider value={{ registerField: this.registerField }}>
+                    <FormGroup {...fieldProps} {...groupProps} as={groupAsProps}>
+                        {label}
+                        <Wrapper {...wrapperCol}>
+                            <AddonWrapper {...addonWrapperProps}>
+                                {addons.pre}
+                                {childList}
+                                {addons.end}
+                            </AddonWrapper>
+                            {error || helper}
+                        </Wrapper>
+                        {extraNode}
+                    </FormGroup>
+                </Provider>
+            );
+        }
+
+        const children = typeof childList === 'function' ? childList : Children.only(childList);
 
         let component = getChildComponent(children);
 
@@ -266,62 +378,53 @@ class _FormGroup extends Component {
                             break;
                     }
 
-                    Object.assign(childProps, {
-                        [focusPropName]: onFocus,
-                        [blurPropName]: onBlur
-                    });
+                    const { groupProps, validationProps, error } = this.getValidationProps(
+                        errorLevel,
+                        $invalid,
+                        $dirty,
+                        $touched,
+                        $focused,
+                        $getFirstError()
+                    );
 
-                    let hasError;
+                    Object.assign(
+                        childProps,
+                        {
+                            [focusPropName]: onFocus,
+                            [blurPropName]: onBlur
+                        },
+                        validationProps
+                    );
 
-                    switch (errorLevel) {
-                        case 0:
-                            hasError = $invalid && $dirty && $touched;
-                            break;
-                        case 1:
-                            hasError = $invalid && $dirty;
-                            break;
-                        case 2:
-                            hasError = $invalid;
-                            break;
-                        default:
-                            hasError = false;
-                            break;
-                    }
-
-                    if (hasError) {
-                        childProps.isInvalid = true;
-                    }
-
-                    if (feedback && !$invalid) {
-                        childProps.isValid = true;
-                    }
-
-                    groupProps.className = [
-                        groupProps.className,
-                        hasError && 'has-error',
-                        $invalid ? 'is-invalid' : 'is-valid',
-                        $dirty ? 'is-dirty' : 'is-pristine',
-                        $touched ? 'is-touched' : 'is-untouched',
-                        $focused ? 'is-focused' : 'is-unfocused'
-                    ]
-                        .filter(Boolean)
-                        .join(' ');
+                    const fieldInstance =
+                        typeof children === 'function' ? children(childProps) : cloneElement(children, childProps);
 
                     return (
-                        <FormGroup {...restProps} {...groupProps}>
-                            {label}
-                            <Wrapper {...wrapperCol}>
-                                <AddonWrapper {...addonWrapperProps}>
-                                    {addons.pre}
-                                    {typeof children === 'function'
-                                        ? children(childProps)
-                                        : cloneElement(children, childProps)}
-                                    {addons.end}
-                                </AddonWrapper>
-                                {hasError ? <HelpBlock type="invalid">{$getFirstError()}</HelpBlock> : helper}
-                            </Wrapper>
-                            {extraNode}
-                        </FormGroup>
+                        <Consumer>
+                            {({ registerField }) => {
+                                if (noStyle) {
+                                    this.$fieldutil = $fieldutil;
+                                    this.registerAncestorField = registerField;
+
+                                    return fieldInstance;
+                                }
+
+                                return (
+                                    <FormGroup {...restProps} {...groupProps} as={groupAsProps}>
+                                        {label}
+                                        <Wrapper {...wrapperCol}>
+                                            <AddonWrapper {...addonWrapperProps}>
+                                                {addons.pre}
+                                                {fieldInstance}
+                                                {addons.end}
+                                            </AddonWrapper>
+                                            {error || helper}
+                                        </Wrapper>
+                                        {extraNode}
+                                    </FormGroup>
+                                );
+                            }}
+                        </Consumer>
                     );
                 }}
             />

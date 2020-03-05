@@ -46,6 +46,7 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
         * [`valuePropName` `changePropName` `focusPropName` `blurPropName`](#valuepropname-changepropname-focuspropname-blurpropname)
         * [`getValueFromEvent`](#getvaluefromevent)
         * [`controlId` `as` `xs` `sm` `md` `lg` 等](#controlid-as-xs-sm-md-lg-等)
+        * [`noStyle`](#nostyle)
         * [`errorLevel`](#errorlevel)
     + [`<CheckboxGroup />`](#checkboxgroup-)
     + [`<RadioGroup />`](#radiogroup-)
@@ -351,6 +352,38 @@ class MyForm extends Component {
 ##### `controlId` `as` `xs` `sm` `md` `lg` 等
 
 这几个属性同`react-bootstrap`中 `FormGroup` 组件的同名属性，事实上任何可以传递给`Form.Group`的属性都可以传递。
+
+##### `noStyle`
+
+> 该属性从 `v1.1.0` 起可
+
+`noStyle`可以用来控制是否输出`FormGroup`的额外的样式元素。缺省情况下默认值为`false`。
+
+当`noStyle`为`true`时，将会只渲染字段节点本身，但是其表单状态依然会被处理收集。此时，如果其存在父级嵌套的`FormGroup`，那么其表达校验状态将会传递给父级的`FormGroup`来展现。
+
+这对于连续的紧凑型表单元素将非常有用！可以避免校验错误描述信息都堆叠在一起! **但是没有额外的样式显示，包括表单校验状态都无法显示了。此时可以在其外层包裹一层不带`name`的`FormGroup`，这些`noStyle`的表单项就会把他们自身的状态向上进行注册显示了！**
+
+但是有以下几点需要注意：
+
+1. 最外层的`FormGroup`不能设置`name`属性，否则将不会被当作子级的校验状态容器
+2. 内层的`FormGroup`需要添加相应的`name`值（向表单控制器注册自身）以及`noStyle`属性（不渲染额外的样式，避免和上层冲突）
+
+```typescript
+// 这里不能设置name
+<FormGroup label="姓名">
+    <InputGroup>
+        {/* 与普通的FormGroup用法一致，只是多了个noStyle */}
+        <FormGroup name="demo4.first_name" required validMessage={{ required: 'First name reuqired!' }} noStyle>
+            <Form.Control placeholder="姓" />
+        </FormGroup>
+        <FormGroup name="demo4.last_name" required validMessage={{ required: 'Last name reuqired!' }} noStyle>
+            <Form.Control placeholder="名" />
+        </FormGroup>
+    </InputGroup>
+</FormGroup>
+```
+
+以上运行示例请参考 [示例demo4](http://github.boy.im/react-bootstrap-formutil/demo/)
 
 ##### `errorLevel`
 

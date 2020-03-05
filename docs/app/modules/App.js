@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
 import { withForm, FormGroup, CheckboxGroup, RadioGroup, SwitchGroup } from 'app/../../src';
-import { Container, Form, Button, Card, CardColumns, Col, ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
+import {
+    Container,
+    Form,
+    InputGroup,
+    Button,
+    Card,
+    CardColumns,
+    Col,
+    ToggleButtonGroup,
+    ToggleButton
+} from 'react-bootstrap';
 
 class App extends Component {
     submit = ev => {
@@ -143,6 +153,24 @@ class App extends Component {
                                         <Form.Check type="checkbox" label="Check" />
                                     </FormGroup>
                                 </Form.Row>
+                                <FormGroup label="姓名">
+                                    <InputGroup>
+                                        <FormGroup
+                                            name="demo4.first_name"
+                                            required
+                                            validMessage={{ required: 'First name reuqired!' }}
+                                            noStyle>
+                                            <Form.Control placeholder="姓" />
+                                        </FormGroup>
+                                        <FormGroup
+                                            name="demo4.last_name"
+                                            required
+                                            validMessage={{ required: 'Last name reuqired!' }}
+                                            noStyle>
+                                            <Form.Control placeholder="名" />
+                                        </FormGroup>
+                                    </InputGroup>
+                                </FormGroup>
 
                                 <pre>{JSON.stringify(this.props.$formutil.$params.demo4, null, 2)}</pre>
                             </Card.Body>
@@ -283,7 +311,6 @@ class App extends Component {
                                         <option>3</option>
                                     </Form.Control>
                                 </FormGroup>
-
 
                                 <FormGroup
                                     name="demo6.toggleButtonCheckbox"

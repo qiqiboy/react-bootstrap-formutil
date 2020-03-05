@@ -9,10 +9,11 @@ import _createClass from '@babel/runtime/helpers/esm/createClass';
 import _possibleConstructorReturn from '@babel/runtime/helpers/esm/possibleConstructorReturn';
 import _getPrototypeOf from '@babel/runtime/helpers/esm/getPrototypeOf';
 import _inherits from '@babel/runtime/helpers/esm/inherits';
-import React, { Children, cloneElement, Component, isValidElement, Fragment } from 'react';
+import React, { Children, cloneElement, Component, createContext, isValidElement, Fragment } from 'react';
 import { isValidElementType } from 'react-is';
 import PropTypes from 'prop-types';
 import { Form, FormControl, FormLabel, InputGroup, FormText, FormGroup, FormCheck, ToggleButton, ToggleButtonGroup, Col, Row } from 'react-bootstrap';
+import isEqual from 'react-fast-compare';
 
 var CheckboxGroup = /*#__PURE__*/function (_Component) {
   _inherits(CheckboxGroup, _Component);
@@ -90,6 +91,10 @@ function insertRule(selector, content) {
   }
 }
 
+var _createContext = createContext({}),
+    Consumer = _createContext.Consumer,
+    Provider = _createContext.Provider;
+
 var errorLevelGlobal = 1;
 /**
  * 0 dirty & invalid & touched
@@ -140,15 +145,124 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
   _inherits(_FormGroup, _Component);
 
   function _FormGroup() {
+    var _getPrototypeOf2;
+
+    var _this;
+
     _classCallCheck(this, _FormGroup);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(_FormGroup).apply(this, arguments));
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(_FormGroup)).call.apply(_getPrototypeOf2, [this].concat(args)));
+    _this.fields = {};
+
+    _this.registerField = function (name, $fieldutil) {
+      return $fieldutil ? _this.fields[name] = $fieldutil : delete _this.fields[name];
+    };
+
+    _this.latestValidationProps = null;
+
+    _this.checkHasError = function (errorLevel, $invalid, $dirty, $touched, $focused) {
+      switch (errorLevel) {
+        case 0:
+          return $invalid && $dirty && $touched;
+
+        case 1:
+          return $invalid && $dirty;
+
+        case 2:
+          return $invalid;
+
+        default:
+          return false;
+      }
+    };
+
+    _this.fetchCurrentValidationProps = function (errorLevel) {
+      var allFieldutils = Object.keys(_this.fields).map(function (name) {
+        return _this.fields[name].$new();
+      });
+      var errFieldutils = allFieldutils.filter(function ($fieldutil) {
+        return $fieldutil.$invalid;
+      });
+      var $invalid = errFieldutils.length > 0;
+      var $dirty = allFieldutils.some(function ($fieldutil) {
+        return $fieldutil.$dirty;
+      });
+      var $touched = allFieldutils.some(function ($fieldutil) {
+        return $fieldutil.$touched;
+      });
+      var $focused = allFieldutils.some(function ($fieldutil) {
+        return $fieldutil.$focused;
+      });
+      var $errors = errFieldutils.map(function ($fieldutil) {
+        var $invalid = $fieldutil.$invalid,
+            $focused = $fieldutil.$focused,
+            $touched = $fieldutil.$touched,
+            $dirty = $fieldutil.$dirty,
+            $getFirstError = $fieldutil.$getFirstError;
+
+        var hasError = _this.checkHasError(errorLevel, $invalid, $dirty, $touched, $focused);
+
+        return hasError && $getFirstError();
+      }).filter(Boolean);
+      return _this.getValidationProps(errorLevel, $invalid, $dirty, $touched, $focused, $errors);
+    };
+
+    _this.getValidationProps = function (errorLevel, $invalid, $dirty, $touched, $focused, $errors) {
+      var hasError = _this.checkHasError(errorLevel, $invalid, $dirty, $touched, $focused);
+
+      var groupProps = {
+        className: [_this.props.className, hasError && 'has-error', $invalid ? 'is-invalid' : 'is-valid', $dirty ? 'is-dirty' : 'is-pristine', $touched ? 'is-touched' : 'is-untouched', $focused ? 'is-focused' : 'is-unfocused'].filter(Boolean).join(' ')
+      };
+      var validationProps = {};
+
+      if (hasError) {
+        validationProps.isInvalid = true;
+      }
+
+      if (_this.props.feedback && !$invalid) {
+        validationProps.isValid = true;
+      }
+
+      return {
+        groupProps: groupProps,
+        validationProps: validationProps,
+        error: hasError ? React.createElement(HelpBlock, {
+          type: "invalid"
+        }, Array.isArray($errors) ? $errors.map(function (err, index) {
+          return React.createElement("div", {
+            key: index
+          }, err);
+        }) : $errors) : null
+      };
+    };
+
+    return _this;
   }
 
   _createClass(_FormGroup, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this$registerAncesto;
+
+      // eslint-disable-next-line
+      (_this$registerAncesto = this.registerAncestorField) === null || _this$registerAncesto === void 0 ? void 0 : _this$registerAncesto.call(this, this.props.name, this.$fieldutil);
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      var _this$registerAncesto2;
+
+      // eslint-disable-next-line
+      (_this$registerAncesto2 = this.registerAncestorField) === null || _this$registerAncesto2 === void 0 ? void 0 : _this$registerAncesto2.call(this, this.props.name, null);
+    }
+  }, {
     key: "render",
     value: function render() {
-      var _this = this;
+      var _this2 = this;
 
       var props = this.props;
 
@@ -160,17 +274,16 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
           wrapperCol = props.wrapperCol,
           validationState = props.validationState,
           className = props.className,
+          as = props.as,
           feedback = props.feedback,
           extraNode = props.extra,
+          noStyle = props.noStyle,
           _props$errorLevel = props.errorLevel,
           errorLevel = _props$errorLevel === void 0 ? errorLevelGlobal : _props$errorLevel,
-          fieldProps = _objectWithoutProperties(props, ["children", "addons", "label", "helper", "labelCol", "wrapperCol", "validationState", "className", "feedback", "extra", "errorLevel"]);
+          fieldProps = _objectWithoutProperties(props, ["children", "addons", "label", "helper", "labelCol", "wrapperCol", "validationState", "className", "as", "feedback", "extra", "noStyle", "errorLevel"]);
 
-      var children = typeof childList === 'function' ? childList : Children.only(childList);
       var Wrapper = wrapperCol ? Col : Fragment;
-      var groupProps = {
-        className: className
-      };
+      var groupAsProps = !as && (labelCol || wrapperCol) ? Row : as;
 
       if (label) {
         if (isValidElement(label)) {
@@ -184,10 +297,6 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
             column: !!labelCol
           }, labelCol), label);
         }
-      }
-
-      if (labelCol || wrapperCol) {
-        groupProps.as = Row;
       }
 
       var AddonWrapper = addons ? InputGroup : Fragment;
@@ -213,6 +322,30 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
         }, helper);
       }
 
+      if (!props.name) {
+        var _this$latestValidatio = this.latestValidationProps = this.fetchCurrentValidationProps(errorLevel),
+            groupProps = _this$latestValidatio.groupProps,
+            error = _this$latestValidatio.error;
+        /**
+         * 检查下最新的校验状态和当前是否一致，不一致的话需要强制刷新下
+         */
+
+
+        Promise.resolve().then(function () {
+          if (!isEqual(_this2.latestValidationProps, _this2.fetchCurrentValidationProps(errorLevel))) {
+            _this2.forceUpdate();
+          }
+        });
+        return React.createElement(Provider, {
+          value: {
+            registerField: this.registerField
+          }
+        }, React.createElement(FormGroup, Object.assign({}, fieldProps, groupProps, {
+          as: groupAsProps
+        }), label, React.createElement(Wrapper, wrapperCol, React.createElement(AddonWrapper, addonWrapperProps, addons.pre, childList, addons.end), error || helper), extraNode));
+      }
+
+      var children = typeof childList === 'function' ? childList : Children.only(childList);
       var component = getChildComponent(children);
 
       if (component === _FormControl) {
@@ -301,13 +434,13 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
             default:
               childProps = (_childProps = {
                 onCompositionEnd: function onCompositionEnd(ev) {
-                  _this.isComposition = false;
-                  delete _this.compositionValue;
+                  _this2.isComposition = false;
+                  delete _this2.compositionValue;
 
                   _onChange(ev);
                 },
                 onCompositionStart: function onCompositionStart() {
-                  return _this.isComposition = true;
+                  return _this2.isComposition = true;
                 }
               }, _defineProperty(_childProps, changePropName, component === 'multipleSelect' ? function (ev) {
                 _onChange([].slice.call(ev.target.options).filter(function (option) {
@@ -316,54 +449,41 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
                   return option.value;
                 }), ev);
               } : function (ev) {
-                if (_this.isComposition) {
-                  _this.compositionValue = ev.target[valuePropName];
+                if (_this2.isComposition) {
+                  _this2.compositionValue = ev.target[valuePropName];
 
-                  _this.forceUpdate();
+                  _this2.forceUpdate();
                 } else {
-                  for (var _len = arguments.length, rest = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-                    rest[_key - 1] = arguments[_key];
+                  for (var _len2 = arguments.length, rest = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+                    rest[_key2 - 1] = arguments[_key2];
                   }
 
                   _onChange.apply(void 0, [ev].concat(rest));
                 }
-              }), _defineProperty(_childProps, valuePropName, 'compositionValue' in _this ? _this.compositionValue : value), _defineProperty(_childProps, "name", fieldProps.name), _childProps);
+              }), _defineProperty(_childProps, valuePropName, 'compositionValue' in _this2 ? _this2.compositionValue : value), _defineProperty(_childProps, "name", fieldProps.name), _childProps);
               break;
           }
 
-          Object.assign(childProps, (_Object$assign = {}, _defineProperty(_Object$assign, focusPropName, onFocus), _defineProperty(_Object$assign, blurPropName, onBlur), _Object$assign));
-          var hasError;
+          var _this2$getValidationP = _this2.getValidationProps(errorLevel, $invalid, $dirty, $touched, $focused, $getFirstError()),
+              groupProps = _this2$getValidationP.groupProps,
+              validationProps = _this2$getValidationP.validationProps,
+              error = _this2$getValidationP.error;
 
-          switch (errorLevel) {
-            case 0:
-              hasError = $invalid && $dirty && $touched;
-              break;
+          Object.assign(childProps, (_Object$assign = {}, _defineProperty(_Object$assign, focusPropName, onFocus), _defineProperty(_Object$assign, blurPropName, onBlur), _Object$assign), validationProps);
+          var fieldInstance = typeof children === 'function' ? children(childProps) : cloneElement(children, childProps);
+          return React.createElement(Consumer, null, function (_ref) {
+            var registerField = _ref.registerField;
 
-            case 1:
-              hasError = $invalid && $dirty;
-              break;
+            if (noStyle) {
+              _this2.$fieldutil = $fieldutil;
+              _this2.registerAncestorField = registerField;
+              return fieldInstance;
+            }
 
-            case 2:
-              hasError = $invalid;
-              break;
-
-            default:
-              hasError = false;
-              break;
-          }
-
-          if (hasError) {
-            childProps.isInvalid = true;
-          }
-
-          if (feedback && !$invalid) {
-            childProps.isValid = true;
-          }
-
-          groupProps.className = [groupProps.className, hasError && 'has-error', $invalid ? 'is-invalid' : 'is-valid', $dirty ? 'is-dirty' : 'is-pristine', $touched ? 'is-touched' : 'is-untouched', $focused ? 'is-focused' : 'is-unfocused'].filter(Boolean).join(' ');
-          return React.createElement(FormGroup, Object.assign({}, restProps, groupProps), label, React.createElement(Wrapper, wrapperCol, React.createElement(AddonWrapper, addonWrapperProps, addons.pre, typeof children === 'function' ? children(childProps) : cloneElement(children, childProps), addons.end), hasError ? React.createElement(HelpBlock, {
-            type: "invalid"
-          }, $getFirstError()) : helper), extraNode);
+            return React.createElement(FormGroup, Object.assign({}, restProps, groupProps, {
+              as: groupAsProps
+            }), label, React.createElement(Wrapper, wrapperCol, React.createElement(AddonWrapper, addonWrapperProps, addons.pre, fieldInstance, addons.end), error || helper), extraNode);
+          });
         }
       }));
     }
@@ -381,6 +501,7 @@ _FormGroup.propTypes = {
   addons: PropTypes.object,
   extra: PropTypes.node,
   feedback: PropTypes.bool,
+  noStyle: PropTypes.bool,
   errorLevel: PropTypes.oneOf([0, 1, 2, 'off']) // $parser $formatter checked unchecked $validators validMessage等传递给 EasyField 组件的额外参数
 
 };

@@ -24,6 +24,7 @@ export interface FormGroupComponentProps<T = any, P = {}, Fields = {}, WeakField
         end?: React.ReactNode;
     };
     feedback?: boolean;
+    noStyle?: boolean;
     errorLevel?: ErrorLevel;
     children: React.ReactElement<any> | (($fieldHandler: Partial<$FieldHandler<T>> & OtherKeys) => React.ReactNode);
 
