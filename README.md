@@ -40,6 +40,8 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
         * [`extra`](#extra)
         * [`$parser`](#parser)
         * [`$formatter`](#formatter)
+        * [`$validateLazy`](#validatelazy)
+        * [`$memo`](#memo)
         * [`checked` `unchecked`](#checked-unchecked)
         * [`validMessage`](#validmessage)
         * [`feedback`](#feedback)
@@ -293,6 +295,16 @@ class MyForm extends Component {
 ```
 
 `$formatter`同样有一个回调方法`$setModelValue`，它可以用来在处理模型值时再次对其进行修改。
+
+##### `$validateLazy`
+
+可以用来优化表单的校验速度，请参考： [`$validateLazy`](https://github.com/qiqiboy/react-formutil#validatelazy)
+
+##### `$memo`
+
+可以用来优化当前表单项的性能，避免过多的重复渲染。如果你遇到了表单性能问题，可以尝试该属性来改善。
+
+详细解释和使用、注意事项请参考： [`$memo`](https://github.com/qiqiboy/react-formutil#memo)
 
 ##### `checked` `unchecked`
 

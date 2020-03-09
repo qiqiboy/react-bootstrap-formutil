@@ -589,39 +589,25 @@
   var setErrorLevel = function setErrorLevel(level) {
     errorLevelGlobal = level;
   };
-  var isUglify = reactBootstrap.Form.displayName !== 'Form';
-
-  var _FormControl = isUglify ? reactBootstrap.FormControl : 'FormControl';
-
-  var _FormCheck = isUglify ? reactBootstrap.FormCheck : 'FormCheck';
-
-  var _CheckboxGroup = isUglify ? CheckboxGroup : 'CheckboxGroup';
-
-  var _ToggleButton = isUglify ? reactBootstrap.ToggleButton : 'ToggleButton';
-
-  var _ToggleButtonGroup = isUglify ? reactBootstrap.ToggleButtonGroup : 'ToggleButtonGroup';
-
   var HelpBlock = reactBootstrap.FormControl.Feedback;
 
   function getChildComponent(children) {
     if (children) {
-      var _children$props;
-
       var childrenType = children.type;
 
-      if (typeof childrenType !== 'string' && _reactIs_16_13_0_reactIs_1(childrenType)) {
+      if (_reactIs_16_13_0_reactIs_1(childrenType)) {
+        // SomeComponent.formutiType = xx
         if (childrenType.formutilType) {
           return childrenType.formutilType;
-        }
+        } // <input type="checkbox" />
 
-        if (isUglify) {
-          return childrenType;
-        }
 
-        return childrenType.displayName || childrenType.name;
+        if (typeof childrenType === 'string' && children.props.type) {
+          return children.props.type;
+        }
       }
 
-      return ((_children$props = children.props) === null || _children$props === void 0 ? void 0 : _children$props.type) || children.type;
+      return childrenType || children;
     }
   }
 
@@ -821,9 +807,7 @@
             }
           });
           return React__default.createElement(Provider, {
-            value: {
-              registerField: this.registerField
-            }
+            value: this.registerField
           }, React__default.createElement(reactBootstrap.FormGroup, Object.assign({}, fieldProps, groupProps, {
             as: groupAsProps
           }), label, React__default.createElement(Wrapper, wrapperCol, React__default.createElement(AddonWrapper, addonWrapperProps, addons.pre, childList, addons.end), error || helper), extraNode));
@@ -832,15 +816,15 @@
         var children = typeof childList === 'function' ? childList : React.Children.only(childList);
         var component = getChildComponent(children);
 
-        if (component === _FormControl) {
+        if (component === reactBootstrap.FormControl) {
           if (children.props.as === 'select' && children.props.multiple) {
             component = 'multipleSelect';
           }
         }
 
         switch (component) {
-          case _FormCheck:
-          case _ToggleButton:
+          case reactBootstrap.FormCheck:
+          case reactBootstrap.ToggleButton:
           case 'checkbox':
           case 'radio':
             fieldProps.__TYPE__ = 'checked';
@@ -850,8 +834,8 @@
             fieldProps.__TYPE__ = 'array';
             break;
 
-          case _CheckboxGroup:
-          case _ToggleButtonGroup:
+          case CheckboxGroup:
+          case reactBootstrap.ToggleButtonGroup:
             if (children.props.type !== 'radio') {
               fieldProps.__TYPE__ = 'array';
             }
@@ -955,9 +939,7 @@
 
             Object.assign(childProps, (_Object$assign = {}, _defineProperty(_Object$assign, focusPropName, onFocus), _defineProperty(_Object$assign, blurPropName, onBlur), _Object$assign), validationProps);
             var fieldInstance = typeof children === 'function' ? children(childProps) : React.cloneElement(children, childProps);
-            return React__default.createElement(Consumer, null, function (_ref) {
-              var registerField = _ref.registerField;
-
+            return React__default.createElement(Consumer, null, function (registerField) {
               if (noStyle) {
                 _this2.$fieldutil = $fieldutil;
                 _this2.registerAncestorField = registerField;

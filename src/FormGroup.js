@@ -3,7 +3,6 @@ import { isValidElementType } from 'react-is';
 import PropTypes from 'prop-types';
 import { EasyField } from 'react-formutil';
 import {
-    Form,
     FormCheck,
     FormGroup,
     FormControl,
@@ -32,33 +31,25 @@ export const setErrorLevel = function(level) {
     errorLevelGlobal = level;
 };
 
-const isUglify = Form.displayName !== 'Form';
-
-const _FormControl = isUglify ? FormControl : 'FormControl';
-const _FormCheck = isUglify ? FormCheck : 'FormCheck';
-const _CheckboxGroup = isUglify ? CheckboxGroup : 'CheckboxGroup';
-const _ToggleButton = isUglify ? ToggleButton : 'ToggleButton';
-const _ToggleButtonGroup = isUglify ? ToggleButtonGroup : 'ToggleButtonGroup';
-
 const HelpBlock = FormControl.Feedback;
 
 function getChildComponent(children) {
     if (children) {
         const childrenType = children.type;
 
-        if (typeof childrenType !== 'string' && isValidElementType(childrenType)) {
+        if (isValidElementType(childrenType)) {
+            // SomeComponent.formutiType = xx
             if (childrenType.formutilType) {
                 return childrenType.formutilType;
             }
 
-            if (isUglify) {
-                return childrenType;
+            // <input type="checkbox" />
+            if (typeof childrenType === 'string' && children.props.type) {
+                return children.props.type;
             }
-
-            return childrenType.displayName || childrenType.name;
         }
 
-        return children.props?.type || children.type;
+        return childrenType || children;
     }
 }
 
@@ -242,7 +233,7 @@ class _FormGroup extends Component {
             });
 
             return (
-                <Provider value={{ registerField: this.registerField }}>
+                <Provider value={this.registerField}>
                     <FormGroup {...fieldProps} {...groupProps} as={groupAsProps}>
                         {label}
                         <Wrapper {...wrapperCol}>
@@ -263,15 +254,15 @@ class _FormGroup extends Component {
 
         let component = getChildComponent(children);
 
-        if (component === _FormControl) {
+        if (component === FormControl) {
             if (children.props.as === 'select' && children.props.multiple) {
                 component = 'multipleSelect';
             }
         }
 
         switch (component) {
-            case _FormCheck:
-            case _ToggleButton:
+            case FormCheck:
+            case ToggleButton:
             case 'checkbox':
             case 'radio':
                 fieldProps.__TYPE__ = 'checked';
@@ -281,8 +272,8 @@ class _FormGroup extends Component {
                 fieldProps.__TYPE__ = 'array';
                 break;
 
-            case _CheckboxGroup:
-            case _ToggleButtonGroup:
+            case CheckboxGroup:
+            case ToggleButtonGroup:
                 if (children.props.type !== 'radio') {
                     fieldProps.__TYPE__ = 'array';
                 }
@@ -401,7 +392,7 @@ class _FormGroup extends Component {
 
                     return (
                         <Consumer>
-                            {({ registerField }) => {
+                            {registerField => {
                                 if (noStyle) {
                                     this.$fieldutil = $fieldutil;
                                     this.registerAncestorField = registerField;

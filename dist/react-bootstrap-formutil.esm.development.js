@@ -12,7 +12,7 @@ import _inherits from '@babel/runtime/helpers/esm/inherits';
 import React, { Children, cloneElement, Component, createContext, isValidElement, Fragment } from 'react';
 import { isValidElementType } from 'react-is';
 import PropTypes from 'prop-types';
-import { Form, FormControl, FormLabel, InputGroup, FormText, FormGroup, FormCheck, ToggleButton, ToggleButtonGroup, Col, Row } from 'react-bootstrap';
+import { FormControl, FormLabel, InputGroup, FormText, FormGroup, ToggleButtonGroup, ToggleButton, FormCheck, Col, Row } from 'react-bootstrap';
 import isEqual from 'react-fast-compare';
 
 var CheckboxGroup = /*#__PURE__*/function (_Component) {
@@ -105,39 +105,25 @@ var errorLevelGlobal = 1;
 var setErrorLevel = function setErrorLevel(level) {
   errorLevelGlobal = level;
 };
-var isUglify = Form.displayName !== 'Form';
-
-var _FormControl = isUglify ? FormControl : 'FormControl';
-
-var _FormCheck = isUglify ? FormCheck : 'FormCheck';
-
-var _CheckboxGroup = isUglify ? CheckboxGroup : 'CheckboxGroup';
-
-var _ToggleButton = isUglify ? ToggleButton : 'ToggleButton';
-
-var _ToggleButtonGroup = isUglify ? ToggleButtonGroup : 'ToggleButtonGroup';
-
 var HelpBlock = FormControl.Feedback;
 
 function getChildComponent(children) {
   if (children) {
-    var _children$props;
-
     var childrenType = children.type;
 
-    if (typeof childrenType !== 'string' && isValidElementType(childrenType)) {
+    if (isValidElementType(childrenType)) {
+      // SomeComponent.formutiType = xx
       if (childrenType.formutilType) {
         return childrenType.formutilType;
-      }
+      } // <input type="checkbox" />
 
-      if (isUglify) {
-        return childrenType;
-      }
 
-      return childrenType.displayName || childrenType.name;
+      if (typeof childrenType === 'string' && children.props.type) {
+        return children.props.type;
+      }
     }
 
-    return ((_children$props = children.props) === null || _children$props === void 0 ? void 0 : _children$props.type) || children.type;
+    return childrenType || children;
   }
 }
 
@@ -337,9 +323,7 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
           }
         });
         return React.createElement(Provider, {
-          value: {
-            registerField: this.registerField
-          }
+          value: this.registerField
         }, React.createElement(FormGroup, Object.assign({}, fieldProps, groupProps, {
           as: groupAsProps
         }), label, React.createElement(Wrapper, wrapperCol, React.createElement(AddonWrapper, addonWrapperProps, addons.pre, childList, addons.end), error || helper), extraNode));
@@ -348,15 +332,15 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
       var children = typeof childList === 'function' ? childList : Children.only(childList);
       var component = getChildComponent(children);
 
-      if (component === _FormControl) {
+      if (component === FormControl) {
         if (children.props.as === 'select' && children.props.multiple) {
           component = 'multipleSelect';
         }
       }
 
       switch (component) {
-        case _FormCheck:
-        case _ToggleButton:
+        case FormCheck:
+        case ToggleButton:
         case 'checkbox':
         case 'radio':
           fieldProps.__TYPE__ = 'checked';
@@ -366,8 +350,8 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
           fieldProps.__TYPE__ = 'array';
           break;
 
-        case _CheckboxGroup:
-        case _ToggleButtonGroup:
+        case CheckboxGroup:
+        case ToggleButtonGroup:
           if (children.props.type !== 'radio') {
             fieldProps.__TYPE__ = 'array';
           }
@@ -471,9 +455,7 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
 
           Object.assign(childProps, (_Object$assign = {}, _defineProperty(_Object$assign, focusPropName, onFocus), _defineProperty(_Object$assign, blurPropName, onBlur), _Object$assign), validationProps);
           var fieldInstance = typeof children === 'function' ? children(childProps) : cloneElement(children, childProps);
-          return React.createElement(Consumer, null, function (_ref) {
-            var registerField = _ref.registerField;
-
+          return React.createElement(Consumer, null, function (registerField) {
             if (noStyle) {
               _this2.$fieldutil = $fieldutil;
               _this2.registerAncestorField = registerField;

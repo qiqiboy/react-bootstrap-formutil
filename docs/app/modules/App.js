@@ -11,8 +11,11 @@ import {
     ToggleButtonGroup,
     ToggleButton
 } from 'react-bootstrap';
+import MemoRender from 'memo-render';
 
 class App extends Component {
+    state = { $memo: false };
+
     submit = ev => {
         ev.preventDefault();
 
@@ -28,16 +31,30 @@ class App extends Component {
     };
 
     render() {
+        const { $memo } = this.state;
+
         return (
             <Container fluid style={{ margin: '20px 0' }}>
                 <h3 className="text-center">react-bootstrap-formutil</h3>
                 <p />
+                <div className="enable-memo">
+                    <Form.Check
+                        type="checkbox"
+                        label="Check me out"
+                        onChange={ev =>
+                            this.setState({
+                                $memo: ev.target.checked
+                            })
+                        }
+                    />
+                </div>
                 <Form noValidate onSubmit={this.submit}>
                     <CardColumns>
                         <Card>
                             <Card.Body>
                                 <Card.Title>登录表单 - 纵向 - demo1</Card.Title>
                                 <FormGroup
+                                    $memo={$memo}
                                     label="Email address"
                                     name="demo1.email"
                                     helper="We'll never share your email with anyone else."
@@ -47,6 +64,7 @@ class App extends Component {
                                 </FormGroup>
 
                                 <FormGroup
+                                    $memo={$memo}
                                     label="Password"
                                     name="demo1.password"
                                     required
@@ -54,7 +72,7 @@ class App extends Component {
                                     <Form.Control type="password" placeholder="Password" />
                                 </FormGroup>
 
-                                <FormGroup name="demo1.checkme" controlId="demo1.formBasicCheckbox">
+                                <FormGroup name="demo1.checkme" controlId="demo1.formBasicCheckbox" $memo={$memo}>
                                     <Form.Check type="checkbox" label="Check me out" />
                                 </FormGroup>
                                 <pre>{JSON.stringify(this.props.$formutil.$params.demo1, null, 2)}</pre>
@@ -64,6 +82,7 @@ class App extends Component {
                             <Card.Body>
                                 <Card.Title>登录表单 - 横向 - demo2</Card.Title>
                                 <FormGroup
+                                    $memo={$memo}
                                     labelCol={{ sm: 4 }}
                                     wrapperCol={{ sm: 8 }}
                                     label="Email address"
@@ -75,6 +94,7 @@ class App extends Component {
                                 </FormGroup>
 
                                 <FormGroup
+                                    $memo={$memo}
                                     labelCol={{ sm: 4 }}
                                     wrapperCol={{ sm: 8 }}
                                     label="Password"
@@ -90,6 +110,7 @@ class App extends Component {
                                             offset: 4
                                         }
                                     }}
+                                    $memo={$memo}
                                     name="demo2.checkme"
                                     controlId="demo2.formBasicCheckbox">
                                     <Form.Check type="checkbox" label="Check me out" />
@@ -104,6 +125,7 @@ class App extends Component {
                                     addons={{
                                         pre: 'Email address'
                                     }}
+                                    $memo={$memo}
                                     name="demo3.email"
                                     helper="We'll never share your email with anyone else."
                                     required
@@ -115,13 +137,14 @@ class App extends Component {
                                     addons={{
                                         pre: 'Password'
                                     }}
+                                    $memo={$memo}
                                     name="demo3.password"
                                     required
                                     controlId="demo3.formBasicPassword">
                                     <Form.Control type="password" placeholder="Password" />
                                 </FormGroup>
 
-                                <FormGroup name="demo3.checkme" controlId="demo3.formBasicCheckbox">
+                                <FormGroup name="demo3.checkme" controlId="demo3.formBasicCheckbox" $memo={$memo}>
                                     <Form.Check type="checkbox" label="Check me out" />
                                 </FormGroup>
                                 <pre>{JSON.stringify(this.props.$formutil.$params.demo3, null, 2)}</pre>
@@ -134,6 +157,7 @@ class App extends Component {
                                 <Form.Row>
                                     <FormGroup
                                         as={Col}
+                                        $memo={$memo}
                                         name="demo4.email"
                                         helper="We'll never share your email with anyone else."
                                         required
@@ -145,6 +169,7 @@ class App extends Component {
                                         as={Col}
                                         name="demo4.password"
                                         required
+                                        $memo={$memo}
                                         controlId="demo4.formBasicPassword">
                                         <Form.Control type="password" placeholder="Password" />
                                     </FormGroup>
@@ -158,6 +183,7 @@ class App extends Component {
                                         <FormGroup
                                             name="demo4.first_name"
                                             required
+                                            $memo={$memo}
                                             validMessage={{ required: 'First name reuqired!' }}
                                             noStyle>
                                             <Form.Control placeholder="姓" />
@@ -165,6 +191,7 @@ class App extends Component {
                                         <FormGroup
                                             name="demo4.last_name"
                                             required
+                                            $memo={$memo}
                                             validMessage={{ required: 'Last name reuqired!' }}
                                             noStyle>
                                             <Form.Control placeholder="名" />
@@ -179,7 +206,7 @@ class App extends Component {
                         <Card>
                             <Card.Body>
                                 <Card.Title>单选组和多选组 - demo5</Card.Title>
-                                <FormGroup name="demo5.checkbox" required>
+                                <FormGroup name="demo5.checkbox" required $memo={$memo}>
                                     <CheckboxGroup>
                                         <Form.Check
                                             custom
@@ -200,7 +227,7 @@ class App extends Component {
                                         />
                                     </CheckboxGroup>
                                 </FormGroup>
-                                <FormGroup name="demo5.radio" required>
+                                <FormGroup name="demo5.radio" required $memo={$memo}>
                                     <RadioGroup>
                                         <Form.Check
                                             custom
@@ -221,7 +248,7 @@ class App extends Component {
                                         />
                                     </RadioGroup>
                                 </FormGroup>
-                                <FormGroup name="demo5.switch" required>
+                                <FormGroup name="demo5.switch" required $memo={$memo}>
                                     <SwitchGroup>
                                         <Form.Check
                                             custom
@@ -243,7 +270,7 @@ class App extends Component {
                                     </SwitchGroup>
                                 </FormGroup>
 
-                                <FormGroup name="demo5.inlineSwitch" required>
+                                <FormGroup name="demo5.inlineSwitch" required $memo={$memo}>
                                     <CheckboxGroup>
                                         <Form.Check
                                             inline
@@ -272,16 +299,27 @@ class App extends Component {
                         <Card>
                             <Card.Body>
                                 <Card.Title>其他组件 - demo6</Card.Title>
-                                <FormGroup label="input" name="demo6.input" required controlId="demo6.input">
+                                <FormGroup
+                                    label="input"
+                                    name="demo6.input"
+                                    required
+                                    controlId="demo6.input"
+                                    $memo={$memo}>
                                     <Form.Control type="email" placeholder="Enter email" />
                                 </FormGroup>
 
-                                <FormGroup label="textarea" name="demo6.textarea" required controlId="demo6.textarea">
+                                <FormGroup
+                                    label="textarea"
+                                    name="demo6.textarea"
+                                    required
+                                    controlId="demo6.textarea"
+                                    $memo={$memo}>
                                     <Form.Control as="textarea" />
                                 </FormGroup>
 
                                 <FormGroup
                                     label="select"
+                                    $memo={$memo}
                                     name="demo6.select"
                                     helper="We'll never share your email with anyone else."
                                     required
@@ -298,6 +336,7 @@ class App extends Component {
 
                                 <FormGroup
                                     label="select"
+                                    $memo={$memo}
                                     name="demo6.multipleSelect"
                                     helper="We'll never share your email with anyone else."
                                     required
@@ -315,6 +354,7 @@ class App extends Component {
                                 <FormGroup
                                     name="demo6.toggleButtonCheckbox"
                                     required
+                                    $memo={$memo}
                                     controlId="demo6.toggleButtonCheckbox"
                                     $defaultValue={[2]}>
                                     <ToggleButtonGroup type="checkbox">
@@ -327,24 +367,25 @@ class App extends Component {
                                 <FormGroup
                                     name="demo6.toggleButtonRadio"
                                     required
+                                    $memo={$memo}
                                     controlId="demo6.toggleButtonRadio"
                                     $defaultValue={2}>
-                                    <ToggleButtonGroup type="radio">
+                                    <ToggleButtonGroup name="demo6.toggleButtonRadio" type="radio">
                                         <ToggleButton value={1}>Option 1</ToggleButton>
                                         <ToggleButton value={2}>Option 2</ToggleButton>
                                         <ToggleButton value={3}>Option 3</ToggleButton>
                                     </ToggleButtonGroup>
                                 </FormGroup>
 
-                                <FormGroup name="demo6.checkbox" required controlId="demo6.checkbox">
+                                <FormGroup name="demo6.checkbox" required controlId="demo6.checkbox" $memo={$memo}>
                                     <Form.Check custom type="checkbox" label="checkbox" />
                                 </FormGroup>
 
-                                <FormGroup name="demo6.radio" required controlId="demo6.radio">
+                                <FormGroup name="demo6.radio" required controlId="demo6.radio" $memo={$memo}>
                                     <Form.Check custom type="radio" label="radio" />
                                 </FormGroup>
 
-                                <FormGroup name="demo6.switch" required controlId="demo6.switch">
+                                <FormGroup name="demo6.switch" required controlId="demo6.switch" $memo={$memo}>
                                     <Form.Check type="switch" label="switch" />
                                 </FormGroup>
 
@@ -352,10 +393,12 @@ class App extends Component {
                             </Card.Body>
                         </Card>
                     </CardColumns>
-                    <Button variant="primary" type="submit" block>
-                        Submit
-                    </Button>
-                    <pre>{JSON.stringify(this.props.$formutil.$params, null, 2)}</pre>
+                    <MemoRender disabled={!$memo}>
+                        <Button variant="primary" type="submit" block>
+                            Submit
+                        </Button>
+                        <pre>{JSON.stringify(this.props.$formutil.$params, null, 2)}</pre>
+                    </MemoRender>
                 </Form>
             </Container>
         );
