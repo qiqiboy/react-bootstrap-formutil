@@ -37,17 +37,22 @@ class App extends Component {
             <Container fluid style={{ margin: '20px 0' }}>
                 <h3 className="text-center">react-bootstrap-formutil</h3>
                 <p />
-                <div className="enable-memo">
-                    <Form.Check
-                        type="checkbox"
-                        label="Check me out"
-                        onChange={ev =>
-                            this.setState({
-                                $memo: ev.target.checked
-                            })
-                        }
-                    />
-                </div>
+                <MemoRender deps={[this.state.$memo]}>
+                    <div
+                        className="enable-memo"
+                        style={{ position: 'sticky', padding: 10, top: 0, zIndex: 10, background: 'white' }}>
+                        <Form.Check
+                            id="enable-$memo"
+                            type="checkbox"
+                            label="Enable $memo"
+                            onChange={ev =>
+                                this.setState({
+                                    $memo: ev.target.checked
+                                })
+                            }
+                        />
+                    </div>
+                </MemoRender>
                 <Form noValidate onSubmit={this.submit}>
                     <CardColumns>
                         <Card>
