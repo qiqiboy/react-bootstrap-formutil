@@ -14,7 +14,7 @@ import {
 import MemoRender from 'memo-render';
 
 class App extends Component {
-    state = { $memo: false };
+    state = { memoIndex: 0 };
 
     submit = ev => {
         ev.preventDefault();
@@ -30,27 +30,34 @@ class App extends Component {
         }
     };
 
+    memoEnum = [false, true, []];
+
     render() {
-        const { $memo } = this.state;
+        const $memo = this.memoEnum[this.state.memoIndex];
 
         return (
             <Container fluid style={{ margin: '20px 0' }}>
                 <h3 className="text-center">react-bootstrap-formutil</h3>
                 <p />
-                <MemoRender deps={[this.state.$memo]}>
+                <MemoRender deps={[this.state.memoIndex]}>
                     <div
                         className="enable-memo"
                         style={{ position: 'sticky', padding: 10, top: 0, zIndex: 10, background: 'white' }}>
-                        <Form.Check
-                            id="enable-$memo"
-                            type="checkbox"
-                            label="Enable $memo"
-                            onChange={ev =>
+                        Enable $memo：
+                        <ToggleButtonGroup
+                            size="sm"
+                            name="$memo-enable"
+                            type="radio"
+                            value={this.state.memoIndex}
+                            onChange={value => {
                                 this.setState({
-                                    $memo: ev.target.checked
-                                })
-                            }
-                        />
+                                    memoIndex: value
+                                });
+                            }}>
+                            <ToggleButton value={0}>false</ToggleButton>
+                            <ToggleButton value={1}>true</ToggleButton>
+                            <ToggleButton value={2}>空数组</ToggleButton>
+                        </ToggleButtonGroup>
                     </div>
                 </MemoRender>
                 <Form noValidate onSubmit={this.submit}>
@@ -179,7 +186,11 @@ class App extends Component {
                                         <Form.Control type="password" placeholder="Password" />
                                     </FormGroup>
 
-                                    <FormGroup as={Col} name="demo4.checkme" controlId="demo4.formBasicCheckbox">
+                                    <FormGroup
+                                        as={Col}
+                                        name="demo4.checkme"
+                                        controlId="demo4.formBasicCheckbox"
+                                        $memo={$memo}>
                                         <Form.Check type="checkbox" label="Check" />
                                     </FormGroup>
                                 </Form.Row>

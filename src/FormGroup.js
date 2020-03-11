@@ -250,6 +250,11 @@ class _FormGroup extends Component {
             );
         }
 
+        // If $memo is true, pass the children to Field for SCU diffing.
+        if (props.$memo === true) {
+            fieldProps.__DIFF__ = childList;
+        }
+
         const children = typeof childList === 'function' ? childList : Children.only(childList);
 
         let component = getChildComponent(children);

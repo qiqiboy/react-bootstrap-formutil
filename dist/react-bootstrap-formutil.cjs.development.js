@@ -333,6 +333,11 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
         }, React__default.createElement(reactBootstrap.FormGroup, Object.assign({}, fieldProps, groupProps, {
           as: groupAsProps
         }), label, React__default.createElement(Wrapper, wrapperCol, React__default.createElement(AddonWrapper, addonWrapperProps, addons.pre, childList, addons.end), error || helper), extraNode));
+      } // If $memo is true, pass the children to Field for SCU diffing.
+
+
+      if (props.$memo === true) {
+        fieldProps.__DIFF__ = childList;
       }
 
       var children = typeof childList === 'function' ? childList : React.Children.only(childList);
