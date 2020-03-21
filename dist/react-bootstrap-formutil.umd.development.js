@@ -22,15 +22,22 @@
     return obj;
   }
 
+  var defineProperty = _defineProperty;
+
+  function createCommonjsModule(fn, module) {
+  	return module = { exports: {} }, fn(module, module.exports), module.exports;
+  }
+
+  var _typeof_1 = createCommonjsModule(function (module) {
   function _typeof(obj) {
     "@babel/helpers - typeof";
 
     if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-      _typeof = function _typeof(obj) {
+      module.exports = _typeof = function _typeof(obj) {
         return typeof obj;
       };
     } else {
-      _typeof = function _typeof(obj) {
+      module.exports = _typeof = function _typeof(obj) {
         return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
       };
     }
@@ -38,23 +45,30 @@
     return _typeof(obj);
   }
 
+  module.exports = _typeof;
+  });
+
   function _toPrimitive(input, hint) {
-    if (_typeof(input) !== "object" || input === null) return input;
+    if (_typeof_1(input) !== "object" || input === null) return input;
     var prim = input[Symbol.toPrimitive];
 
     if (prim !== undefined) {
       var res = prim.call(input, hint || "default");
-      if (_typeof(res) !== "object") return res;
+      if (_typeof_1(res) !== "object") return res;
       throw new TypeError("@@toPrimitive must return a primitive value.");
     }
 
     return (hint === "string" ? String : Number)(input);
   }
 
+  var toPrimitive = _toPrimitive;
+
   function _toPropertyKey(arg) {
-    var key = _toPrimitive(arg, "string");
-    return _typeof(key) === "symbol" ? key : String(key);
+    var key = toPrimitive(arg, "string");
+    return _typeof_1(key) === "symbol" ? key : String(key);
   }
+
+  var toPropertyKey = _toPropertyKey;
 
   function ownKeys(object, enumerableOnly) {
     var keys = Object.keys(object);
@@ -76,7 +90,7 @@
 
       if (i % 2) {
         ownKeys(Object(source), true).forEach(function (key) {
-          _defineProperty(target, key, source[key]);
+          defineProperty(target, key, source[key]);
         });
       } else if (Object.getOwnPropertyDescriptors) {
         Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
@@ -89,6 +103,8 @@
 
     return target;
   }
+
+  var objectSpread2 = _objectSpread2;
 
   function _objectWithoutPropertiesLoose(source, excluded) {
     if (source == null) return {};
@@ -105,9 +121,11 @@
     return target;
   }
 
+  var objectWithoutPropertiesLoose = _objectWithoutPropertiesLoose;
+
   function _objectWithoutProperties(source, excluded) {
     if (source == null) return {};
-    var target = _objectWithoutPropertiesLoose(source, excluded);
+    var target = objectWithoutPropertiesLoose(source, excluded);
     var key, i;
 
     if (Object.getOwnPropertySymbols) {
@@ -124,11 +142,15 @@
     return target;
   }
 
+  var objectWithoutProperties = _objectWithoutProperties;
+
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
       throw new TypeError("Cannot call a class as a function");
     }
   }
+
+  var classCallCheck = _classCallCheck;
 
   function _defineProperties(target, props) {
     for (var i = 0; i < props.length; i++) {
@@ -146,6 +168,8 @@
     return Constructor;
   }
 
+  var createClass = _createClass;
+
   function _assertThisInitialized(self) {
     if (self === void 0) {
       throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -154,29 +178,41 @@
     return self;
   }
 
+  var assertThisInitialized = _assertThisInitialized;
+
   function _possibleConstructorReturn(self, call) {
-    if (call && (_typeof(call) === "object" || typeof call === "function")) {
+    if (call && (_typeof_1(call) === "object" || typeof call === "function")) {
       return call;
     }
 
-    return _assertThisInitialized(self);
+    return assertThisInitialized(self);
   }
 
+  var possibleConstructorReturn = _possibleConstructorReturn;
+
+  var getPrototypeOf = createCommonjsModule(function (module) {
   function _getPrototypeOf(o) {
-    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+    module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
       return o.__proto__ || Object.getPrototypeOf(o);
     };
     return _getPrototypeOf(o);
   }
 
+  module.exports = _getPrototypeOf;
+  });
+
+  var setPrototypeOf = createCommonjsModule(function (module) {
   function _setPrototypeOf(o, p) {
-    _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
       o.__proto__ = p;
       return o;
     };
 
     return _setPrototypeOf(o, p);
   }
+
+  module.exports = _setPrototypeOf;
+  });
 
   function _inherits(subClass, superClass) {
     if (typeof superClass !== "function" && superClass !== null) {
@@ -190,12 +226,10 @@
         configurable: true
       }
     });
-    if (superClass) _setPrototypeOf(subClass, superClass);
+    if (superClass) setPrototypeOf(subClass, superClass);
   }
 
-  function createCommonjsModule(fn, module) {
-  	return module = { exports: {} }, fn(module, module.exports), module.exports;
-  }
+  var inherits = _inherits;
 
   var reactIs_development = createCommonjsModule(function (module, exports) {
 
@@ -407,15 +441,15 @@
   var _reactIs_16_13_0_reactIs_1 = _reactIs_16_13_0_reactIs.isValidElementType;
 
   var CheckboxGroup = /*#__PURE__*/function (_Component) {
-    _inherits(CheckboxGroup, _Component);
+    inherits(CheckboxGroup, _Component);
 
     function CheckboxGroup() {
-      _classCallCheck(this, CheckboxGroup);
+      classCallCheck(this, CheckboxGroup);
 
-      return _possibleConstructorReturn(this, _getPrototypeOf(CheckboxGroup).apply(this, arguments));
+      return possibleConstructorReturn(this, getPrototypeOf(CheckboxGroup).apply(this, arguments));
     }
 
-    _createClass(CheckboxGroup, [{
+    createClass(CheckboxGroup, [{
       key: "render",
       value: function render() {
         var _this$props = this.props,
@@ -612,20 +646,20 @@
   }
 
   var _FormGroup = /*#__PURE__*/function (_Component) {
-    _inherits(_FormGroup, _Component);
+    inherits(_FormGroup, _Component);
 
     function _FormGroup() {
       var _getPrototypeOf2;
 
       var _this;
 
-      _classCallCheck(this, _FormGroup);
+      classCallCheck(this, _FormGroup);
 
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
 
-      _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(_FormGroup)).call.apply(_getPrototypeOf2, [this].concat(args)));
+      _this = possibleConstructorReturn(this, (_getPrototypeOf2 = getPrototypeOf(_FormGroup)).call.apply(_getPrototypeOf2, [this].concat(args)));
       _this.fields = {};
 
       _this.registerField = function (name, $fieldutil) {
@@ -713,7 +747,7 @@
       return _this;
     }
 
-    _createClass(_FormGroup, [{
+    createClass(_FormGroup, [{
       key: "componentDidMount",
       value: function componentDidMount() {
         var _this$registerAncesto;
@@ -750,7 +784,7 @@
             noStyle = props.noStyle,
             _props$errorLevel = props.errorLevel,
             errorLevel = _props$errorLevel === void 0 ? errorLevelGlobal : _props$errorLevel,
-            fieldProps = _objectWithoutProperties(props, ["children", "addons", "label", "helper", "labelCol", "wrapperCol", "validationState", "className", "as", "feedback", "extra", "noStyle", "errorLevel"]);
+            fieldProps = objectWithoutProperties(props, ["children", "addons", "label", "helper", "labelCol", "wrapperCol", "validationState", "className", "as", "feedback", "extra", "noStyle", "errorLevel"]);
 
         var Wrapper = wrapperCol ? reactBootstrap.Col : React.Fragment;
         var groupAsProps = !as && (labelCol || wrapperCol) ? reactBootstrap.Row : as;
@@ -758,7 +792,7 @@
         if (label) {
           if (React.isValidElement(label)) {
             if (labelCol) {
-              label = React.cloneElement(label, _objectSpread2({
+              label = React.cloneElement(label, objectSpread2({
                 column: true
               }, labelCol));
             }
@@ -875,7 +909,7 @@
                 onFocus = $handleProps[focusPropName],
                 onBlur = $handleProps[blurPropName],
                 value = $handleProps[valuePropName],
-                restProps = _objectWithoutProperties($handleProps, ["$fieldutil", changePropName, focusPropName, blurPropName, valuePropName].map(_toPropertyKey));
+                restProps = objectWithoutProperties($handleProps, ["$fieldutil", changePropName, focusPropName, blurPropName, valuePropName].map(toPropertyKey));
 
             var $invalid = $fieldutil.$invalid,
                 $dirty = $fieldutil.$dirty,
@@ -915,7 +949,7 @@
                   onCompositionStart: function onCompositionStart() {
                     return _this2.isComposition = true;
                   }
-                }, _defineProperty(_childProps, changePropName, component === 'multipleSelect' ? function (ev) {
+                }, defineProperty(_childProps, changePropName, component === 'multipleSelect' ? function (ev) {
                   _onChange([].slice.call(ev.target.options).filter(function (option) {
                     return option.selected;
                   }).map(function (option) {
@@ -933,7 +967,7 @@
 
                     _onChange.apply(void 0, [ev].concat(rest));
                   }
-                }), _defineProperty(_childProps, valuePropName, 'compositionValue' in _this2 ? _this2.compositionValue : value), _defineProperty(_childProps, "name", fieldProps.name), _childProps);
+                }), defineProperty(_childProps, valuePropName, 'compositionValue' in _this2 ? _this2.compositionValue : value), defineProperty(_childProps, "name", fieldProps.name), _childProps);
                 break;
             }
 
@@ -942,7 +976,7 @@
                 validationProps = _this2$getValidationP.validationProps,
                 error = _this2$getValidationP.error;
 
-            Object.assign(childProps, (_Object$assign = {}, _defineProperty(_Object$assign, focusPropName, onFocus), _defineProperty(_Object$assign, blurPropName, onBlur), _Object$assign), validationProps);
+            Object.assign(childProps, (_Object$assign = {}, defineProperty(_Object$assign, focusPropName, onFocus), defineProperty(_Object$assign, blurPropName, onBlur), _Object$assign), validationProps);
             var fieldInstance = typeof children === 'function' ? children(childProps) : React.cloneElement(children, childProps);
             return React__default.createElement(Consumer, null, function (registerField) {
               if (noStyle) {
@@ -980,15 +1014,15 @@
   insertRule('.has-error .invalid-feedback', 'display: block');
 
   var RadioGroup = /*#__PURE__*/function (_Component) {
-    _inherits(RadioGroup, _Component);
+    inherits(RadioGroup, _Component);
 
     function RadioGroup() {
-      _classCallCheck(this, RadioGroup);
+      classCallCheck(this, RadioGroup);
 
-      return _possibleConstructorReturn(this, _getPrototypeOf(RadioGroup).apply(this, arguments));
+      return possibleConstructorReturn(this, getPrototypeOf(RadioGroup).apply(this, arguments));
     }
 
-    _createClass(RadioGroup, [{
+    createClass(RadioGroup, [{
       key: "render",
       value: function render() {
         var _this$props = this.props,
