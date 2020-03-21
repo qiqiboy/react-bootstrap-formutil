@@ -1,27 +1,235 @@
 import { EasyField } from 'react-formutil';
 export * from 'react-formutil';
-import _defineProperty from '@babel/runtime/helpers/esm/defineProperty';
-import _toPropertyKey from '@babel/runtime/helpers/esm/toPropertyKey';
-import _objectSpread from '@babel/runtime/helpers/esm/objectSpread2';
-import _objectWithoutProperties from '@babel/runtime/helpers/esm/objectWithoutProperties';
-import _classCallCheck from '@babel/runtime/helpers/esm/classCallCheck';
-import _createClass from '@babel/runtime/helpers/esm/createClass';
-import _possibleConstructorReturn from '@babel/runtime/helpers/esm/possibleConstructorReturn';
-import _getPrototypeOf from '@babel/runtime/helpers/esm/getPrototypeOf';
-import _inherits from '@babel/runtime/helpers/esm/inherits';
 import React, { Children, cloneElement, Component, createContext, isValidElement, Fragment } from 'react';
 import { isValidElementType } from 'react-is';
 import PropTypes from 'prop-types';
 import { FormControl, FormLabel, InputGroup, FormText, FormGroup, ToggleButtonGroup, ToggleButton, FormCheck, Col, Row } from 'react-bootstrap';
 import isEqual from 'react-fast-compare';
 
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    _typeof = function _typeof(obj) {
+      return typeof obj;
+    };
+  } else {
+    _typeof = function _typeof(obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
+function _toPrimitive(input, hint) {
+  if (_typeof(input) !== "object" || input === null) return input;
+  var prim = input[Symbol.toPrimitive];
+
+  if (prim !== undefined) {
+    var res = prim.call(input, hint || "default");
+    if (_typeof(res) !== "object") return res;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+
+  return (hint === "string" ? String : Number)(input);
+}
+
+function _toPropertyKey(arg) {
+  var key = _toPrimitive(arg, "string");
+  return _typeof(key) === "symbol" ? key : String(key);
+}
+
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    });
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+
+  return target;
+}
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+  var target = _objectWithoutPropertiesLoose(source, excluded);
+  var key, i;
+
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+
+  return target;
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  return Constructor;
+}
+
+function _getPrototypeOf(o) {
+  _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+    return o.__proto__ || Object.getPrototypeOf(o);
+  };
+  return _getPrototypeOf(o);
+}
+
+function _isNativeReflectConstruct() {
+  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+  if (Reflect.construct.sham) return false;
+  if (typeof Proxy === "function") return true;
+
+  try {
+    Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function _assertThisInitialized(self) {
+  if (self === void 0) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return self;
+}
+
+function _possibleConstructorReturn(self, call) {
+  if (call && (_typeof(call) === "object" || typeof call === "function")) {
+    return call;
+  }
+
+  return _assertThisInitialized(self);
+}
+
+function _createSuper(Derived) {
+  return function () {
+    var Super = _getPrototypeOf(Derived),
+        result;
+
+    if (_isNativeReflectConstruct()) {
+      var NewTarget = _getPrototypeOf(this).constructor;
+      result = Reflect.construct(Super, arguments, NewTarget);
+    } else {
+      result = Super.apply(this, arguments);
+    }
+
+    return _possibleConstructorReturn(this, result);
+  };
+}
+
+function _setPrototypeOf(o, p) {
+  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function");
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) _setPrototypeOf(subClass, superClass);
+}
+
 var CheckboxGroup = /*#__PURE__*/function (_Component) {
   _inherits(CheckboxGroup, _Component);
+
+  var _super = _createSuper(CheckboxGroup);
 
   function CheckboxGroup() {
     _classCallCheck(this, CheckboxGroup);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(CheckboxGroup).apply(this, arguments));
+    return _super.apply(this, arguments);
   }
 
   _createClass(CheckboxGroup, [{
@@ -65,6 +273,7 @@ var CheckboxGroup = /*#__PURE__*/function (_Component) {
   return CheckboxGroup;
 }(Component);
 
+CheckboxGroup.formutilType = 'array';
 CheckboxGroup.propTypes = {
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
@@ -130,9 +339,9 @@ function getChildComponent(children) {
 var _FormGroup = /*#__PURE__*/function (_Component) {
   _inherits(_FormGroup, _Component);
 
-  function _FormGroup() {
-    var _getPrototypeOf2;
+  var _super = _createSuper(_FormGroup);
 
+  function _FormGroup() {
     var _this;
 
     _classCallCheck(this, _FormGroup);
@@ -141,7 +350,7 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
       args[_key] = arguments[_key];
     }
 
-    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(_FormGroup)).call.apply(_getPrototypeOf2, [this].concat(args)));
+    _this = _super.call.apply(_super, [this].concat(args));
     _this.fields = {};
 
     _this.registerField = function (name, $fieldutil) {
@@ -216,10 +425,10 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
       return {
         groupProps: groupProps,
         validationProps: validationProps,
-        error: hasError ? React.createElement(HelpBlock, {
+        error: hasError ? /*#__PURE__*/React.createElement(HelpBlock, {
           type: "invalid"
         }, Array.isArray($errors) ? $errors.map(function (err, index) {
-          return React.createElement("div", {
+          return /*#__PURE__*/React.createElement("div", {
             key: index
           }, err);
         }) : $errors) : null
@@ -274,12 +483,12 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
       if (label) {
         if (isValidElement(label)) {
           if (labelCol) {
-            label = cloneElement(label, _objectSpread({
+            label = cloneElement(label, _objectSpread2({
               column: true
             }, labelCol));
           }
         } else {
-          label = React.createElement(FormLabel, Object.assign({
+          label = /*#__PURE__*/React.createElement(FormLabel, Object.assign({
             column: !!labelCol
           }, labelCol), label);
         }
@@ -292,18 +501,18 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
 
       if (addons) {
         if (addons.pre) {
-          addons.pre = React.createElement(InputGroup.Prepend, null, isValidElement(addons.pre) ? addons.pre : React.createElement(InputGroup.Text, null, addons.pre));
+          addons.pre = /*#__PURE__*/React.createElement(InputGroup.Prepend, null, isValidElement(addons.pre) ? addons.pre : /*#__PURE__*/React.createElement(InputGroup.Text, null, addons.pre));
         }
 
         if (addons.end) {
-          addons.end = React.createElement(InputGroup.Append, null, isValidElement(addons.end) ? addons.end : React.createElement(InputGroup.Text, null, addons.end));
+          addons.end = /*#__PURE__*/React.createElement(InputGroup.Append, null, isValidElement(addons.end) ? addons.end : /*#__PURE__*/React.createElement(InputGroup.Text, null, addons.end));
         }
       } else {
         addons = {};
       }
 
       if (helper && !isValidElement(helper)) {
-        helper = React.createElement(FormText, {
+        helper = /*#__PURE__*/React.createElement(FormText, {
           className: "text-muted"
         }, helper);
       }
@@ -322,11 +531,11 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
             _this2.forceUpdate();
           }
         });
-        return React.createElement(Provider, {
+        return /*#__PURE__*/React.createElement(Provider, {
           value: this.registerField
-        }, React.createElement(FormGroup, Object.assign({}, fieldProps, groupProps, {
+        }, /*#__PURE__*/React.createElement(FormGroup, Object.assign({}, fieldProps, groupProps, {
           as: groupAsProps
-        }), label, React.createElement(Wrapper, wrapperCol, React.createElement(AddonWrapper, addonWrapperProps, addons.pre, childList, addons.end), error || helper), extraNode));
+        }), label, /*#__PURE__*/React.createElement(Wrapper, wrapperCol, /*#__PURE__*/React.createElement(AddonWrapper, addonWrapperProps, addons.pre, childList, addons.end), error || helper), extraNode));
       } // If $memo is true, pass the children to Field for SCU diffing.
 
 
@@ -372,7 +581,7 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
           break;
       }
 
-      return React.createElement(EasyField, Object.assign({}, fieldProps, {
+      return /*#__PURE__*/React.createElement(EasyField, Object.assign({}, fieldProps, {
         passUtil: "$fieldutil",
         render: function render($handleProps) {
           var _childProps, _Object$assign;
@@ -460,16 +669,16 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
 
           Object.assign(childProps, (_Object$assign = {}, _defineProperty(_Object$assign, focusPropName, onFocus), _defineProperty(_Object$assign, blurPropName, onBlur), _Object$assign), validationProps);
           var fieldInstance = typeof children === 'function' ? children(childProps) : cloneElement(children, childProps);
-          return React.createElement(Consumer, null, function (registerField) {
+          return /*#__PURE__*/React.createElement(Consumer, null, function (registerField) {
             if (noStyle) {
               _this2.$fieldutil = $fieldutil;
               _this2.registerAncestorField = registerField;
               return fieldInstance;
             }
 
-            return React.createElement(FormGroup, Object.assign({}, restProps, groupProps, {
+            return /*#__PURE__*/React.createElement(FormGroup, Object.assign({}, restProps, groupProps, {
               as: groupAsProps
-            }), label, React.createElement(Wrapper, wrapperCol, React.createElement(AddonWrapper, addonWrapperProps, addons.pre, fieldInstance, addons.end), error || helper), extraNode);
+            }), label, /*#__PURE__*/React.createElement(Wrapper, wrapperCol, /*#__PURE__*/React.createElement(AddonWrapper, addonWrapperProps, addons.pre, fieldInstance, addons.end), error || helper), extraNode);
           });
         }
       }));
@@ -498,10 +707,12 @@ insertRule('.has-error .invalid-feedback', 'display: block');
 var RadioGroup = /*#__PURE__*/function (_Component) {
   _inherits(RadioGroup, _Component);
 
+  var _super = _createSuper(RadioGroup);
+
   function RadioGroup() {
     _classCallCheck(this, RadioGroup);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(RadioGroup).apply(this, arguments));
+    return _super.apply(this, arguments);
   }
 
   _createClass(RadioGroup, [{

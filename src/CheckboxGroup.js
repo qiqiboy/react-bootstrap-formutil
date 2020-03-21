@@ -2,6 +2,7 @@ import { Component, cloneElement, Children } from 'react';
 import PropTypes from 'prop-types';
 
 class CheckboxGroup extends Component {
+    static formutilType = 'array';
     static propTypes = {
         onChange: PropTypes.func,
         onFocus: PropTypes.func,

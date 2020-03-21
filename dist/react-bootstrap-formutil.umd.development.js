@@ -5,7 +5,7 @@
 }(this, (function (exports, reactFormutil, React, PropTypes, reactBootstrap) { 'use strict';
 
   var React__default = 'default' in React ? React['default'] : React;
-  PropTypes = PropTypes && PropTypes.hasOwnProperty('default') ? PropTypes['default'] : PropTypes;
+  PropTypes = PropTypes && Object.prototype.hasOwnProperty.call(PropTypes, 'default') ? PropTypes['default'] : PropTypes;
 
   function _defineProperty(obj, key, value) {
     if (key in obj) {
@@ -170,6 +170,32 @@
 
   var createClass = _createClass;
 
+  var getPrototypeOf = createCommonjsModule(function (module) {
+  function _getPrototypeOf(o) {
+    module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+      return o.__proto__ || Object.getPrototypeOf(o);
+    };
+    return _getPrototypeOf(o);
+  }
+
+  module.exports = _getPrototypeOf;
+  });
+
+  function _isNativeReflectConstruct() {
+    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+    if (Reflect.construct.sham) return false;
+    if (typeof Proxy === "function") return true;
+
+    try {
+      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  var isNativeReflectConstruct = _isNativeReflectConstruct;
+
   function _assertThisInitialized(self) {
     if (self === void 0) {
       throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -190,16 +216,23 @@
 
   var possibleConstructorReturn = _possibleConstructorReturn;
 
-  var getPrototypeOf = createCommonjsModule(function (module) {
-  function _getPrototypeOf(o) {
-    module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
-      return o.__proto__ || Object.getPrototypeOf(o);
+  function _createSuper(Derived) {
+    return function () {
+      var Super = getPrototypeOf(Derived),
+          result;
+
+      if (isNativeReflectConstruct()) {
+        var NewTarget = getPrototypeOf(this).constructor;
+        result = Reflect.construct(Super, arguments, NewTarget);
+      } else {
+        result = Super.apply(this, arguments);
+      }
+
+      return possibleConstructorReturn(this, result);
     };
-    return _getPrototypeOf(o);
   }
 
-  module.exports = _getPrototypeOf;
-  });
+  var createSuper = _createSuper;
 
   var setPrototypeOf = createCommonjsModule(function (module) {
   function _setPrototypeOf(o, p) {
@@ -432,21 +465,23 @@
   var reactIs_development_27 = reactIs_development.isValidElementType;
   var reactIs_development_28 = reactIs_development.typeOf;
 
-  var _reactIs_16_13_0_reactIs = createCommonjsModule(function (module) {
+  var _reactIs_16_13_1_reactIs = createCommonjsModule(function (module) {
 
   {
     module.exports = reactIs_development;
   }
   });
-  var _reactIs_16_13_0_reactIs_1 = _reactIs_16_13_0_reactIs.isValidElementType;
+  var _reactIs_16_13_1_reactIs_1 = _reactIs_16_13_1_reactIs.isValidElementType;
 
   var CheckboxGroup = /*#__PURE__*/function (_Component) {
     inherits(CheckboxGroup, _Component);
 
+    var _super = createSuper(CheckboxGroup);
+
     function CheckboxGroup() {
       classCallCheck(this, CheckboxGroup);
 
-      return possibleConstructorReturn(this, getPrototypeOf(CheckboxGroup).apply(this, arguments));
+      return _super.apply(this, arguments);
     }
 
     createClass(CheckboxGroup, [{
@@ -490,6 +525,7 @@
     return CheckboxGroup;
   }(React.Component);
 
+  CheckboxGroup.formutilType = 'array';
   CheckboxGroup.propTypes = {
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
@@ -516,23 +552,24 @@
     }
   }
 
-  var isArray = Array.isArray;
-  var keyList = Object.keys;
-  var hasProp = Object.prototype.hasOwnProperty;
+  /* global Map:readonly, Set:readonly, ArrayBuffer:readonly */
+
   var hasElementType = typeof Element !== 'undefined';
+  var hasMap = typeof Map === 'function';
+  var hasSet = typeof Set === 'function';
+  var hasArrayBuffer = typeof ArrayBuffer === 'function';
+
+  // Note: We **don't** need `envHasBigInt64Array` in fde es6/index.js
 
   function equal(a, b) {
-    // fast-deep-equal index.js 2.0.1
+    // START: fast-deep-equal es6/index.js 3.1.1
     if (a === b) return true;
 
     if (a && b && typeof a == 'object' && typeof b == 'object') {
-      var arrA = isArray(a)
-        , arrB = isArray(b)
-        , i
-        , length
-        , key;
+      if (a.constructor !== b.constructor) return false;
 
-      if (arrA && arrB) {
+      var length, i, keys;
+      if (Array.isArray(a)) {
         length = a.length;
         if (length != b.length) return false;
         for (i = length; i-- !== 0;)
@@ -540,50 +577,87 @@
         return true;
       }
 
-      if (arrA != arrB) return false;
+      // START: Modifications:
+      // 1. Extra `has<Type> &&` helpers in initial condition allow es6 code
+      //    to co-exist with es5.
+      // 2. Replace `for of` with es5 compliant iteration using `for`.
+      //    Basically, take:
+      //
+      //    ```js
+      //    for (i of a.entries())
+      //      if (!b.has(i[0])) return false;
+      //    ```
+      //
+      //    ... and convert to:
+      //
+      //    ```js
+      //    it = a.entries();
+      //    while (!(i = it.next()).done)
+      //      if (!b.has(i.value[0])) return false;
+      //    ```
+      //
+      //    **Note**: `i` access switches to `i.value`.
+      var it;
+      if (hasMap && (a instanceof Map) && (b instanceof Map)) {
+        if (a.size !== b.size) return false;
+        it = a.entries();
+        while (!(i = it.next()).done)
+          if (!b.has(i.value[0])) return false;
+        it = a.entries();
+        while (!(i = it.next()).done)
+          if (!equal(i.value[1], b.get(i.value[0]))) return false;
+        return true;
+      }
 
-      var dateA = a instanceof Date
-        , dateB = b instanceof Date;
-      if (dateA != dateB) return false;
-      if (dateA && dateB) return a.getTime() == b.getTime();
+      if (hasSet && (a instanceof Set) && (b instanceof Set)) {
+        if (a.size !== b.size) return false;
+        it = a.entries();
+        while (!(i = it.next()).done)
+          if (!b.has(i.value[0])) return false;
+        return true;
+      }
+      // END: Modifications
 
-      var regexpA = a instanceof RegExp
-        , regexpB = b instanceof RegExp;
-      if (regexpA != regexpB) return false;
-      if (regexpA && regexpB) return a.toString() == b.toString();
+      if (hasArrayBuffer && ArrayBuffer.isView(a) && ArrayBuffer.isView(b)) {
+        length = a.length;
+        if (length != b.length) return false;
+        for (i = length; i-- !== 0;)
+          if (a[i] !== b[i]) return false;
+        return true;
+      }
 
-      var keys = keyList(a);
+      if (a.constructor === RegExp) return a.source === b.source && a.flags === b.flags;
+      if (a.valueOf !== Object.prototype.valueOf) return a.valueOf() === b.valueOf();
+      if (a.toString !== Object.prototype.toString) return a.toString() === b.toString();
+
+      keys = Object.keys(a);
       length = keys.length;
-
-      if (length !== keyList(b).length)
-        return false;
+      if (length !== Object.keys(b).length) return false;
 
       for (i = length; i-- !== 0;)
-        if (!hasProp.call(b, keys[i])) return false;
-      // end fast-deep-equal
+        if (!Object.prototype.hasOwnProperty.call(b, keys[i])) return false;
+      // END: fast-deep-equal
 
-      // start react-fast-compare
+      // START: react-fast-compare
       // custom handling for DOM elements
-      if (hasElementType && a instanceof Element && b instanceof Element)
-        return a === b;
+      if (hasElementType && a instanceof Element) return false;
 
       // custom handling for React
       for (i = length; i-- !== 0;) {
-        key = keys[i];
-        if (key === '_owner' && a.$$typeof) {
+        if (keys[i] === '_owner' && a.$$typeof) {
           // React-specific: avoid traversing React elements' _owner.
           //  _owner contains circular references
           // and is not needed when comparing the actual elements (and not their owners)
           // .$$typeof and ._store on just reasonable markers of a react element
           continue;
-        } else {
-          // all other properties should be traversed as usual
-          if (!equal(a[key], b[key])) return false;
         }
-      }
-      // end react-fast-compare
 
-      // fast-deep-equal index.js 2.0.1
+        // all other properties should be traversed as usual
+        if (!equal(a[keys[i]], b[keys[i]])) return false;
+      }
+      // END: react-fast-compare
+
+      // START: fast-deep-equal
       return true;
     }
 
@@ -591,17 +665,17 @@
   }
   // end fast-deep-equal
 
-  var _reactFastCompare_2_0_4_reactFastCompare = function exportedEqual(a, b) {
+  var _reactFastCompare_3_0_1_reactFastCompare = function isEqual(a, b) {
     try {
       return equal(a, b);
     } catch (error) {
-      if ((error.message && error.message.match(/stack|recursion/i)) || (error.number === -2146828260)) {
+      if (((error.message || '').match(/stack|recursion/i))) {
         // warn on circular references, don't crash
         // browsers give this different errors name and messages:
         // chrome/safari: "RangeError", "Maximum call stack size exceeded"
         // firefox: "InternalError", too much recursion"
         // edge: "Error", "Out of stack space"
-        console.warn('Warning: react-fast-compare does not handle circular references.', error.name, error.message);
+        console.warn('react-fast-compare cannot handle circular refs');
         return false;
       }
       // some other error. we should definitely know about these
@@ -629,7 +703,7 @@
     if (children) {
       var childrenType = children.type;
 
-      if (_reactIs_16_13_0_reactIs_1(childrenType)) {
+      if (_reactIs_16_13_1_reactIs_1(childrenType)) {
         // SomeComponent.formutiType = xx
         if (childrenType.formutilType) {
           return childrenType.formutilType;
@@ -648,9 +722,9 @@
   var _FormGroup = /*#__PURE__*/function (_Component) {
     inherits(_FormGroup, _Component);
 
-    function _FormGroup() {
-      var _getPrototypeOf2;
+    var _super = createSuper(_FormGroup);
 
+    function _FormGroup() {
       var _this;
 
       classCallCheck(this, _FormGroup);
@@ -659,7 +733,7 @@
         args[_key] = arguments[_key];
       }
 
-      _this = possibleConstructorReturn(this, (_getPrototypeOf2 = getPrototypeOf(_FormGroup)).call.apply(_getPrototypeOf2, [this].concat(args)));
+      _this = _super.call.apply(_super, [this].concat(args));
       _this.fields = {};
 
       _this.registerField = function (name, $fieldutil) {
@@ -734,10 +808,10 @@
         return {
           groupProps: groupProps,
           validationProps: validationProps,
-          error: hasError ? React__default.createElement(HelpBlock, {
+          error: hasError ? /*#__PURE__*/React__default.createElement(HelpBlock, {
             type: "invalid"
           }, Array.isArray($errors) ? $errors.map(function (err, index) {
-            return React__default.createElement("div", {
+            return /*#__PURE__*/React__default.createElement("div", {
               key: index
             }, err);
           }) : $errors) : null
@@ -797,7 +871,7 @@
               }, labelCol));
             }
           } else {
-            label = React__default.createElement(reactBootstrap.FormLabel, Object.assign({
+            label = /*#__PURE__*/React__default.createElement(reactBootstrap.FormLabel, Object.assign({
               column: !!labelCol
             }, labelCol), label);
           }
@@ -810,18 +884,18 @@
 
         if (addons) {
           if (addons.pre) {
-            addons.pre = React__default.createElement(reactBootstrap.InputGroup.Prepend, null, React.isValidElement(addons.pre) ? addons.pre : React__default.createElement(reactBootstrap.InputGroup.Text, null, addons.pre));
+            addons.pre = /*#__PURE__*/React__default.createElement(reactBootstrap.InputGroup.Prepend, null, React.isValidElement(addons.pre) ? addons.pre : /*#__PURE__*/React__default.createElement(reactBootstrap.InputGroup.Text, null, addons.pre));
           }
 
           if (addons.end) {
-            addons.end = React__default.createElement(reactBootstrap.InputGroup.Append, null, React.isValidElement(addons.end) ? addons.end : React__default.createElement(reactBootstrap.InputGroup.Text, null, addons.end));
+            addons.end = /*#__PURE__*/React__default.createElement(reactBootstrap.InputGroup.Append, null, React.isValidElement(addons.end) ? addons.end : /*#__PURE__*/React__default.createElement(reactBootstrap.InputGroup.Text, null, addons.end));
           }
         } else {
           addons = {};
         }
 
         if (helper && !React.isValidElement(helper)) {
-          helper = React__default.createElement(reactBootstrap.FormText, {
+          helper = /*#__PURE__*/React__default.createElement(reactBootstrap.FormText, {
             className: "text-muted"
           }, helper);
         }
@@ -836,15 +910,15 @@
 
 
           Promise.resolve().then(function () {
-            if (!_reactFastCompare_2_0_4_reactFastCompare(_this2.latestValidationProps, _this2.fetchCurrentValidationProps(errorLevel))) {
+            if (!_reactFastCompare_3_0_1_reactFastCompare(_this2.latestValidationProps, _this2.fetchCurrentValidationProps(errorLevel))) {
               _this2.forceUpdate();
             }
           });
-          return React__default.createElement(Provider, {
+          return /*#__PURE__*/React__default.createElement(Provider, {
             value: this.registerField
-          }, React__default.createElement(reactBootstrap.FormGroup, Object.assign({}, fieldProps, groupProps, {
+          }, /*#__PURE__*/React__default.createElement(reactBootstrap.FormGroup, Object.assign({}, fieldProps, groupProps, {
             as: groupAsProps
-          }), label, React__default.createElement(Wrapper, wrapperCol, React__default.createElement(AddonWrapper, addonWrapperProps, addons.pre, childList, addons.end), error || helper), extraNode));
+          }), label, /*#__PURE__*/React__default.createElement(Wrapper, wrapperCol, /*#__PURE__*/React__default.createElement(AddonWrapper, addonWrapperProps, addons.pre, childList, addons.end), error || helper), extraNode));
         } // If $memo is true, pass the children to Field for SCU diffing.
 
 
@@ -890,7 +964,7 @@
             break;
         }
 
-        return React__default.createElement(reactFormutil.EasyField, Object.assign({}, fieldProps, {
+        return /*#__PURE__*/React__default.createElement(reactFormutil.EasyField, Object.assign({}, fieldProps, {
           passUtil: "$fieldutil",
           render: function render($handleProps) {
             var _childProps, _Object$assign;
@@ -978,16 +1052,16 @@
 
             Object.assign(childProps, (_Object$assign = {}, defineProperty(_Object$assign, focusPropName, onFocus), defineProperty(_Object$assign, blurPropName, onBlur), _Object$assign), validationProps);
             var fieldInstance = typeof children === 'function' ? children(childProps) : React.cloneElement(children, childProps);
-            return React__default.createElement(Consumer, null, function (registerField) {
+            return /*#__PURE__*/React__default.createElement(Consumer, null, function (registerField) {
               if (noStyle) {
                 _this2.$fieldutil = $fieldutil;
                 _this2.registerAncestorField = registerField;
                 return fieldInstance;
               }
 
-              return React__default.createElement(reactBootstrap.FormGroup, Object.assign({}, restProps, groupProps, {
+              return /*#__PURE__*/React__default.createElement(reactBootstrap.FormGroup, Object.assign({}, restProps, groupProps, {
                 as: groupAsProps
-              }), label, React__default.createElement(Wrapper, wrapperCol, React__default.createElement(AddonWrapper, addonWrapperProps, addons.pre, fieldInstance, addons.end), error || helper), extraNode);
+              }), label, /*#__PURE__*/React__default.createElement(Wrapper, wrapperCol, /*#__PURE__*/React__default.createElement(AddonWrapper, addonWrapperProps, addons.pre, fieldInstance, addons.end), error || helper), extraNode);
             });
           }
         }));
@@ -1016,10 +1090,12 @@
   var RadioGroup = /*#__PURE__*/function (_Component) {
     inherits(RadioGroup, _Component);
 
+    var _super = createSuper(RadioGroup);
+
     function RadioGroup() {
       classCallCheck(this, RadioGroup);
 
-      return possibleConstructorReturn(this, getPrototypeOf(RadioGroup).apply(this, arguments));
+      return _super.apply(this, arguments);
     }
 
     createClass(RadioGroup, [{

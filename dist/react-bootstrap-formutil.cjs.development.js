@@ -5,15 +5,6 @@ Object.defineProperty(exports, '__esModule', { value: true });
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
 var reactFormutil = require('react-formutil');
-var _defineProperty = _interopDefault(require('@babel/runtime/helpers/defineProperty'));
-var _toPropertyKey = _interopDefault(require('@babel/runtime/helpers/toPropertyKey'));
-var _objectSpread = _interopDefault(require('@babel/runtime/helpers/objectSpread2'));
-var _objectWithoutProperties = _interopDefault(require('@babel/runtime/helpers/objectWithoutProperties'));
-var _classCallCheck = _interopDefault(require('@babel/runtime/helpers/classCallCheck'));
-var _createClass = _interopDefault(require('@babel/runtime/helpers/createClass'));
-var _possibleConstructorReturn = _interopDefault(require('@babel/runtime/helpers/possibleConstructorReturn'));
-var _getPrototypeOf = _interopDefault(require('@babel/runtime/helpers/getPrototypeOf'));
-var _inherits = _interopDefault(require('@babel/runtime/helpers/inherits'));
 var React = require('react');
 var React__default = _interopDefault(React);
 var reactIs = require('react-is');
@@ -21,16 +12,275 @@ var PropTypes = _interopDefault(require('prop-types'));
 var reactBootstrap = require('react-bootstrap');
 var isEqual = _interopDefault(require('react-fast-compare'));
 
-var CheckboxGroup = /*#__PURE__*/function (_Component) {
-  _inherits(CheckboxGroup, _Component);
-
-  function CheckboxGroup() {
-    _classCallCheck(this, CheckboxGroup);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(CheckboxGroup).apply(this, arguments));
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
   }
 
-  _createClass(CheckboxGroup, [{
+  return obj;
+}
+
+var defineProperty = _defineProperty;
+
+function createCommonjsModule(fn, module) {
+	return module = { exports: {} }, fn(module, module.exports), module.exports;
+}
+
+var _typeof_1 = createCommonjsModule(function (module) {
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    module.exports = _typeof = function _typeof(obj) {
+      return typeof obj;
+    };
+  } else {
+    module.exports = _typeof = function _typeof(obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
+module.exports = _typeof;
+});
+
+function _toPrimitive(input, hint) {
+  if (_typeof_1(input) !== "object" || input === null) return input;
+  var prim = input[Symbol.toPrimitive];
+
+  if (prim !== undefined) {
+    var res = prim.call(input, hint || "default");
+    if (_typeof_1(res) !== "object") return res;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+
+  return (hint === "string" ? String : Number)(input);
+}
+
+var toPrimitive = _toPrimitive;
+
+function _toPropertyKey(arg) {
+  var key = toPrimitive(arg, "string");
+  return _typeof_1(key) === "symbol" ? key : String(key);
+}
+
+var toPropertyKey = _toPropertyKey;
+
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    });
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+
+  return target;
+}
+
+var objectSpread2 = _objectSpread2;
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+var objectWithoutPropertiesLoose = _objectWithoutPropertiesLoose;
+
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+  var target = objectWithoutPropertiesLoose(source, excluded);
+  var key, i;
+
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+
+  return target;
+}
+
+var objectWithoutProperties = _objectWithoutProperties;
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+var classCallCheck = _classCallCheck;
+
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  return Constructor;
+}
+
+var createClass = _createClass;
+
+var getPrototypeOf = createCommonjsModule(function (module) {
+function _getPrototypeOf(o) {
+  module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+    return o.__proto__ || Object.getPrototypeOf(o);
+  };
+  return _getPrototypeOf(o);
+}
+
+module.exports = _getPrototypeOf;
+});
+
+function _isNativeReflectConstruct() {
+  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+  if (Reflect.construct.sham) return false;
+  if (typeof Proxy === "function") return true;
+
+  try {
+    Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+var isNativeReflectConstruct = _isNativeReflectConstruct;
+
+function _assertThisInitialized(self) {
+  if (self === void 0) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return self;
+}
+
+var assertThisInitialized = _assertThisInitialized;
+
+function _possibleConstructorReturn(self, call) {
+  if (call && (_typeof_1(call) === "object" || typeof call === "function")) {
+    return call;
+  }
+
+  return assertThisInitialized(self);
+}
+
+var possibleConstructorReturn = _possibleConstructorReturn;
+
+function _createSuper(Derived) {
+  return function () {
+    var Super = getPrototypeOf(Derived),
+        result;
+
+    if (isNativeReflectConstruct()) {
+      var NewTarget = getPrototypeOf(this).constructor;
+      result = Reflect.construct(Super, arguments, NewTarget);
+    } else {
+      result = Super.apply(this, arguments);
+    }
+
+    return possibleConstructorReturn(this, result);
+  };
+}
+
+var createSuper = _createSuper;
+
+var setPrototypeOf = createCommonjsModule(function (module) {
+function _setPrototypeOf(o, p) {
+  module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
+}
+
+module.exports = _setPrototypeOf;
+});
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function");
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) setPrototypeOf(subClass, superClass);
+}
+
+var inherits = _inherits;
+
+var CheckboxGroup = /*#__PURE__*/function (_Component) {
+  inherits(CheckboxGroup, _Component);
+
+  var _super = createSuper(CheckboxGroup);
+
+  function CheckboxGroup() {
+    classCallCheck(this, CheckboxGroup);
+
+    return _super.apply(this, arguments);
+  }
+
+  createClass(CheckboxGroup, [{
     key: "render",
     value: function render() {
       var _this$props = this.props,
@@ -71,6 +321,7 @@ var CheckboxGroup = /*#__PURE__*/function (_Component) {
   return CheckboxGroup;
 }(React.Component);
 
+CheckboxGroup.formutilType = 'array';
 CheckboxGroup.propTypes = {
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
@@ -134,20 +385,20 @@ function getChildComponent(children) {
 }
 
 var _FormGroup = /*#__PURE__*/function (_Component) {
-  _inherits(_FormGroup, _Component);
+  inherits(_FormGroup, _Component);
+
+  var _super = createSuper(_FormGroup);
 
   function _FormGroup() {
-    var _getPrototypeOf2;
-
     var _this;
 
-    _classCallCheck(this, _FormGroup);
+    classCallCheck(this, _FormGroup);
 
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(_FormGroup)).call.apply(_getPrototypeOf2, [this].concat(args)));
+    _this = _super.call.apply(_super, [this].concat(args));
     _this.fields = {};
 
     _this.registerField = function (name, $fieldutil) {
@@ -222,10 +473,10 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
       return {
         groupProps: groupProps,
         validationProps: validationProps,
-        error: hasError ? React__default.createElement(HelpBlock, {
+        error: hasError ? /*#__PURE__*/React__default.createElement(HelpBlock, {
           type: "invalid"
         }, Array.isArray($errors) ? $errors.map(function (err, index) {
-          return React__default.createElement("div", {
+          return /*#__PURE__*/React__default.createElement("div", {
             key: index
           }, err);
         }) : $errors) : null
@@ -235,7 +486,7 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
     return _this;
   }
 
-  _createClass(_FormGroup, [{
+  createClass(_FormGroup, [{
     key: "componentDidMount",
     value: function componentDidMount() {
       var _this$registerAncesto;
@@ -272,7 +523,7 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
           noStyle = props.noStyle,
           _props$errorLevel = props.errorLevel,
           errorLevel = _props$errorLevel === void 0 ? errorLevelGlobal : _props$errorLevel,
-          fieldProps = _objectWithoutProperties(props, ["children", "addons", "label", "helper", "labelCol", "wrapperCol", "validationState", "className", "as", "feedback", "extra", "noStyle", "errorLevel"]);
+          fieldProps = objectWithoutProperties(props, ["children", "addons", "label", "helper", "labelCol", "wrapperCol", "validationState", "className", "as", "feedback", "extra", "noStyle", "errorLevel"]);
 
       var Wrapper = wrapperCol ? reactBootstrap.Col : React.Fragment;
       var groupAsProps = !as && (labelCol || wrapperCol) ? reactBootstrap.Row : as;
@@ -280,12 +531,12 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
       if (label) {
         if (React.isValidElement(label)) {
           if (labelCol) {
-            label = React.cloneElement(label, _objectSpread({
+            label = React.cloneElement(label, objectSpread2({
               column: true
             }, labelCol));
           }
         } else {
-          label = React__default.createElement(reactBootstrap.FormLabel, Object.assign({
+          label = /*#__PURE__*/React__default.createElement(reactBootstrap.FormLabel, Object.assign({
             column: !!labelCol
           }, labelCol), label);
         }
@@ -298,18 +549,18 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
 
       if (addons) {
         if (addons.pre) {
-          addons.pre = React__default.createElement(reactBootstrap.InputGroup.Prepend, null, React.isValidElement(addons.pre) ? addons.pre : React__default.createElement(reactBootstrap.InputGroup.Text, null, addons.pre));
+          addons.pre = /*#__PURE__*/React__default.createElement(reactBootstrap.InputGroup.Prepend, null, React.isValidElement(addons.pre) ? addons.pre : /*#__PURE__*/React__default.createElement(reactBootstrap.InputGroup.Text, null, addons.pre));
         }
 
         if (addons.end) {
-          addons.end = React__default.createElement(reactBootstrap.InputGroup.Append, null, React.isValidElement(addons.end) ? addons.end : React__default.createElement(reactBootstrap.InputGroup.Text, null, addons.end));
+          addons.end = /*#__PURE__*/React__default.createElement(reactBootstrap.InputGroup.Append, null, React.isValidElement(addons.end) ? addons.end : /*#__PURE__*/React__default.createElement(reactBootstrap.InputGroup.Text, null, addons.end));
         }
       } else {
         addons = {};
       }
 
       if (helper && !React.isValidElement(helper)) {
-        helper = React__default.createElement(reactBootstrap.FormText, {
+        helper = /*#__PURE__*/React__default.createElement(reactBootstrap.FormText, {
           className: "text-muted"
         }, helper);
       }
@@ -328,11 +579,11 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
             _this2.forceUpdate();
           }
         });
-        return React__default.createElement(Provider, {
+        return /*#__PURE__*/React__default.createElement(Provider, {
           value: this.registerField
-        }, React__default.createElement(reactBootstrap.FormGroup, Object.assign({}, fieldProps, groupProps, {
+        }, /*#__PURE__*/React__default.createElement(reactBootstrap.FormGroup, Object.assign({}, fieldProps, groupProps, {
           as: groupAsProps
-        }), label, React__default.createElement(Wrapper, wrapperCol, React__default.createElement(AddonWrapper, addonWrapperProps, addons.pre, childList, addons.end), error || helper), extraNode));
+        }), label, /*#__PURE__*/React__default.createElement(Wrapper, wrapperCol, /*#__PURE__*/React__default.createElement(AddonWrapper, addonWrapperProps, addons.pre, childList, addons.end), error || helper), extraNode));
       } // If $memo is true, pass the children to Field for SCU diffing.
 
 
@@ -378,7 +629,7 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
           break;
       }
 
-      return React__default.createElement(reactFormutil.EasyField, Object.assign({}, fieldProps, {
+      return /*#__PURE__*/React__default.createElement(reactFormutil.EasyField, Object.assign({}, fieldProps, {
         passUtil: "$fieldutil",
         render: function render($handleProps) {
           var _childProps, _Object$assign;
@@ -397,7 +648,7 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
               onFocus = $handleProps[focusPropName],
               onBlur = $handleProps[blurPropName],
               value = $handleProps[valuePropName],
-              restProps = _objectWithoutProperties($handleProps, ["$fieldutil", changePropName, focusPropName, blurPropName, valuePropName].map(_toPropertyKey));
+              restProps = objectWithoutProperties($handleProps, ["$fieldutil", changePropName, focusPropName, blurPropName, valuePropName].map(toPropertyKey));
 
           var $invalid = $fieldutil.$invalid,
               $dirty = $fieldutil.$dirty,
@@ -437,7 +688,7 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
                 onCompositionStart: function onCompositionStart() {
                   return _this2.isComposition = true;
                 }
-              }, _defineProperty(_childProps, changePropName, component === 'multipleSelect' ? function (ev) {
+              }, defineProperty(_childProps, changePropName, component === 'multipleSelect' ? function (ev) {
                 _onChange([].slice.call(ev.target.options).filter(function (option) {
                   return option.selected;
                 }).map(function (option) {
@@ -455,7 +706,7 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
 
                   _onChange.apply(void 0, [ev].concat(rest));
                 }
-              }), _defineProperty(_childProps, valuePropName, 'compositionValue' in _this2 ? _this2.compositionValue : value), _defineProperty(_childProps, "name", fieldProps.name), _childProps);
+              }), defineProperty(_childProps, valuePropName, 'compositionValue' in _this2 ? _this2.compositionValue : value), defineProperty(_childProps, "name", fieldProps.name), _childProps);
               break;
           }
 
@@ -464,18 +715,18 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
               validationProps = _this2$getValidationP.validationProps,
               error = _this2$getValidationP.error;
 
-          Object.assign(childProps, (_Object$assign = {}, _defineProperty(_Object$assign, focusPropName, onFocus), _defineProperty(_Object$assign, blurPropName, onBlur), _Object$assign), validationProps);
+          Object.assign(childProps, (_Object$assign = {}, defineProperty(_Object$assign, focusPropName, onFocus), defineProperty(_Object$assign, blurPropName, onBlur), _Object$assign), validationProps);
           var fieldInstance = typeof children === 'function' ? children(childProps) : React.cloneElement(children, childProps);
-          return React__default.createElement(Consumer, null, function (registerField) {
+          return /*#__PURE__*/React__default.createElement(Consumer, null, function (registerField) {
             if (noStyle) {
               _this2.$fieldutil = $fieldutil;
               _this2.registerAncestorField = registerField;
               return fieldInstance;
             }
 
-            return React__default.createElement(reactBootstrap.FormGroup, Object.assign({}, restProps, groupProps, {
+            return /*#__PURE__*/React__default.createElement(reactBootstrap.FormGroup, Object.assign({}, restProps, groupProps, {
               as: groupAsProps
-            }), label, React__default.createElement(Wrapper, wrapperCol, React__default.createElement(AddonWrapper, addonWrapperProps, addons.pre, fieldInstance, addons.end), error || helper), extraNode);
+            }), label, /*#__PURE__*/React__default.createElement(Wrapper, wrapperCol, /*#__PURE__*/React__default.createElement(AddonWrapper, addonWrapperProps, addons.pre, fieldInstance, addons.end), error || helper), extraNode);
           });
         }
       }));
@@ -502,15 +753,17 @@ insertRule('.valid-feedback:empty,.invalid-feedback:empty', 'display: none !impo
 insertRule('.has-error .invalid-feedback', 'display: block');
 
 var RadioGroup = /*#__PURE__*/function (_Component) {
-  _inherits(RadioGroup, _Component);
+  inherits(RadioGroup, _Component);
+
+  var _super = createSuper(RadioGroup);
 
   function RadioGroup() {
-    _classCallCheck(this, RadioGroup);
+    classCallCheck(this, RadioGroup);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(RadioGroup).apply(this, arguments));
+    return _super.apply(this, arguments);
   }
 
-  _createClass(RadioGroup, [{
+  createClass(RadioGroup, [{
     key: "render",
     value: function render() {
       var _this$props = this.props,
@@ -553,12 +806,12 @@ RadioGroup.propTypes = {
 };
 
 Object.keys(reactFormutil).forEach(function (k) {
-    if (k !== 'default') Object.defineProperty(exports, k, {
-        enumerable: true,
-        get: function () {
-            return reactFormutil[k];
-        }
-    });
+  if (k !== 'default') Object.defineProperty(exports, k, {
+    enumerable: true,
+    get: function () {
+      return reactFormutil[k];
+    }
+  });
 });
 exports.CheckboxGroup = CheckboxGroup;
 exports.FormGroup = _FormGroup;
