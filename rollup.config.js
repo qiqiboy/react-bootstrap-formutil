@@ -2,11 +2,10 @@ process.env.NODE_ENV = 'production';
 
 const path = require('path');
 const fs = require('fs');
-const commonjs = require('rollup-plugin-commonjs');
+const commonjs = require('@rollup/plugin-commonjs');
 const replace = require('@rollup/plugin-replace');
 const nodeResolve = require('@rollup/plugin-node-resolve');
 const babel = require('rollup-plugin-babel');
-const sourceMaps = require('rollup-plugin-sourcemaps');
 const filesize = require('rollup-plugin-filesize');
 const copy = require('rollup-plugin-copy');
 const sass = require('rollup-plugin-sass');
@@ -20,7 +19,7 @@ const externalExclude = [
     '@babel/runtime', 'regenerator-runtime'
 ];
 
-const exportName = 'react-bootstrap-formutil';
+const exportName = pkg.exportName || pkg.name.split('/').slice(-1)[0];
 /**
  * 如果你希望编译后的代码里依然自动包含进去编译后的css，那么这里可以设置为 true
  */
@@ -41,7 +40,7 @@ function createConfig(env, module) {
         /**
          * 入口文件位置，如果你更改了entryFile，别忘了同时修改 npm/index.cjs.js 和 npm/index.esm.js 里的文件引用名称
          */
-        input: 'src/index.js',
+        input: pkg.entryFile || 'src/index.js',
         external:
             module === 'umd'
                 ? Object.keys(globals)
@@ -141,7 +140,6 @@ function createConfig(env, module) {
                 sass({
                     output: `dist/${exportName}.css`
                 }),
-            sourceMaps(),
             isProd &&
                 terser({
                     sourcemap: true,
@@ -154,8 +152,13 @@ function createConfig(env, module) {
                 }),
             filesize(),
             copy({
-                targets: [`npm/index.${module}.js`],
-                verbose: true
+                targets: [
+                    {
+                        src: `npm/index.${module}.js`,
+                        dest: 'dist'
+                    }
+                ],
+                verbose: false
             })
         ].filter(Boolean)
     };

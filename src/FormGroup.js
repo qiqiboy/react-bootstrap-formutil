@@ -27,7 +27,7 @@ let errorLevelGlobal = 1;
  * 1 dirty & invalid
  * 2 invalid
  */
-export const setErrorLevel = function(level) {
+export const setErrorLevel = function (level) {
     errorLevelGlobal = level;
 };
 
@@ -55,7 +55,13 @@ function getChildComponent(children) {
 
 class _FormGroup extends Component {
     static propTypes = {
-        children: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
+        children(props, ...args) {
+            if ('name' in props) {
+                return PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired(props, ...args);
+            }
+
+            return PropTypes.node.isRequired(props, ...args);
+        },
         label: PropTypes.any,
         helper: PropTypes.any,
         labelCol: PropTypes.object,
@@ -239,7 +245,7 @@ class _FormGroup extends Component {
                         <Wrapper {...wrapperCol}>
                             <AddonWrapper {...addonWrapperProps}>
                                 {addons.pre}
-                                {childList}
+                                {typeof childList === 'function' ? childList() : childList}
                                 {addons.end}
                             </AddonWrapper>
                             {error || helper}
