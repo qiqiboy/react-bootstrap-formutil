@@ -535,7 +535,7 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
           value: this.registerField
         }, /*#__PURE__*/React.createElement(FormGroup, Object.assign({}, fieldProps, groupProps, {
           as: groupAsProps
-        }), label, /*#__PURE__*/React.createElement(Wrapper, wrapperCol, /*#__PURE__*/React.createElement(AddonWrapper, addonWrapperProps, addons.pre, childList, addons.end), error || helper), extraNode));
+        }), label, /*#__PURE__*/React.createElement(Wrapper, wrapperCol, /*#__PURE__*/React.createElement(AddonWrapper, addonWrapperProps, addons.pre, typeof childList === 'function' ? childList() : childList, addons.end), error || helper), extraNode));
       } // If $memo is true, pass the children to Field for SCU diffing.
 
 
@@ -658,7 +658,16 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
 
                   _onChange.apply(void 0, [ev].concat(rest));
                 }
-              }), _defineProperty(_childProps, valuePropName, 'compositionValue' in _this2 ? _this2.compositionValue : value), _defineProperty(_childProps, "name", fieldProps.name), _childProps);
+              }), _defineProperty(_childProps, valuePropName, 'compositionValue' in _this2 ? _this2.compositionValue : value), _defineProperty(_childProps, blurPropName, function () {
+                if (_this2.isComposition) {
+                  _this2.isComposition = false;
+                  delete _this2.compositionValue;
+
+                  _onChange.apply(void 0, arguments);
+                }
+
+                return onBlur.apply(void 0, arguments);
+              }), _defineProperty(_childProps, "name", fieldProps.name), _childProps);
               break;
           }
 
@@ -667,7 +676,7 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
               validationProps = _this2$getValidationP.validationProps,
               error = _this2$getValidationP.error;
 
-          Object.assign(childProps, (_Object$assign = {}, _defineProperty(_Object$assign, focusPropName, onFocus), _defineProperty(_Object$assign, blurPropName, onBlur), _Object$assign), validationProps);
+          Object.assign((_Object$assign = {}, _defineProperty(_Object$assign, focusPropName, onFocus), _defineProperty(_Object$assign, blurPropName, onBlur), _Object$assign), childProps, validationProps);
           var fieldInstance = typeof children === 'function' ? children(childProps) : cloneElement(children, childProps);
           return /*#__PURE__*/React.createElement(Consumer, null, function (registerField) {
             if (noStyle) {
@@ -689,7 +698,21 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
 }(Component);
 
 _FormGroup.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
+  children: function children(props) {
+    var _PropTypes$node;
+
+    for (var _len3 = arguments.length, args = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+      args[_key3 - 1] = arguments[_key3];
+    }
+
+    if ('name' in props) {
+      var _PropTypes$oneOfType;
+
+      return (_PropTypes$oneOfType = PropTypes.oneOfType([PropTypes.element, PropTypes.func])).isRequired.apply(_PropTypes$oneOfType, [props].concat(args));
+    }
+
+    return (_PropTypes$node = PropTypes.node).isRequired.apply(_PropTypes$node, [props].concat(args));
+  },
   label: PropTypes.any,
   helper: PropTypes.any,
   labelCol: PropTypes.object,

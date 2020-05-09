@@ -374,6 +374,14 @@ class _FormGroup extends Component {
                                               }
                                           },
                                 [valuePropName]: 'compositionValue' in this ? this.compositionValue : value,
+                                [blurPropName]: (...args) => {
+                                    if (this.isComposition) {
+                                        this.isComposition = false;
+                                        delete this.compositionValue;
+                                        onChange(...args);
+                                    }
+                                    return onBlur(...args);
+                                },
                                 name: fieldProps.name
                             };
 
@@ -390,11 +398,11 @@ class _FormGroup extends Component {
                     );
 
                     Object.assign(
-                        childProps,
                         {
                             [focusPropName]: onFocus,
                             [blurPropName]: onBlur
                         },
+                        childProps,
                         validationProps
                     );
 
