@@ -397,7 +397,7 @@ class _FormGroup extends Component {
                         $getFirstError()
                     );
 
-                    Object.assign(
+                    childProps = Object.assign(
                         {
                             [focusPropName]: onFocus,
                             [blurPropName]: onBlur

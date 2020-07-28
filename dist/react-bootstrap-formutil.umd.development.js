@@ -1059,7 +1059,7 @@
                 validationProps = _this2$getValidationP.validationProps,
                 error = _this2$getValidationP.error;
 
-            Object.assign((_Object$assign = {}, defineProperty(_Object$assign, focusPropName, onFocus), defineProperty(_Object$assign, blurPropName, onBlur), _Object$assign), childProps, validationProps);
+            childProps = Object.assign((_Object$assign = {}, defineProperty(_Object$assign, focusPropName, onFocus), defineProperty(_Object$assign, blurPropName, onBlur), _Object$assign), childProps, validationProps);
             var fieldInstance = typeof children === 'function' ? children(childProps) : React.cloneElement(children, childProps);
             return /*#__PURE__*/React__default.createElement(Consumer, null, function (registerField) {
               if (noStyle) {

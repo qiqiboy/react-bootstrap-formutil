@@ -676,7 +676,7 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
               validationProps = _this2$getValidationP.validationProps,
               error = _this2$getValidationP.error;
 
-          Object.assign((_Object$assign = {}, _defineProperty(_Object$assign, focusPropName, onFocus), _defineProperty(_Object$assign, blurPropName, onBlur), _Object$assign), childProps, validationProps);
+          childProps = Object.assign((_Object$assign = {}, _defineProperty(_Object$assign, focusPropName, onFocus), _defineProperty(_Object$assign, blurPropName, onBlur), _Object$assign), childProps, validationProps);
           var fieldInstance = typeof children === 'function' ? children(childProps) : cloneElement(children, childProps);
           return /*#__PURE__*/React.createElement(Consumer, null, function (registerField) {
             if (noStyle) {
