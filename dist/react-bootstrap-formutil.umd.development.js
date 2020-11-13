@@ -1,11 +1,13 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react-formutil'), require('react'), require('prop-types'), require('react-bootstrap')) :
   typeof define === 'function' && define.amd ? define(['exports', 'react-formutil', 'react', 'prop-types', 'react-bootstrap'], factory) :
-  (global = global || self, factory(global.ReactBootstrapFormutil = {}, global.ReactFormutil, global.React, global.PropTypes, global.ReactBootstrap));
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.ReactBootstrapFormutil = {}, global.ReactFormutil, global.React, global.PropTypes, global.ReactBootstrap));
 }(this, (function (exports, reactFormutil, React, PropTypes, reactBootstrap) { 'use strict';
 
-  var React__default = 'default' in React ? React['default'] : React;
-  PropTypes = PropTypes && Object.prototype.hasOwnProperty.call(PropTypes, 'default') ? PropTypes['default'] : PropTypes;
+  function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+  var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
+  var PropTypes__default = /*#__PURE__*/_interopDefaultLegacy(PropTypes);
 
   function _defineProperty(obj, key, value) {
     if (key in obj) {
@@ -170,6 +172,36 @@
 
   var createClass = _createClass;
 
+  var setPrototypeOf = createCommonjsModule(function (module) {
+  function _setPrototypeOf(o, p) {
+    module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+      o.__proto__ = p;
+      return o;
+    };
+
+    return _setPrototypeOf(o, p);
+  }
+
+  module.exports = _setPrototypeOf;
+  });
+
+  function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+      throw new TypeError("Super expression must either be null or a function");
+    }
+
+    subClass.prototype = Object.create(superClass && superClass.prototype, {
+      constructor: {
+        value: subClass,
+        writable: true,
+        configurable: true
+      }
+    });
+    if (superClass) setPrototypeOf(subClass, superClass);
+  }
+
+  var inherits = _inherits;
+
   var getPrototypeOf = createCommonjsModule(function (module) {
   function _getPrototypeOf(o) {
     module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
@@ -217,11 +249,12 @@
   var possibleConstructorReturn = _possibleConstructorReturn;
 
   function _createSuper(Derived) {
-    return function () {
+    var hasNativeReflectConstruct = isNativeReflectConstruct();
+    return function _createSuperInternal() {
       var Super = getPrototypeOf(Derived),
           result;
 
-      if (isNativeReflectConstruct()) {
+      if (hasNativeReflectConstruct) {
         var NewTarget = getPrototypeOf(this).constructor;
         result = Reflect.construct(Super, arguments, NewTarget);
       } else {
@@ -234,70 +267,93 @@
 
   var createSuper = _createSuper;
 
-  var setPrototypeOf = createCommonjsModule(function (module) {
-  function _setPrototypeOf(o, p) {
-    module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
-      o.__proto__ = p;
-      return o;
-    };
-
-    return _setPrototypeOf(o, p);
-  }
-
-  module.exports = _setPrototypeOf;
-  });
-
-  function _inherits(subClass, superClass) {
-    if (typeof superClass !== "function" && superClass !== null) {
-      throw new TypeError("Super expression must either be null or a function");
-    }
-
-    subClass.prototype = Object.create(superClass && superClass.prototype, {
-      constructor: {
-        value: subClass,
-        writable: true,
-        configurable: true
-      }
-    });
-    if (superClass) setPrototypeOf(subClass, superClass);
-  }
-
-  var inherits = _inherits;
+  /** @license React v17.0.1
+   * react-is.production.min.js
+   *
+   * Copyright (c) Facebook, Inc. and its affiliates.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE file in the root directory of this source tree.
+   */
+  var b=60103,c=60106,d=60107,e=60108,f=60114,g=60109,h=60110,k=60112,l=60113,m=60120,n=60115,p=60116,q=60121,r=60122,u=60117,v=60129,w=60131;
+  if("function"===typeof Symbol&&Symbol.for){var x=Symbol.for;b=x("react.element");c=x("react.portal");d=x("react.fragment");e=x("react.strict_mode");f=x("react.profiler");g=x("react.provider");h=x("react.context");k=x("react.forward_ref");l=x("react.suspense");m=x("react.suspense_list");n=x("react.memo");p=x("react.lazy");q=x("react.block");r=x("react.server.block");u=x("react.fundamental");v=x("react.debug_trace_mode");w=x("react.legacy_hidden");}
 
   var reactIs_development = createCommonjsModule(function (module, exports) {
-
-
 
   {
     (function() {
 
+  // ATTENTION
+  // When adding new symbols to this file,
+  // Please consider also adding to 'react-devtools-shared/src/backend/ReactSymbols'
   // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
   // nor polyfill, then a plain number is used for performance.
-  var hasSymbol = typeof Symbol === 'function' && Symbol.for;
-  var REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7;
-  var REACT_PORTAL_TYPE = hasSymbol ? Symbol.for('react.portal') : 0xeaca;
-  var REACT_FRAGMENT_TYPE = hasSymbol ? Symbol.for('react.fragment') : 0xeacb;
-  var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 0xeacc;
-  var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
-  var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
-  var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace; // TODO: We don't use AsyncMode or ConcurrentMode anymore. They were temporary
-  // (unstable) APIs that have been removed. Can we remove the symbols?
+  var REACT_ELEMENT_TYPE = 0xeac7;
+  var REACT_PORTAL_TYPE = 0xeaca;
+  var REACT_FRAGMENT_TYPE = 0xeacb;
+  var REACT_STRICT_MODE_TYPE = 0xeacc;
+  var REACT_PROFILER_TYPE = 0xead2;
+  var REACT_PROVIDER_TYPE = 0xeacd;
+  var REACT_CONTEXT_TYPE = 0xeace;
+  var REACT_FORWARD_REF_TYPE = 0xead0;
+  var REACT_SUSPENSE_TYPE = 0xead1;
+  var REACT_SUSPENSE_LIST_TYPE = 0xead8;
+  var REACT_MEMO_TYPE = 0xead3;
+  var REACT_LAZY_TYPE = 0xead4;
+  var REACT_BLOCK_TYPE = 0xead9;
+  var REACT_SERVER_BLOCK_TYPE = 0xeada;
+  var REACT_FUNDAMENTAL_TYPE = 0xead5;
+  var REACT_SCOPE_TYPE = 0xead7;
+  var REACT_OPAQUE_ID_TYPE = 0xeae0;
+  var REACT_DEBUG_TRACING_MODE_TYPE = 0xeae1;
+  var REACT_OFFSCREEN_TYPE = 0xeae2;
+  var REACT_LEGACY_HIDDEN_TYPE = 0xeae3;
 
-  var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
-  var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
-  var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
-  var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
-  var REACT_SUSPENSE_LIST_TYPE = hasSymbol ? Symbol.for('react.suspense_list') : 0xead8;
-  var REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3;
-  var REACT_LAZY_TYPE = hasSymbol ? Symbol.for('react.lazy') : 0xead4;
-  var REACT_BLOCK_TYPE = hasSymbol ? Symbol.for('react.block') : 0xead9;
-  var REACT_FUNDAMENTAL_TYPE = hasSymbol ? Symbol.for('react.fundamental') : 0xead5;
-  var REACT_RESPONDER_TYPE = hasSymbol ? Symbol.for('react.responder') : 0xead6;
-  var REACT_SCOPE_TYPE = hasSymbol ? Symbol.for('react.scope') : 0xead7;
+  if (typeof Symbol === 'function' && Symbol.for) {
+    var symbolFor = Symbol.for;
+    REACT_ELEMENT_TYPE = symbolFor('react.element');
+    REACT_PORTAL_TYPE = symbolFor('react.portal');
+    REACT_FRAGMENT_TYPE = symbolFor('react.fragment');
+    REACT_STRICT_MODE_TYPE = symbolFor('react.strict_mode');
+    REACT_PROFILER_TYPE = symbolFor('react.profiler');
+    REACT_PROVIDER_TYPE = symbolFor('react.provider');
+    REACT_CONTEXT_TYPE = symbolFor('react.context');
+    REACT_FORWARD_REF_TYPE = symbolFor('react.forward_ref');
+    REACT_SUSPENSE_TYPE = symbolFor('react.suspense');
+    REACT_SUSPENSE_LIST_TYPE = symbolFor('react.suspense_list');
+    REACT_MEMO_TYPE = symbolFor('react.memo');
+    REACT_LAZY_TYPE = symbolFor('react.lazy');
+    REACT_BLOCK_TYPE = symbolFor('react.block');
+    REACT_SERVER_BLOCK_TYPE = symbolFor('react.server.block');
+    REACT_FUNDAMENTAL_TYPE = symbolFor('react.fundamental');
+    REACT_SCOPE_TYPE = symbolFor('react.scope');
+    REACT_OPAQUE_ID_TYPE = symbolFor('react.opaque.id');
+    REACT_DEBUG_TRACING_MODE_TYPE = symbolFor('react.debug_trace_mode');
+    REACT_OFFSCREEN_TYPE = symbolFor('react.offscreen');
+    REACT_LEGACY_HIDDEN_TYPE = symbolFor('react.legacy_hidden');
+  }
+
+  // Filter certain DOM attributes (e.g. src, href) if their values are empty strings.
+
+  var enableScopeAPI = false; // Experimental Create Event Handle API.
 
   function isValidElementType(type) {
-    return typeof type === 'string' || typeof type === 'function' || // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
-    type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || typeof type === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_RESPONDER_TYPE || type.$$typeof === REACT_SCOPE_TYPE || type.$$typeof === REACT_BLOCK_TYPE);
+    if (typeof type === 'string' || typeof type === 'function') {
+      return true;
+    } // Note: typeof might be other than 'symbol' or 'number' (e.g. if it's a polyfill).
+
+
+    if (type === REACT_FRAGMENT_TYPE || type === REACT_PROFILER_TYPE || type === REACT_DEBUG_TRACING_MODE_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || type === REACT_LEGACY_HIDDEN_TYPE || enableScopeAPI ) {
+      return true;
+    }
+
+    if (typeof type === 'object' && type !== null) {
+      if (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_BLOCK_TYPE || type[0] === REACT_SERVER_BLOCK_TYPE) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   function typeOf(object) {
@@ -309,12 +365,11 @@
           var type = object.type;
 
           switch (type) {
-            case REACT_ASYNC_MODE_TYPE:
-            case REACT_CONCURRENT_MODE_TYPE:
             case REACT_FRAGMENT_TYPE:
             case REACT_PROFILER_TYPE:
             case REACT_STRICT_MODE_TYPE:
             case REACT_SUSPENSE_TYPE:
+            case REACT_SUSPENSE_LIST_TYPE:
               return type;
 
             default:
@@ -340,10 +395,7 @@
     }
 
     return undefined;
-  } // AsyncMode is deprecated along with isAsyncMode
-
-  var AsyncMode = REACT_ASYNC_MODE_TYPE;
-  var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
+  }
   var ContextConsumer = REACT_CONTEXT_TYPE;
   var ContextProvider = REACT_PROVIDER_TYPE;
   var Element = REACT_ELEMENT_TYPE;
@@ -355,21 +407,30 @@
   var Profiler = REACT_PROFILER_TYPE;
   var StrictMode = REACT_STRICT_MODE_TYPE;
   var Suspense = REACT_SUSPENSE_TYPE;
-  var hasWarnedAboutDeprecatedIsAsyncMode = false; // AsyncMode should be deprecated
+  var hasWarnedAboutDeprecatedIsAsyncMode = false;
+  var hasWarnedAboutDeprecatedIsConcurrentMode = false; // AsyncMode should be deprecated
 
   function isAsyncMode(object) {
     {
       if (!hasWarnedAboutDeprecatedIsAsyncMode) {
         hasWarnedAboutDeprecatedIsAsyncMode = true; // Using console['warn'] to evade Babel and ESLint
 
-        console['warn']('The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
+        console['warn']('The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 18+.');
       }
     }
 
-    return isConcurrentMode(object) || typeOf(object) === REACT_ASYNC_MODE_TYPE;
+    return false;
   }
   function isConcurrentMode(object) {
-    return typeOf(object) === REACT_CONCURRENT_MODE_TYPE;
+    {
+      if (!hasWarnedAboutDeprecatedIsConcurrentMode) {
+        hasWarnedAboutDeprecatedIsConcurrentMode = true; // Using console['warn'] to evade Babel and ESLint
+
+        console['warn']('The ReactIs.isConcurrentMode() alias has been deprecated, ' + 'and will be removed in React 18+.');
+      }
+    }
+
+    return false;
   }
   function isContextConsumer(object) {
     return typeOf(object) === REACT_CONTEXT_TYPE;
@@ -405,8 +466,6 @@
     return typeOf(object) === REACT_SUSPENSE_TYPE;
   }
 
-  exports.AsyncMode = AsyncMode;
-  exports.ConcurrentMode = ConcurrentMode;
   exports.ContextConsumer = ContextConsumer;
   exports.ContextProvider = ContextProvider;
   exports.Element = Element;
@@ -436,128 +495,46 @@
     })();
   }
   });
-  var reactIs_development_1 = reactIs_development.AsyncMode;
-  var reactIs_development_2 = reactIs_development.ConcurrentMode;
-  var reactIs_development_3 = reactIs_development.ContextConsumer;
-  var reactIs_development_4 = reactIs_development.ContextProvider;
-  var reactIs_development_5 = reactIs_development.Element;
-  var reactIs_development_6 = reactIs_development.ForwardRef;
-  var reactIs_development_7 = reactIs_development.Fragment;
-  var reactIs_development_8 = reactIs_development.Lazy;
-  var reactIs_development_9 = reactIs_development.Memo;
-  var reactIs_development_10 = reactIs_development.Portal;
-  var reactIs_development_11 = reactIs_development.Profiler;
-  var reactIs_development_12 = reactIs_development.StrictMode;
-  var reactIs_development_13 = reactIs_development.Suspense;
-  var reactIs_development_14 = reactIs_development.isAsyncMode;
-  var reactIs_development_15 = reactIs_development.isConcurrentMode;
-  var reactIs_development_16 = reactIs_development.isContextConsumer;
-  var reactIs_development_17 = reactIs_development.isContextProvider;
-  var reactIs_development_18 = reactIs_development.isElement;
-  var reactIs_development_19 = reactIs_development.isForwardRef;
-  var reactIs_development_20 = reactIs_development.isFragment;
-  var reactIs_development_21 = reactIs_development.isLazy;
-  var reactIs_development_22 = reactIs_development.isMemo;
-  var reactIs_development_23 = reactIs_development.isPortal;
-  var reactIs_development_24 = reactIs_development.isProfiler;
-  var reactIs_development_25 = reactIs_development.isStrictMode;
-  var reactIs_development_26 = reactIs_development.isSuspense;
-  var reactIs_development_27 = reactIs_development.isValidElementType;
-  var reactIs_development_28 = reactIs_development.typeOf;
+  var reactIs_development_1 = reactIs_development.ContextConsumer;
+  var reactIs_development_2 = reactIs_development.ContextProvider;
+  var reactIs_development_3 = reactIs_development.Element;
+  var reactIs_development_4 = reactIs_development.ForwardRef;
+  var reactIs_development_5 = reactIs_development.Fragment;
+  var reactIs_development_6 = reactIs_development.Lazy;
+  var reactIs_development_7 = reactIs_development.Memo;
+  var reactIs_development_8 = reactIs_development.Portal;
+  var reactIs_development_9 = reactIs_development.Profiler;
+  var reactIs_development_10 = reactIs_development.StrictMode;
+  var reactIs_development_11 = reactIs_development.Suspense;
+  var reactIs_development_12 = reactIs_development.isAsyncMode;
+  var reactIs_development_13 = reactIs_development.isConcurrentMode;
+  var reactIs_development_14 = reactIs_development.isContextConsumer;
+  var reactIs_development_15 = reactIs_development.isContextProvider;
+  var reactIs_development_16 = reactIs_development.isElement;
+  var reactIs_development_17 = reactIs_development.isForwardRef;
+  var reactIs_development_18 = reactIs_development.isFragment;
+  var reactIs_development_19 = reactIs_development.isLazy;
+  var reactIs_development_20 = reactIs_development.isMemo;
+  var reactIs_development_21 = reactIs_development.isPortal;
+  var reactIs_development_22 = reactIs_development.isProfiler;
+  var reactIs_development_23 = reactIs_development.isStrictMode;
+  var reactIs_development_24 = reactIs_development.isSuspense;
+  var reactIs_development_25 = reactIs_development.isValidElementType;
+  var reactIs_development_26 = reactIs_development.typeOf;
 
-  var _reactIs_16_13_1_reactIs = createCommonjsModule(function (module) {
+  var _reactIs_17_0_1_reactIs = createCommonjsModule(function (module) {
 
   {
     module.exports = reactIs_development;
   }
   });
-  var _reactIs_16_13_1_reactIs_1 = _reactIs_16_13_1_reactIs.isValidElementType;
-
-  var CheckboxGroup = /*#__PURE__*/function (_Component) {
-    inherits(CheckboxGroup, _Component);
-
-    var _super = createSuper(CheckboxGroup);
-
-    function CheckboxGroup() {
-      classCallCheck(this, CheckboxGroup);
-
-      return _super.apply(this, arguments);
-    }
-
-    createClass(CheckboxGroup, [{
-      key: "render",
-      value: function render() {
-        var _this$props = this.props,
-            children = _this$props.children,
-            name = _this$props.name,
-            onChange = _this$props.onChange,
-            value = _this$props.value,
-            onFocus = _this$props.onFocus,
-            onBlur = _this$props.onBlur,
-            isValid = _this$props.isValid,
-            isInvalid = _this$props.isInvalid;
-
-        var childOnChange = function childOnChange(ev) {
-          var _ev$target = ev.target,
-              checked = _ev$target.checked,
-              childValue = _ev$target.value;
-          var newValue = value || [];
-          onChange(checked ? newValue.concat(childValue) : newValue.filter(function (v) {
-            return v !== childValue;
-          }));
-        };
-
-        return React.Children.map(children, function (child) {
-          var childValue = child.props.value;
-          return React.cloneElement(child, {
-            isValid: isValid,
-            isInvalid: isInvalid,
-            checked: !!value && value.indexOf(childValue) > -1,
-            onChange: childOnChange,
-            onFocus: onFocus,
-            onBlur: onBlur,
-            name: name
-          });
-        });
-      }
-    }]);
-
-    return CheckboxGroup;
-  }(React.Component);
-
-  CheckboxGroup.formutilType = 'array';
-  CheckboxGroup.propTypes = {
-    onChange: PropTypes.func,
-    onFocus: PropTypes.func,
-    onBlur: PropTypes.func,
-    value: PropTypes.array
-  };
-
-  var styleSheet;
-
-  try {
-    var style = document.createElement('style');
-    style.type = 'text/css';
-    document.getElementsByTagName('head')[0].appendChild(style);
-    styleSheet = document.styleSheets[document.styleSheets.length - 1];
-  } catch (err) {}
-
-  function insertRule(selector, content) {
-    if (styleSheet) {
-      if (styleSheet.insertRule) {
-        styleSheet.insertRule("".concat(selector, " { ").concat(content, " }"), 0);
-      } else if (styleSheet.addRule) {
-        styleSheet.addRule(selector, content, 0);
-      }
-    }
-  }
 
   /* global Map:readonly, Set:readonly, ArrayBuffer:readonly */
 
   var hasElementType = typeof Element !== 'undefined';
   var hasMap = typeof Map === 'function';
   var hasSet = typeof Set === 'function';
-  var hasArrayBuffer = typeof ArrayBuffer === 'function';
+  var hasArrayBuffer = typeof ArrayBuffer === 'function' && !!ArrayBuffer.isView;
 
   // Note: We **don't** need `envHasBigInt64Array` in fde es6/index.js
 
@@ -642,13 +619,17 @@
       // custom handling for DOM elements
       if (hasElementType && a instanceof Element) return false;
 
-      // custom handling for React
+      // custom handling for React/Preact
       for (i = length; i-- !== 0;) {
-        if (keys[i] === '_owner' && a.$$typeof) {
-          // React-specific: avoid traversing React elements' _owner.
-          //  _owner contains circular references
-          // and is not needed when comparing the actual elements (and not their owners)
-          // .$$typeof and ._store on just reasonable markers of a react element
+        if ((keys[i] === '_owner' || keys[i] === '__v' || keys[i] === '__o') && a.$$typeof) {
+          // React-specific: avoid traversing React elements' _owner
+          // Preact-specific: avoid traversing Preact elements' __v and __o
+          //    __v = $_original / $_vnode
+          //    __o = $_owner
+          // These properties contain circular references and are not needed when
+          // comparing the actual elements (and not their owners)
+          // .$$typeof and ._store on just reasonable markers of elements
+
           continue;
         }
 
@@ -665,7 +646,7 @@
   }
   // end fast-deep-equal
 
-  var _reactFastCompare_3_0_1_reactFastCompare = function isEqual(a, b) {
+  var _reactFastCompare_3_2_0_reactFastCompare = function isEqual(a, b) {
     try {
       return equal(a, b);
     } catch (error) {
@@ -683,7 +664,88 @@
     }
   };
 
-  var _createContext = React.createContext({}),
+  var CheckboxGroup = /*#__PURE__*/function (_Component) {
+    inherits(CheckboxGroup, _Component);
+
+    var _super = createSuper(CheckboxGroup);
+
+    function CheckboxGroup() {
+      classCallCheck(this, CheckboxGroup);
+
+      return _super.apply(this, arguments);
+    }
+
+    createClass(CheckboxGroup, [{
+      key: "render",
+      value: function render() {
+        var _this$props = this.props,
+            children = _this$props.children,
+            name = _this$props.name,
+            onChange = _this$props.onChange,
+            value = _this$props.value,
+            onFocus = _this$props.onFocus,
+            onBlur = _this$props.onBlur,
+            isValid = _this$props.isValid,
+            isInvalid = _this$props.isInvalid;
+
+        var childOnChange = function childOnChange(ev) {
+          var _ev$target = ev.target,
+              checked = _ev$target.checked,
+              childValue = _ev$target.value;
+          var newValue = value || [];
+          onChange(checked ? newValue.concat(childValue) : newValue.filter(function (v) {
+            return v !== childValue;
+          }));
+        };
+
+        return React.Children.map(children, function (child) {
+          var childValue = child.props.value;
+          return /*#__PURE__*/React.cloneElement(child, {
+            isValid: isValid,
+            isInvalid: isInvalid,
+            checked: !!value && value.indexOf(childValue) > -1,
+            onChange: childOnChange,
+            onFocus: onFocus,
+            onBlur: onBlur,
+            name: name
+          });
+        });
+      }
+    }]);
+
+    return CheckboxGroup;
+  }(React.Component);
+
+  CheckboxGroup.formutilType = 'array';
+  CheckboxGroup.propTypes = {
+    onChange: PropTypes__default['default'].func,
+    onFocus: PropTypes__default['default'].func,
+    onBlur: PropTypes__default['default'].func,
+    value: PropTypes__default['default'].array
+  };
+
+  var styleSheet;
+
+  try {
+    var style = document.createElement('style');
+    style.type = 'text/css';
+    document.getElementsByTagName('head')[0].appendChild(style);
+    styleSheet = document.styleSheets[document.styleSheets.length - 1];
+  } catch (err) {}
+
+  function insertRule(selector, content) {
+    if (styleSheet) {
+      if (styleSheet.insertRule) {
+        styleSheet.insertRule("".concat(selector, " { ").concat(content, " }"), 0);
+      } else if (styleSheet.addRule) {
+        styleSheet.addRule(selector, content, 0);
+      }
+    }
+  }
+
+  var isValidElementType = _reactIs_17_0_1_reactIs.isValidElementType;
+
+  var _createContext = /*#__PURE__*/React.createContext({}),
       Consumer = _createContext.Consumer,
       Provider = _createContext.Provider;
 
@@ -703,7 +765,7 @@
     if (children) {
       var childrenType = children.type;
 
-      if (_reactIs_16_13_1_reactIs_1(childrenType)) {
+      if (isValidElementType(childrenType)) {
         // SomeComponent.formutiType = xx
         if (childrenType.formutilType) {
           return childrenType.formutilType;
@@ -808,10 +870,10 @@
         return {
           groupProps: groupProps,
           validationProps: validationProps,
-          error: hasError ? /*#__PURE__*/React__default.createElement(HelpBlock, {
+          error: hasError ? /*#__PURE__*/React__default['default'].createElement(HelpBlock, {
             type: "invalid"
           }, Array.isArray($errors) ? $errors.map(function (err, index) {
-            return /*#__PURE__*/React__default.createElement("div", {
+            return /*#__PURE__*/React__default['default'].createElement("div", {
               key: index
             }, err);
           }) : $errors) : null
@@ -864,14 +926,14 @@
         var groupAsProps = !as && (labelCol || wrapperCol) ? reactBootstrap.Row : as;
 
         if (label) {
-          if (React.isValidElement(label)) {
+          if ( /*#__PURE__*/React.isValidElement(label)) {
             if (labelCol) {
-              label = React.cloneElement(label, objectSpread2({
+              label = /*#__PURE__*/React.cloneElement(label, objectSpread2({
                 column: true
               }, labelCol));
             }
           } else {
-            label = /*#__PURE__*/React__default.createElement(reactBootstrap.FormLabel, Object.assign({
+            label = /*#__PURE__*/React__default['default'].createElement(reactBootstrap.FormLabel, Object.assign({
               column: !!labelCol
             }, labelCol), label);
           }
@@ -884,18 +946,18 @@
 
         if (addons) {
           if (addons.pre) {
-            addons.pre = /*#__PURE__*/React__default.createElement(reactBootstrap.InputGroup.Prepend, null, React.isValidElement(addons.pre) ? addons.pre : /*#__PURE__*/React__default.createElement(reactBootstrap.InputGroup.Text, null, addons.pre));
+            addons.pre = /*#__PURE__*/React__default['default'].createElement(reactBootstrap.InputGroup.Prepend, null, /*#__PURE__*/React.isValidElement(addons.pre) ? addons.pre : /*#__PURE__*/React__default['default'].createElement(reactBootstrap.InputGroup.Text, null, addons.pre));
           }
 
           if (addons.end) {
-            addons.end = /*#__PURE__*/React__default.createElement(reactBootstrap.InputGroup.Append, null, React.isValidElement(addons.end) ? addons.end : /*#__PURE__*/React__default.createElement(reactBootstrap.InputGroup.Text, null, addons.end));
+            addons.end = /*#__PURE__*/React__default['default'].createElement(reactBootstrap.InputGroup.Append, null, /*#__PURE__*/React.isValidElement(addons.end) ? addons.end : /*#__PURE__*/React__default['default'].createElement(reactBootstrap.InputGroup.Text, null, addons.end));
           }
         } else {
           addons = {};
         }
 
-        if (helper && !React.isValidElement(helper)) {
-          helper = /*#__PURE__*/React__default.createElement(reactBootstrap.FormText, {
+        if (helper && ! /*#__PURE__*/React.isValidElement(helper)) {
+          helper = /*#__PURE__*/React__default['default'].createElement(reactBootstrap.FormText, {
             className: "text-muted"
           }, helper);
         }
@@ -910,15 +972,15 @@
 
 
           Promise.resolve().then(function () {
-            if (!_reactFastCompare_3_0_1_reactFastCompare(_this2.latestValidationProps, _this2.fetchCurrentValidationProps(errorLevel))) {
+            if (!_reactFastCompare_3_2_0_reactFastCompare(_this2.latestValidationProps, _this2.fetchCurrentValidationProps(errorLevel))) {
               _this2.forceUpdate();
             }
           });
-          return /*#__PURE__*/React__default.createElement(Provider, {
+          return /*#__PURE__*/React__default['default'].createElement(Provider, {
             value: this.registerField
-          }, /*#__PURE__*/React__default.createElement(reactBootstrap.FormGroup, Object.assign({}, fieldProps, groupProps, {
+          }, /*#__PURE__*/React__default['default'].createElement(reactBootstrap.FormGroup, Object.assign({}, fieldProps, groupProps, {
             as: groupAsProps
-          }), label, /*#__PURE__*/React__default.createElement(Wrapper, wrapperCol, /*#__PURE__*/React__default.createElement(AddonWrapper, addonWrapperProps, addons.pre, typeof childList === 'function' ? childList() : childList, addons.end), error || helper), extraNode));
+          }), label, /*#__PURE__*/React__default['default'].createElement(Wrapper, wrapperCol, /*#__PURE__*/React__default['default'].createElement(AddonWrapper, addonWrapperProps, addons.pre, typeof childList === 'function' ? childList() : childList, addons.end), error || helper), extraNode));
         } // If $memo is true, pass the children to Field for SCU diffing.
 
 
@@ -964,7 +1026,7 @@
             break;
         }
 
-        return /*#__PURE__*/React__default.createElement(reactFormutil.EasyField, Object.assign({}, fieldProps, {
+        return /*#__PURE__*/React__default['default'].createElement(reactFormutil.EasyField, Object.assign({}, fieldProps, {
           passUtil: "$fieldutil",
           render: function render($handleProps) {
             var _childProps, _Object$assign;
@@ -1060,17 +1122,17 @@
                 error = _this2$getValidationP.error;
 
             childProps = Object.assign((_Object$assign = {}, defineProperty(_Object$assign, focusPropName, onFocus), defineProperty(_Object$assign, blurPropName, onBlur), _Object$assign), childProps, validationProps);
-            var fieldInstance = typeof children === 'function' ? children(childProps) : React.cloneElement(children, childProps);
-            return /*#__PURE__*/React__default.createElement(Consumer, null, function (registerField) {
+            var fieldInstance = typeof children === 'function' ? children(childProps) : /*#__PURE__*/React.cloneElement(children, childProps);
+            return /*#__PURE__*/React__default['default'].createElement(Consumer, null, function (registerField) {
               if (noStyle) {
                 _this2.$fieldutil = $fieldutil;
                 _this2.registerAncestorField = registerField;
                 return fieldInstance;
               }
 
-              return /*#__PURE__*/React__default.createElement(reactBootstrap.FormGroup, Object.assign({}, restProps, groupProps, {
+              return /*#__PURE__*/React__default['default'].createElement(reactBootstrap.FormGroup, Object.assign({}, restProps, groupProps, {
                 as: groupAsProps
-              }), label, /*#__PURE__*/React__default.createElement(Wrapper, wrapperCol, /*#__PURE__*/React__default.createElement(AddonWrapper, addonWrapperProps, addons.pre, fieldInstance, addons.end), error || helper), extraNode);
+              }), label, /*#__PURE__*/React__default['default'].createElement(Wrapper, wrapperCol, /*#__PURE__*/React__default['default'].createElement(AddonWrapper, addonWrapperProps, addons.pre, fieldInstance, addons.end), error || helper), extraNode);
             });
           }
         }));
@@ -1091,20 +1153,20 @@
       if ('name' in props) {
         var _PropTypes$oneOfType;
 
-        return (_PropTypes$oneOfType = PropTypes.oneOfType([PropTypes.element, PropTypes.func])).isRequired.apply(_PropTypes$oneOfType, [props].concat(args));
+        return (_PropTypes$oneOfType = PropTypes__default['default'].oneOfType([PropTypes__default['default'].element, PropTypes__default['default'].func])).isRequired.apply(_PropTypes$oneOfType, [props].concat(args));
       }
 
-      return (_PropTypes$node = PropTypes.node).isRequired.apply(_PropTypes$node, [props].concat(args));
+      return (_PropTypes$node = PropTypes__default['default'].node).isRequired.apply(_PropTypes$node, [props].concat(args));
     },
-    label: PropTypes.any,
-    helper: PropTypes.any,
-    labelCol: PropTypes.object,
-    wrapperCol: PropTypes.object,
-    addons: PropTypes.object,
-    extra: PropTypes.node,
-    feedback: PropTypes.bool,
-    noStyle: PropTypes.bool,
-    errorLevel: PropTypes.oneOf([0, 1, 2, 'off']) // $parser $formatter checked unchecked $validators validMessage等传递给 EasyField 组件的额外参数
+    label: PropTypes__default['default'].any,
+    helper: PropTypes__default['default'].any,
+    labelCol: PropTypes__default['default'].object,
+    wrapperCol: PropTypes__default['default'].object,
+    addons: PropTypes__default['default'].object,
+    extra: PropTypes__default['default'].node,
+    feedback: PropTypes__default['default'].bool,
+    noStyle: PropTypes__default['default'].bool,
+    errorLevel: PropTypes__default['default'].oneOf([0, 1, 2, 'off']) // $parser $formatter checked unchecked $validators validMessage等传递给 EasyField 组件的额外参数
 
   };
   insertRule('.valid-feedback:empty,.invalid-feedback:empty', 'display: none !important');
@@ -1140,7 +1202,7 @@
 
         return React.Children.map(children, function (child) {
           var childValue = child.props.value;
-          return React.cloneElement(child, {
+          return /*#__PURE__*/React.cloneElement(child, {
             isValid: isValid,
             isInvalid: isInvalid,
             checked: value === childValue,
@@ -1157,10 +1219,10 @@
   }(React.Component);
 
   RadioGroup.propTypes = {
-    onChange: PropTypes.func,
-    onFocus: PropTypes.func,
-    onBlur: PropTypes.func,
-    value: PropTypes.string
+    onChange: PropTypes__default['default'].func,
+    onFocus: PropTypes__default['default'].func,
+    onBlur: PropTypes__default['default'].func,
+    value: PropTypes__default['default'].string
   };
 
   Object.keys(reactFormutil).forEach(function (k) {

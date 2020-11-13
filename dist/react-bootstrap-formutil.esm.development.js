@@ -1,9 +1,9 @@
 import { EasyField } from 'react-formutil';
 export * from 'react-formutil';
-import React, { Children, cloneElement, Component, createContext, isValidElement, Fragment } from 'react';
-import { isValidElementType } from 'react-is';
+import React, { Children, cloneElement, Component, isValidElement, createContext, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { FormControl, FormLabel, InputGroup, FormText, FormGroup, ToggleButtonGroup, ToggleButton, FormCheck, Col, Row } from 'react-bootstrap';
+import reactIs from 'react-is';
 import isEqual from 'react-fast-compare';
 
 function _defineProperty(obj, key, value) {
@@ -145,6 +145,30 @@ function _createClass(Constructor, protoProps, staticProps) {
   return Constructor;
 }
 
+function _setPrototypeOf(o, p) {
+  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function");
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) _setPrototypeOf(subClass, superClass);
+}
+
 function _getPrototypeOf(o) {
   _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
     return o.__proto__ || Object.getPrototypeOf(o);
@@ -182,11 +206,12 @@ function _possibleConstructorReturn(self, call) {
 }
 
 function _createSuper(Derived) {
-  return function () {
+  var hasNativeReflectConstruct = _isNativeReflectConstruct();
+  return function _createSuperInternal() {
     var Super = _getPrototypeOf(Derived),
         result;
 
-    if (_isNativeReflectConstruct()) {
+    if (hasNativeReflectConstruct) {
       var NewTarget = _getPrototypeOf(this).constructor;
       result = Reflect.construct(Super, arguments, NewTarget);
     } else {
@@ -195,30 +220,6 @@ function _createSuper(Derived) {
 
     return _possibleConstructorReturn(this, result);
   };
-}
-
-function _setPrototypeOf(o, p) {
-  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
-    o.__proto__ = p;
-    return o;
-  };
-
-  return _setPrototypeOf(o, p);
-}
-
-function _inherits(subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function");
-  }
-
-  subClass.prototype = Object.create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      writable: true,
-      configurable: true
-    }
-  });
-  if (superClass) _setPrototypeOf(subClass, superClass);
 }
 
 var CheckboxGroup = /*#__PURE__*/function (_Component) {
@@ -257,7 +258,7 @@ var CheckboxGroup = /*#__PURE__*/function (_Component) {
 
       return Children.map(children, function (child) {
         var childValue = child.props.value;
-        return cloneElement(child, {
+        return /*#__PURE__*/cloneElement(child, {
           isValid: isValid,
           isInvalid: isInvalid,
           checked: !!value && value.indexOf(childValue) > -1,
@@ -300,7 +301,9 @@ function insertRule(selector, content) {
   }
 }
 
-var _createContext = createContext({}),
+var isValidElementType = reactIs.isValidElementType;
+
+var _createContext = /*#__PURE__*/createContext({}),
     Consumer = _createContext.Consumer,
     Provider = _createContext.Provider;
 
@@ -481,9 +484,9 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
       var groupAsProps = !as && (labelCol || wrapperCol) ? Row : as;
 
       if (label) {
-        if (isValidElement(label)) {
+        if ( /*#__PURE__*/isValidElement(label)) {
           if (labelCol) {
-            label = cloneElement(label, _objectSpread2({
+            label = /*#__PURE__*/cloneElement(label, _objectSpread2({
               column: true
             }, labelCol));
           }
@@ -501,17 +504,17 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
 
       if (addons) {
         if (addons.pre) {
-          addons.pre = /*#__PURE__*/React.createElement(InputGroup.Prepend, null, isValidElement(addons.pre) ? addons.pre : /*#__PURE__*/React.createElement(InputGroup.Text, null, addons.pre));
+          addons.pre = /*#__PURE__*/React.createElement(InputGroup.Prepend, null, /*#__PURE__*/isValidElement(addons.pre) ? addons.pre : /*#__PURE__*/React.createElement(InputGroup.Text, null, addons.pre));
         }
 
         if (addons.end) {
-          addons.end = /*#__PURE__*/React.createElement(InputGroup.Append, null, isValidElement(addons.end) ? addons.end : /*#__PURE__*/React.createElement(InputGroup.Text, null, addons.end));
+          addons.end = /*#__PURE__*/React.createElement(InputGroup.Append, null, /*#__PURE__*/isValidElement(addons.end) ? addons.end : /*#__PURE__*/React.createElement(InputGroup.Text, null, addons.end));
         }
       } else {
         addons = {};
       }
 
-      if (helper && !isValidElement(helper)) {
+      if (helper && ! /*#__PURE__*/isValidElement(helper)) {
         helper = /*#__PURE__*/React.createElement(FormText, {
           className: "text-muted"
         }, helper);
@@ -677,7 +680,7 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
               error = _this2$getValidationP.error;
 
           childProps = Object.assign((_Object$assign = {}, _defineProperty(_Object$assign, focusPropName, onFocus), _defineProperty(_Object$assign, blurPropName, onBlur), _Object$assign), childProps, validationProps);
-          var fieldInstance = typeof children === 'function' ? children(childProps) : cloneElement(children, childProps);
+          var fieldInstance = typeof children === 'function' ? children(childProps) : /*#__PURE__*/cloneElement(children, childProps);
           return /*#__PURE__*/React.createElement(Consumer, null, function (registerField) {
             if (noStyle) {
               _this2.$fieldutil = $fieldutil;
@@ -757,7 +760,7 @@ var RadioGroup = /*#__PURE__*/function (_Component) {
 
       return Children.map(children, function (child) {
         var childValue = child.props.value;
-        return cloneElement(child, {
+        return /*#__PURE__*/cloneElement(child, {
           isValid: isValid,
           isInvalid: isInvalid,
           checked: value === childValue,

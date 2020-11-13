@@ -1,5 +1,4 @@
 import React, { Component, cloneElement, isValidElement, Children, Fragment, createContext } from 'react';
-import { isValidElementType } from 'react-is';
 import PropTypes from 'prop-types';
 import { EasyField } from 'react-formutil';
 import {
@@ -14,10 +13,12 @@ import {
     ToggleButton,
     ToggleButtonGroup
 } from 'react-bootstrap';
+import reactIs from 'react-is';
+import isEqual from 'react-fast-compare';
 import CheckboxGroup from './CheckboxGroup';
 import { insertRule } from './helper';
-import isEqual from 'react-fast-compare';
 
+const { isValidElementType } = reactIs;
 const { Consumer, Provider } = createContext({});
 
 let errorLevelGlobal = 1;
@@ -90,6 +91,7 @@ class _FormGroup extends Component {
                 return false;
         }
     };
+
     fetchCurrentValidationProps = errorLevel => {
         const allFieldutils = Object.keys(this.fields).map(name => this.fields[name].$new());
         const errFieldutils = allFieldutils.filter($fieldutil => $fieldutil.$invalid);
@@ -380,6 +382,7 @@ class _FormGroup extends Component {
                                         delete this.compositionValue;
                                         onChange(...args);
                                     }
+
                                     return onBlur(...args);
                                 },
                                 name: fieldProps.name
