@@ -259,8 +259,13 @@ class _FormGroup extends Component {
         }
 
         // If $memo is true, pass the children to Field for SCU diffing.
-        if (props.$memo === true) {
-            fieldProps.__DIFF__ = childList;
+        if (fieldProps.$memo === true) {
+            fieldProps.__DIFF__ = {
+                childList,
+                compositionValue: this.compositionValue
+            };
+        } else if (Array.isArray(fieldProps.$memo)) {
+            fieldProps.$memo = fieldProps.$memo.concat(this.compositionValue);
         }
 
         const children = typeof childList === 'function' ? childList : Children.only(childList);
@@ -351,11 +356,11 @@ class _FormGroup extends Component {
                         default:
                             childProps = {
                                 onCompositionEnd: ev => {
-                                    this.isComposition = false;
+                                    this.isComposing = false;
                                     delete this.compositionValue;
                                     onChange(ev);
                                 },
-                                onCompositionStart: () => (this.isComposition = true),
+                                onCompositionStart: () => (this.isComposing = true),
                                 [changePropName]:
                                     component === 'multipleSelect'
                                         ? ev => {
@@ -368,7 +373,7 @@ class _FormGroup extends Component {
                                               );
                                           }
                                         : (ev, ...rest) => {
-                                              if (this.isComposition) {
+                                              if (this.isComposing) {
                                                   this.compositionValue = ev.target[valuePropName];
                                                   this.forceUpdate();
                                               } else {
@@ -377,8 +382,8 @@ class _FormGroup extends Component {
                                           },
                                 [valuePropName]: 'compositionValue' in this ? this.compositionValue : value,
                                 [blurPropName]: (...args) => {
-                                    if (this.isComposition) {
-                                        this.isComposition = false;
+                                    if (this.isComposing) {
+                                        this.isComposing = false;
                                         delete this.compositionValue;
                                         onChange(...args);
                                     }
