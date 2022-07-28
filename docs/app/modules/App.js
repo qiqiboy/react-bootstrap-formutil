@@ -1,5 +1,5 @@
+import MemoRender from 'memo-render';
 import React, { Component } from 'react';
-import { withForm, FormGroup, CheckboxGroup, RadioGroup, SwitchGroup } from 'app/../../src';
 import {
     Container,
     Form,
@@ -11,7 +11,7 @@ import {
     ToggleButtonGroup,
     ToggleButton
 } from 'react-bootstrap';
-import MemoRender from 'memo-render';
+import { withForm, FormGroup, CheckboxGroup, RadioGroup, SwitchGroup } from 'app/../../src';
 
 class App extends Component {
     state = { memoIndex: 0 };

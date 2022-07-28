@@ -13,21 +13,26 @@ process.on('unhandledRejection', err => {
 
 require('./config/env');
 
-const chalk = require('chalk');
-const fs = require('fs-extra');
 const path = require('path');
+const fs = require('fs-extra');
 const webpack = require('webpack');
-const config = require(useDevConfig ? './config/webpack.config.dev' : './config/webpack.config.prod');
+const chalk = require('tiger-new-utils/chalk');
+const ora = require('tiger-new-utils/ora');
+const checkRequiredFiles = require('tiger-new-utils/checkRequiredFiles');
+const FileSizeReporter = require('tiger-new-utils/FileSizeReporter');
+const clearConsole = require('tiger-new-utils/clearConsole');
+const { checkBrowsers } = require('tiger-new-utils/browsersHelper');
+const formatWebpackMessages = require('tiger-new-utils/formatWebpackMessages');
+const checkMissDependencies = require('tiger-new-utils/checkMissDependencies');
+const printBuildError = require('tiger-new-utils/printBuildError');
+const configFactory = require('./config/webpack.config');
 const paths = require('./config/paths');
-const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles');
-const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
-const FileSizeReporter = require('react-dev-utils/FileSizeReporter');
-const clearConsole = require('react-dev-utils/clearConsole');
+const { printServeCommand } = require('./config/helper');
+const { ensureLocals } = require('./i18n');
+
 const measureFileSizesBeforeBuild = FileSizeReporter.measureFileSizesBeforeBuild;
 const printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
-const checkMissDependencies = require('./config/checkMissDependencies');
-const { ensureLocals } = require('./i18n');
-const ora = require('ora');
+const isInteractive = process.stdout.isTTY;
 
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
     console.log();
@@ -41,87 +46,119 @@ const spinner = ora('webpack启动中...').start();
 const WARN_AFTER_BUNDLE_GZIP_SIZE = 512 * 1024;
 const WARN_AFTER_CHUNK_GZIP_SIZE = 1024 * 1024;
 
-checkMissDependencies(spinner)
-    .then(() => {
-        return measureFileSizesBeforeBuild(paths.appBuild);
-    })
-    .then(previousFileSizes => {
-        // Remove all content but keep the directory
-        fs.emptyDirSync(paths.appBuild);
-        // Merge with the public folder
-        copyPublicFolder();
-        // Start the webpack build
-        return build(previousFileSizes);
-    })
-    .then(({ stats, previousFileSizes, warnings }) => {
-        if (warnings.length) {
-            spinner.warn(chalk.yellow('编译有警告产生：'));
-            console.log();
-            console.log(warnings.join('\n\n'));
-            console.log();
-            // Teach some ESLint tricks.
-            console.log('\n搜索相关' + chalk.underline(chalk.yellow('关键词')) + '以了解更多关于警告产生的原因.');
+const config = configFactory(useDevConfig ? 'development' : 'production');
+const nodeConfig = configFactory(useDevConfig ? 'development' : 'production', 'node');
 
-            console.log(
-                '如果要忽略警告, 可以将 ' + chalk.cyan('// eslint-disable-next-line') + ' 添加到产生警告的代码行上方\n'
+checkBrowsers(paths.root, isInteractive).then(() => {
+    return checkMissDependencies(paths.root, paths.npmCommander, spinner)
+        .then(() => {
+            return measureFileSizesBeforeBuild(paths.appBuild);
+        })
+        .then(previousFileSizes => {
+            // Remove all content but keep the directory
+            fs.emptyDirSync(paths.appBuild);
+            // Merge with the public folder
+            copyPublicFolder();
+
+            // Start the webpack build
+            return build(previousFileSizes);
+        })
+        .then(({ stats, previousFileSizes, warnings, compiler }) => {
+            if (warnings.length) {
+                spinner.warn(chalk.yellow('编译有警告产生：'));
+                console.log();
+                console.log(warnings.join('\n\n'));
+                console.log();
+
+                // Teach some ESLint tricks.
+                console.log(`\n搜索相关${chalk.underline(chalk.yellow('关键词'))}以了解更多关于警告产生的原因.`);
+
+                console.log(
+                    `如果要忽略警告, 可以将 ${chalk.cyan('// eslint-disable-next-line')} 添加到产生警告的代码行上方\n`
+                );
+
+                console.log();
+                console.log();
+
+                if (!useDevConfig && process.env.COMPILE_ON_WARNING !== 'true') {
+                    spinner.fail(chalk.red('请处理所有的错误和警告后再build代码！'));
+
+                    console.log();
+                    console.log();
+                    process.exit(1);
+                }
+            } else {
+                spinner.succeed(chalk.green('编译通过！！'));
+                console.log();
+            }
+
+            spinner.succeed('gzip后的文件大小:');
+            console.log();
+
+            printFileSizesAfterBuild(
+                stats.stats[0],
+                previousFileSizes,
+                paths.appBuild,
+                WARN_AFTER_BUNDLE_GZIP_SIZE,
+                WARN_AFTER_CHUNK_GZIP_SIZE
             );
 
             console.log();
-            console.log();
 
-            if (!useDevConfig) {
-                spinner.fail(chalk.red('请处理所有的错误和警告后再build代码！'));
-
+            if (/^http/.test(paths.publicUrlOrPath) === false) {
+                spinner.succeed(chalk.green('项目打包完成，运行以下命令可即时预览：'));
                 console.log();
-                console.log();
-                process.exit(1);
-            }
-        } else {
-            spinner.succeed(chalk.green('编译通过！！'));
-            console.log();
-        }
 
-        spinner.succeed('gzip后的文件大小:');
-        console.log();
-
-        printFileSizesAfterBuild(
-            stats,
-            previousFileSizes,
-            paths.appBuild,
-            WARN_AFTER_BUNDLE_GZIP_SIZE,
-            WARN_AFTER_CHUNK_GZIP_SIZE
-        );
-
-        console.log();
-
-        if (/^http/.test(config.output.publicPath) === false) {
-            spinner.succeed(chalk.green('项目打包完成，运行以下命令可即时预览：'));
-            console.log();
-
-            if (!paths.serve) {
-                console.log(chalk.cyan('npm') + ' install -g serve');
+                printServeCommand();
+            } else {
+                spinner.succeed(`项目打包完成，请确保资源已上传到：${chalk.green(paths.publicUrlOrPath)}.`);
             }
 
-            console.log(chalk.cyan('serve') + ' -s ' + path.relative('.', paths.appBuild));
-        } else {
-            const publicPath = config.output.publicPath;
+            console.log();
 
-            spinner.succeed('项目打包完成，请确保资源已上传到：' + chalk.green(publicPath) + '.');
-        }
+            let timer;
+            const startTime = Date.now();
+            const logProgress = function(prefix, isStop) {
+                let text = `${prefix || '正在生成本地缓存...'}已耗时：${((Date.now() - startTime) / 1000).toFixed(3)}s`;
 
-        console.log();
-    })
-    .catch(err => {
-        if (err) {
+                if (isStop) {
+                    clearTimeout(timer);
+                    spinner.succeed(chalk.green(text));
+                } else {
+                    spinner.text = chalk.cyan(text);
+
+                    timer = setTimeout(logProgress, 100);
+                }
+            };
+
+            if (config.cache) {
+                logProgress();
+                spinner.start();
+            }
+
+            return new Promise((resolve, reject) =>
+                compiler.close(err => {
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    if (config.cache) {
+                        logProgress(`本地缓存已生成：${path.resolve(paths.appNodeModules, '.cache/webpack')} | `, true);
+                    }
+
+                    resolve();
+                })
+            );
+        })
+        .catch(err => {
             spinner.fail(chalk.red('编译失败！！'));
             console.log();
-            console.log(err.message || err);
-        }
 
-        console.log();
-        console.log();
-        process.exit(1);
-    });
+            printBuildError(err);
+
+            process.exit(1);
+        });
+});
 
 // Create the production build and print the deployment instructions.
 function build(previousFileSizes) {
@@ -129,7 +166,7 @@ function build(previousFileSizes) {
     let startTime = Date.now();
     let timer;
     let logProgress = function(stop) {
-        var text = packText + '已耗时：' + ((Date.now() - startTime) / 1000).toFixed(3) + 's';
+        let text = `${packText}已耗时：${((Date.now() - startTime) / 1000).toFixed(3)}s`;
 
         if (stop) {
             clearTimeout(timer);
@@ -144,7 +181,7 @@ function build(previousFileSizes) {
     clearConsole();
     logProgress();
 
-    let compiler = webpack(config);
+    let compiler = webpack(paths.useNodeEnv ? [config, nodeConfig] : [config]);
 
     return new Promise((resolve, reject) => {
         compiler.run((err, stats) => {
@@ -158,8 +195,15 @@ function build(previousFileSizes) {
                     return reject(err);
                 }
 
+                let errMessage = err.message;
+
+                // Add additional information for postcss errors
+                if (Object.prototype.hasOwnProperty.call(err, 'postcssNode')) {
+                    errMessage += `\nCompileError: Begins at CSS selector ${err.postcssNode.selector}`;
+                }
+
                 messages = formatWebpackMessages({
-                    errors: [err.message],
+                    errors: [errMessage],
                     warnings: []
                 });
             } else {
@@ -177,7 +221,8 @@ function build(previousFileSizes) {
             const resolveArgs = {
                 stats,
                 previousFileSizes,
-                warnings: messages.warnings
+                warnings: messages.warnings,
+                compiler
             };
 
             return resolve(resolveArgs);
@@ -190,12 +235,15 @@ function copyPublicFolder() {
         dereference: true,
         filter: file => {
             const relative = path.relative(paths.appPublic, file);
+            const mayHtmlEntryName = relative.replace(/(\.web|\.node)?\.html$/i, '');
             const basename = path.basename(file);
             const isDirectory = fs.statSync(file).isDirectory();
 
             return isDirectory
                 ? basename !== 'layout' // layout目录不复制
-                : !paths.pageEntries.find(name => name + '.html' === relative);
+                : !basename.startsWith('_') &&
+                      !paths.pageEntries[mayHtmlEntryName] &&
+                      !paths.nodePageEntries[mayHtmlEntryName];
         }
     });
 }

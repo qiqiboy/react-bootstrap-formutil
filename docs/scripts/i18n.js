@@ -1,20 +1,16 @@
 /* eslint @typescript-eslint/no-var-requires: 0 */
+const path = require('path');
 const fs = require('fs-extra');
 const glob = require('glob');
 const Parser = require('i18next-scanner').Parser;
 const xlsx = require('node-xlsx');
-const paths = require('./config/paths');
-const path = require('path');
-const chalk = require('chalk');
-const ora = require('ora');
+const chalk = require('tiger-new-utils/chalk');
+const ora = require('tiger-new-utils/ora');
 const lodash = require('lodash');
-const pkg = require(paths.appPackageJson);
+const paths = require('./config/paths');
+const pkg = paths.appPackageJson;
 
 const spinner = ora();
-
-const xlsxOptions = {
-    '!cols': [{ wch: 50 }, { wch: 50 }]
-};
 
 const terminalArg = process.argv[2];
 
@@ -38,6 +34,14 @@ function ensureLocalsConfig() {
     }
 }
 
+function requireJson(file) {
+    try {
+        return require(file);
+    } catch (err) {
+        return {};
+    }
+}
+
 /**
  * @description
  * 扫描源代码文件，匹配需要翻译的文案，并输出excel文件待翻译
@@ -52,39 +56,47 @@ function scanner() {
     });
 
     fs.ensureDirSync(path.join(paths.locals, 'xlsx'));
+    fs.emptyDirSync(path.join(paths.locals, 'xlsx'));
 
-    glob.sync(paths.appSrc + '/**/*.{js,jsx,ts,tsx}').forEach(file => {
+    glob.sync(`${paths.appSrc}/**/*.{js,jsx,ts,tsx}`).forEach(file => {
         const content = fs.readFileSync(file);
 
-        i18nParser.parseFuncFromString(content, { list: ['__', 'i18n.__', 'window.__'] }, key => {
-            if (key) {
-                i18nParser.set(key, key);
+        i18nParser.parseFuncFromString(
+            content,
+            { list: ['__', 'i18n.__', 'window.__', 'props.i18n.__', 'this.props.i18n.__'] },
+            key => {
+                if (key) {
+                    i18nParser.set(key, key);
+                }
             }
-        });
+        );
     });
 
     const i18nJson = i18nParser.get();
+    const destination = path.join(paths.locals, 'xlsx', `${pkg.name}.i18n.xlsx`);
+    const langConfig = [];
 
-    Object.keys(i18nJson).forEach(key => {
-        const jsonDestination = path.join(paths.locals, key + '.json');
-        const excelDestination = path.join(paths.locals, 'xlsx', key + '.xlsx');
+    lodash.each(i18nJson, ({ translation }, key) => {
+        const langFile = path.join(paths.locals, `${key}.json`);
 
-        const translation = i18nJson[key].translation;
-        const existConfig = fs.existsSync(jsonDestination) ? JSON.parse(fs.readFileSync(jsonDestination)) : {};
-        const newConfig = lodash.pickBy(existConfig, (value, key) => key in translation);
+        const currentLangs = fs.existsSync(langFile) ? JSON.parse(fs.readFileSync(langFile)) : {};
+        const newLangs = lodash.pickBy(currentLangs, (value, key) => key in translation);
 
         lodash.each(translation, (value, key) => {
-            if (!(key in newConfig)) {
-                newConfig[key] = value;
+            if (!(key in newLangs)) {
+                newLangs[key] = value;
             }
         });
 
-        fs.outputFile(path.join(paths.locals, key + '.json'), JSON.stringify(newConfig, '\n', 2));
+        fs.outputFile(path.join(paths.locals, `${key}.json`), JSON.stringify(newLangs, '\n', 2));
 
-        convertJson2Excel(newConfig, key, path.join(excelDestination));
-
-        spinner.succeed('输出 ' + chalk.bold(chalk.green(key)) + ' 到 ' + chalk.cyan(excelDestination));
+        langConfig.push({
+            lang: key,
+            config: newLangs
+        });
     });
+
+    convertJson2Excel(langConfig, destination);
 
     console.log();
     spinner.warn(chalk.yellow('你可以将生成的excel文件进行翻译后，放回原处。然后运行：'));
@@ -96,45 +108,54 @@ function scanner() {
  * 读取excel文件，并转换为json语言包
  */
 function reader() {
-    glob.sync(path.join(paths.locals, 'xlsx', '!(~$)*.xlsx')).forEach(file => {
-        const lang = path.basename(file, '.xlsx');
-        const jsonDestination = path.join(paths.locals, lang + '.json');
-
-        convertExcel2Json(file, lang, jsonDestination);
-
-        spinner.succeed('输出 ' + chalk.bold(chalk.green(lang)) + ' 到 ' + chalk.cyan(jsonDestination));
-    });
+    glob.sync(path.join(paths.locals, 'xlsx', '!(~$)*.xlsx')).forEach(convertExcel2Json);
 
     console.log();
     spinner.succeed(chalk.green('语言包转换成功！'));
 }
 
-function convertJson2Excel(jsonContent, lang, destination) {
-    const sheets = [[pkg.name + ' v' + pkg.version, lang], ['原始文案（禁止修改）', '翻译文案'], []];
+function convertJson2Excel(langConfig, destination) {
+    const sheets = [
+        [`${pkg.name} v${pkg.version}`].concat(langConfig.map(({ lang }) => lang)),
+        ['原始文案（禁止修改）'],
+        []
+    ];
 
-    Object.keys(jsonContent).forEach(key => {
-        const text = jsonContent[key];
-
-        sheets.push([key, text]);
+    lodash.each(langConfig[0].config, (text, key) => {
+        sheets.push([key].concat(langConfig.map(({ config }) => config[key])));
     });
 
-    const buffer = xlsx.build([{ name: 'locals', data: sheets }], xlsxOptions);
+    const buffer = xlsx.build([{ name: 'i18n_locals', data: sheets }], {
+        '!cols': [{ wch: 50 }].concat(
+            langConfig.map(() => ({
+                wch: 80
+            }))
+        )
+    });
 
     fs.writeFileSync(destination, buffer);
+
+    spinner.succeed(`语言包已输出到 ${chalk.cyan(destination)}`);
 }
 
-function convertExcel2Json(file, lang, destination) {
-    const sheets = xlsx.parse(fs.readFileSync(file));
+function convertExcel2Json(file) {
+    const [{ data: sheets }] = xlsx.parse(fs.readFileSync(file));
+    const langs = sheets[0].slice(1);
 
-    const jsonData = require(destination) || {};
+    langs.forEach((lang, index) => {
+        const destination = path.join(paths.locals, `${lang}.json`);
+        const jsonData = requireJson(destination);
 
-    sheets[0].data.slice(2).forEach(item => {
-        if (item.length) {
-            jsonData[item[0]] = item[1];
-        }
+        sheets.slice(2).forEach(item => {
+            if (item.length) {
+                jsonData[item[0]] = item[index + 1];
+            }
+        });
+
+        fs.outputFileSync(destination, JSON.stringify(jsonData, '\n', 2));
+
+        spinner.succeed(`输出 ${chalk.bold(chalk.green(lang))} 到 ${chalk.cyan(destination)}`);
     });
-
-    fs.outputFileSync(destination, JSON.stringify(jsonData, '\n', 2));
 }
 
 exports.ensureLocals = function() {
@@ -142,7 +163,7 @@ exports.ensureLocals = function() {
 
     if (Array.isArray(pkg.locals)) {
         pkg.locals.forEach(lang => {
-            const file = path.join(paths.locals, lang + '.json');
+            const file = path.join(paths.locals, `${lang}.json`);
 
             if (!fs.existsSync(file)) {
                 fs.outputJSONSync(file, {});
