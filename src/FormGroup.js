@@ -7,9 +7,11 @@ import {
     FormControl,
     FormLabel,
     FormText,
+    FormSelect,
     InputGroup,
     Row,
     Col,
+    FloatingLabel,
     ToggleButton,
     ToggleButtonGroup
 } from 'react-bootstrap';
@@ -66,6 +68,7 @@ class _FormGroup extends Component {
         label: PropTypes.any,
         helper: PropTypes.any,
         labelCol: PropTypes.object,
+        floatingLabel: PropTypes.bool,
         wrapperCol: PropTypes.object,
         addons: PropTypes.object,
         extra: PropTypes.node,
@@ -171,6 +174,7 @@ class _FormGroup extends Component {
             className,
             as,
             feedback,
+            floatingLabel,
             extra: extraNode,
             noStyle,
             errorLevel = errorLevelGlobal,
@@ -206,26 +210,18 @@ class _FormGroup extends Component {
 
         if (addons) {
             if (addons.pre) {
-                addons.pre = (
-                    <InputGroup.Prepend>
-                        {isValidElement(addons.pre) ? addons.pre : <InputGroup.Text>{addons.pre}</InputGroup.Text>}
-                    </InputGroup.Prepend>
-                );
+                addons.pre = isValidElement(addons.pre) ? addons.pre : <InputGroup.Text>{addons.pre}</InputGroup.Text>;
             }
 
             if (addons.end) {
-                addons.end = (
-                    <InputGroup.Append>
-                        {isValidElement(addons.end) ? addons.end : <InputGroup.Text>{addons.end}</InputGroup.Text>}
-                    </InputGroup.Append>
-                );
+                addons.end = isValidElement(addons.end) ? addons.end : <InputGroup.Text>{addons.end}</InputGroup.Text>;
             }
         } else {
             addons = {};
         }
 
         if (helper && !isValidElement(helper)) {
-            helper = <FormText className="text-muted">{helper}</FormText>;
+            helper = <FormText muted>{helper}</FormText>;
         }
 
         if (!props.name) {
@@ -240,6 +236,8 @@ class _FormGroup extends Component {
                 }
             });
 
+            const fieldInstance = typeof childList === 'function' ? childList() : childList;
+
             return (
                 <Provider value={this.registerField}>
                     <FormGroup {...fieldProps} {...groupProps} as={groupAsProps}>
@@ -247,7 +245,7 @@ class _FormGroup extends Component {
                         <Wrapper {...wrapperCol}>
                             <AddonWrapper {...addonWrapperProps}>
                                 {addons.pre}
-                                {typeof childList === 'function' ? childList() : childList}
+                                {fieldInstance}
                                 {addons.end}
                             </AddonWrapper>
                             {error || helper}
@@ -272,10 +270,11 @@ class _FormGroup extends Component {
 
         let component = getChildComponent(children);
 
-        if (component === FormControl) {
-            if (children.props.as === 'select' && children.props.multiple) {
-                component = 'multipleSelect';
-            }
+        if (
+            ((component === FormControl && children.props.as === 'select') || component === FormSelect) &&
+            children.props.multiple
+        ) {
+            component = 'multipleSelect';
         }
 
         switch (component) {
@@ -429,11 +428,17 @@ class _FormGroup extends Component {
 
                                 return (
                                     <FormGroup {...restProps} {...groupProps} as={groupAsProps}>
-                                        {label}
+                                        {!floatingLabel && label}
                                         <Wrapper {...wrapperCol}>
                                             <AddonWrapper {...addonWrapperProps}>
                                                 {addons.pre}
-                                                {fieldInstance}
+                                                {floatingLabel && label ? (
+                                                    <FloatingLabel label={label.props.children}>
+                                                        {fieldInstance}
+                                                    </FloatingLabel>
+                                                ) : (
+                                                    fieldInstance
+                                                )}
                                                 {addons.end}
                                             </AddonWrapper>
                                             {error || helper}

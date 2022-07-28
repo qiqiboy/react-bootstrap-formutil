@@ -817,7 +817,7 @@
 	  }
 	}
 
-	var _excluded = ["children", "addons", "label", "helper", "labelCol", "wrapperCol", "validationState", "className", "as", "feedback", "extra", "noStyle", "errorLevel"];
+	var _excluded = ["children", "addons", "label", "helper", "labelCol", "wrapperCol", "validationState", "className", "as", "feedback", "floatingLabel", "extra", "noStyle", "errorLevel"];
 	var isValidElementType = reactIs.isValidElementType;
 
 	var _createContext = /*#__PURE__*/React.createContext({}),
@@ -991,7 +991,8 @@
 	          props.className;
 	          var as = props.as;
 	          props.feedback;
-	          var extraNode = props.extra,
+	          var floatingLabel = props.floatingLabel,
+	          extraNode = props.extra,
 	          noStyle = props.noStyle,
 	          _props$errorLevel = props.errorLevel,
 	          errorLevel = _props$errorLevel === void 0 ? errorLevelGlobal : _props$errorLevel,
@@ -1021,11 +1022,11 @@
 
 	      if (addons) {
 	        if (addons.pre) {
-	          addons.pre = /*#__PURE__*/React__default["default"].createElement(reactBootstrap.InputGroup.Prepend, null, /*#__PURE__*/React.isValidElement(addons.pre) ? addons.pre : /*#__PURE__*/React__default["default"].createElement(reactBootstrap.InputGroup.Text, null, addons.pre));
+	          addons.pre = /*#__PURE__*/React.isValidElement(addons.pre) ? addons.pre : /*#__PURE__*/React__default["default"].createElement(reactBootstrap.InputGroup.Text, null, addons.pre);
 	        }
 
 	        if (addons.end) {
-	          addons.end = /*#__PURE__*/React__default["default"].createElement(reactBootstrap.InputGroup.Append, null, /*#__PURE__*/React.isValidElement(addons.end) ? addons.end : /*#__PURE__*/React__default["default"].createElement(reactBootstrap.InputGroup.Text, null, addons.end));
+	          addons.end = /*#__PURE__*/React.isValidElement(addons.end) ? addons.end : /*#__PURE__*/React__default["default"].createElement(reactBootstrap.InputGroup.Text, null, addons.end);
 	        }
 	      } else {
 	        addons = {};
@@ -1033,7 +1034,7 @@
 
 	      if (helper && ! /*#__PURE__*/React.isValidElement(helper)) {
 	        helper = /*#__PURE__*/React__default["default"].createElement(reactBootstrap.FormText, {
-	          className: "text-muted"
+	          muted: true
 	        }, helper);
 	      }
 
@@ -1051,11 +1052,12 @@
 	            _this2.forceUpdate();
 	          }
 	        });
+	        var fieldInstance = typeof childList === 'function' ? childList() : childList;
 	        return /*#__PURE__*/React__default["default"].createElement(Provider, {
 	          value: this.registerField
 	        }, /*#__PURE__*/React__default["default"].createElement(reactBootstrap.FormGroup, Object.assign({}, fieldProps, groupProps, {
 	          as: groupAsProps
-	        }), label, /*#__PURE__*/React__default["default"].createElement(Wrapper, wrapperCol, /*#__PURE__*/React__default["default"].createElement(AddonWrapper, addonWrapperProps, addons.pre, typeof childList === 'function' ? childList() : childList, addons.end), error || helper), extraNode));
+	        }), label, /*#__PURE__*/React__default["default"].createElement(Wrapper, wrapperCol, /*#__PURE__*/React__default["default"].createElement(AddonWrapper, addonWrapperProps, addons.pre, fieldInstance, addons.end), error || helper), extraNode));
 	      } // If $memo is true, pass the children to Field for SCU diffing.
 
 
@@ -1071,10 +1073,8 @@
 	      var children = typeof childList === 'function' ? childList : React.Children.only(childList);
 	      var component = getChildComponent(children);
 
-	      if (component === reactBootstrap.FormControl) {
-	        if (children.props.as === 'select' && children.props.multiple) {
-	          component = 'multipleSelect';
-	        }
+	      if ((component === reactBootstrap.FormControl && children.props.as === 'select' || component === reactBootstrap.FormSelect) && children.props.multiple) {
+	        component = 'multipleSelect';
 	      }
 
 	      switch (component) {
@@ -1212,7 +1212,9 @@
 
 	            return /*#__PURE__*/React__default["default"].createElement(reactBootstrap.FormGroup, Object.assign({}, restProps, groupProps, {
 	              as: groupAsProps
-	            }), label, /*#__PURE__*/React__default["default"].createElement(Wrapper, wrapperCol, /*#__PURE__*/React__default["default"].createElement(AddonWrapper, addonWrapperProps, addons.pre, fieldInstance, addons.end), error || helper), extraNode);
+	            }), !floatingLabel && label, /*#__PURE__*/React__default["default"].createElement(Wrapper, wrapperCol, /*#__PURE__*/React__default["default"].createElement(AddonWrapper, addonWrapperProps, addons.pre, floatingLabel && label ? /*#__PURE__*/React__default["default"].createElement(reactBootstrap.FloatingLabel, {
+	              label: label.props.children
+	            }, fieldInstance) : fieldInstance, addons.end), error || helper), extraNode);
 	          });
 	        }
 	      }));
@@ -1241,6 +1243,7 @@
 	  label: PropTypes__default["default"].any,
 	  helper: PropTypes__default["default"].any,
 	  labelCol: PropTypes__default["default"].object,
+	  floatingLabel: PropTypes__default["default"].bool,
 	  wrapperCol: PropTypes__default["default"].object,
 	  addons: PropTypes__default["default"].object,
 	  extra: PropTypes__default["default"].node,

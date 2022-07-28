@@ -2,7 +2,7 @@ import { EasyField } from 'react-formutil';
 export * from 'react-formutil';
 import React, { Children, cloneElement, Component, isValidElement, createContext, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { FormControl, FormLabel, InputGroup, FormGroup, ToggleButtonGroup, ToggleButton, FormCheck, Col, Row, FormText } from 'react-bootstrap';
+import { FormControl, FormLabel, InputGroup, FormGroup, FormSelect, ToggleButtonGroup, ToggleButton, FormCheck, FloatingLabel, Col, Row, FormText } from 'react-bootstrap';
 import reactIs from 'react-is';
 import isEqual from 'react-fast-compare';
 
@@ -295,7 +295,7 @@ function insertRule(selector, content) {
   }
 }
 
-var _excluded = ["children", "addons", "label", "helper", "labelCol", "wrapperCol", "validationState", "className", "as", "feedback", "extra", "noStyle", "errorLevel"];
+var _excluded = ["children", "addons", "label", "helper", "labelCol", "wrapperCol", "validationState", "className", "as", "feedback", "floatingLabel", "extra", "noStyle", "errorLevel"];
 var isValidElementType = reactIs.isValidElementType;
 
 var _createContext = /*#__PURE__*/createContext({}),
@@ -469,7 +469,8 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
           props.className;
           var as = props.as;
           props.feedback;
-          var extraNode = props.extra,
+          var floatingLabel = props.floatingLabel,
+          extraNode = props.extra,
           noStyle = props.noStyle,
           _props$errorLevel = props.errorLevel,
           errorLevel = _props$errorLevel === void 0 ? errorLevelGlobal : _props$errorLevel,
@@ -499,11 +500,11 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
 
       if (addons) {
         if (addons.pre) {
-          addons.pre = /*#__PURE__*/React.createElement(InputGroup.Prepend, null, /*#__PURE__*/isValidElement(addons.pre) ? addons.pre : /*#__PURE__*/React.createElement(InputGroup.Text, null, addons.pre));
+          addons.pre = /*#__PURE__*/isValidElement(addons.pre) ? addons.pre : /*#__PURE__*/React.createElement(InputGroup.Text, null, addons.pre);
         }
 
         if (addons.end) {
-          addons.end = /*#__PURE__*/React.createElement(InputGroup.Append, null, /*#__PURE__*/isValidElement(addons.end) ? addons.end : /*#__PURE__*/React.createElement(InputGroup.Text, null, addons.end));
+          addons.end = /*#__PURE__*/isValidElement(addons.end) ? addons.end : /*#__PURE__*/React.createElement(InputGroup.Text, null, addons.end);
         }
       } else {
         addons = {};
@@ -511,7 +512,7 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
 
       if (helper && ! /*#__PURE__*/isValidElement(helper)) {
         helper = /*#__PURE__*/React.createElement(FormText, {
-          className: "text-muted"
+          muted: true
         }, helper);
       }
 
@@ -529,11 +530,12 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
             _this2.forceUpdate();
           }
         });
+        var fieldInstance = typeof childList === 'function' ? childList() : childList;
         return /*#__PURE__*/React.createElement(Provider, {
           value: this.registerField
         }, /*#__PURE__*/React.createElement(FormGroup, Object.assign({}, fieldProps, groupProps, {
           as: groupAsProps
-        }), label, /*#__PURE__*/React.createElement(Wrapper, wrapperCol, /*#__PURE__*/React.createElement(AddonWrapper, addonWrapperProps, addons.pre, typeof childList === 'function' ? childList() : childList, addons.end), error || helper), extraNode));
+        }), label, /*#__PURE__*/React.createElement(Wrapper, wrapperCol, /*#__PURE__*/React.createElement(AddonWrapper, addonWrapperProps, addons.pre, fieldInstance, addons.end), error || helper), extraNode));
       } // If $memo is true, pass the children to Field for SCU diffing.
 
 
@@ -549,10 +551,8 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
       var children = typeof childList === 'function' ? childList : Children.only(childList);
       var component = getChildComponent(children);
 
-      if (component === FormControl) {
-        if (children.props.as === 'select' && children.props.multiple) {
-          component = 'multipleSelect';
-        }
+      if ((component === FormControl && children.props.as === 'select' || component === FormSelect) && children.props.multiple) {
+        component = 'multipleSelect';
       }
 
       switch (component) {
@@ -690,7 +690,9 @@ var _FormGroup = /*#__PURE__*/function (_Component) {
 
             return /*#__PURE__*/React.createElement(FormGroup, Object.assign({}, restProps, groupProps, {
               as: groupAsProps
-            }), label, /*#__PURE__*/React.createElement(Wrapper, wrapperCol, /*#__PURE__*/React.createElement(AddonWrapper, addonWrapperProps, addons.pre, fieldInstance, addons.end), error || helper), extraNode);
+            }), !floatingLabel && label, /*#__PURE__*/React.createElement(Wrapper, wrapperCol, /*#__PURE__*/React.createElement(AddonWrapper, addonWrapperProps, addons.pre, floatingLabel && label ? /*#__PURE__*/React.createElement(FloatingLabel, {
+              label: label.props.children
+            }, fieldInstance) : fieldInstance, addons.end), error || helper), extraNode);
           });
         }
       }));
@@ -719,6 +721,7 @@ _FormGroup.propTypes = {
   label: PropTypes.any,
   helper: PropTypes.any,
   labelCol: PropTypes.object,
+  floatingLabel: PropTypes.bool,
   wrapperCol: PropTypes.object,
   addons: PropTypes.object,
   extra: PropTypes.node,

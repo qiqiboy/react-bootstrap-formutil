@@ -16,6 +16,7 @@ export interface FormGroupComponentProps<T = any, P = {}, Fields = {}, WeakField
     wrapperCol?: ColProps;
     labelCol?: ColProps;
     label?: React.ReactNode;
+    floatingLabel?: boolean;
     helper?: React.ReactNode;
     extra?: React.ReactNode;
     addons?: {

@@ -36,6 +36,7 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
         * [`helper`](#helper)
         * [`labelCol`](#labelcol)
         * [`wrapperCol`](#wrappercol)
+        * [`floatingLabel`](#floatinglabel)
         * [`addons`](#addons)
         * [`extra`](#extra)
         * [`$parser`](#parser)
@@ -72,9 +73,10 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
 
 [![react-bootstrap-formutil](https://nodei.co/npm/react-bootstrap-formutil.png?compact=true)](https://npm.im/react-bootstrap-formutil)
 
-由于目前流行的`bootstrap`版本主要有`v3`和`v4`，其对应的`react-bootstrap`也有两个相对应的版本，所以我们也提供了两个版本供选择下载。
+📌📌 该版本适用于 `bootstrap@5.x` 和 `react-bootstrap@2.x`。
 
-该版本适用于 `bootstrap@4.x` 和 `react-bootstrap@1.x`。**如果你项目中使用的是 `bootstrap@3.x` 和 `react-bootstrap@0.32.x`，请查看 [react-bootstrap-formutil@classic](https://github.com/qiqiboy/react-bootstrap-formutil/tree/classic)**。
+-   如果你项目中使用的是 `bootstrap@3.x` 和 `react-bootstrap@0.32.x`，请查看 [react-bootstrap-formutil@classic](https://github.com/qiqiboy/react-bootstrap-formutil/tree/classic)\*\*。
+-   如果你项目中使用的是 `bootstrap@4.x` 和 `react-bootstrap@1.x`，请查看 [react-bootstrap-formutil@bs4](https://github.com/qiqiboy/react-bootstrap-formutil/tree/bs4)\*\*。
 
 ```bash
 # npm
@@ -220,6 +222,16 @@ class MyForm extends Component {
 ##### `wrapperCol`
 
 该属性可用来搭配`labelCol`设置水平布局的表单项的 `栅格` 布局
+
+##### `floatingLabel`
+
+指定该属性，启用[`Floating Labels`](https://getbootstrap.com/docs/5.2/forms/floating-labels/)效果
+
+```javascript
+<FormGroup label="Your Name" floatingLabel={true}>
+    <Control placeholder="text here" />
+</FormGroup>
+```
 
 ##### `addons`
 
@@ -395,7 +407,7 @@ class MyForm extends Component {
 </FormGroup>
 ```
 
-以上运行示例请参考 [示例demo4](http://github.boy.im/react-bootstrap-formutil/demo/)
+以上运行示例请参考 [示例 demo4](http://github.boy.im/react-bootstrap-formutil/demo/)
 
 ##### `errorLevel`
 
