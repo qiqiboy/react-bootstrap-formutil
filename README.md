@@ -75,8 +75,8 @@ Happy to use react-formutil in the project based on `react-bootstrap` ^\_^
 
 📌📌 该版本适用于 `bootstrap@5.x` 和 `react-bootstrap@2.x`。
 
--   如果你项目中使用的是 `bootstrap@3.x` 和 `react-bootstrap@0.32.x`，请查看 [react-bootstrap-formutil@classic](https://github.com/qiqiboy/react-bootstrap-formutil/tree/classic)\*\*。
--   如果你项目中使用的是 `bootstrap@4.x` 和 `react-bootstrap@1.x`，请查看 [react-bootstrap-formutil@bs4](https://github.com/qiqiboy/react-bootstrap-formutil/tree/bs4)\*\*。
+-   如果你项目中使用的是 `bootstrap@3.x` 和 `react-bootstrap@0.32.x`，请查看 [react-bootstrap-formutil@classic](https://github.com/qiqiboy/react-bootstrap-formutil/tree/classic)
+-   如果你项目中使用的是 `bootstrap@4.x` 和 `react-bootstrap@1.x`，请查看 [react-bootstrap-formutil@bs4](https://github.com/qiqiboy/react-bootstrap-formutil/tree/bs4)
 
 ```bash
 # npm
