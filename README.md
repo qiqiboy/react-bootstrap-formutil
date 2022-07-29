@@ -237,19 +237,17 @@ class MyForm extends Component {
 
 该属性可以用来实现`InputGroup`布局，该属性包含三个字段`pre` `end` `size`，可以分别用来添加前后`addons`以及设置`InputGroup`的尺寸大小。
 
-如果`pre` `end`的值为字符串，则会自动添加`InputGroup.Prepend` `InputGroup.Append`组件。当然，你也可以自行定义要添加的节点。
+如果`pre` `end`的值为字符串，则会自动添加`InputGroup.Text`组件包装。当然，你也可以自行定义要添加的节点。
 
 ```javascript
 <FormGroup
     name="email"
     addons={{
         size: 'lg',
+        // 如果是字符串，会自动添加 InputGroup.Text 包装
         pre: 'Email',
-        end: (
-            <InputGroup.Append>
-                <InputGroup.Text>@apple.com</InputGroup.Text>
-            </InputGroup.Append>
-        )
+        // 也可以直接传递节点
+        end: <InputGroup.Text>@apple.com</InputGroup.Text>
     }}>
     <FormControl />
 </FormGroup>
@@ -534,12 +532,14 @@ setErrorLevel(0);
 
 ##### [`ToggleButtonGroup`](https://react-bootstrap.github.io/components/button-group/#btn-groups-checkbox-radio)
 
+**注意：`ToggleButton`组件必须指定id属性！！** 您可以查看`react-boostrap`文档详细了解。
+
 ```javascript
 <FormGroup name="hobbies">
     <ToggleButtonGroup type="checkbox">
-        <ToggleButton value={1}>option 1</ToggleButton>
-        <ToggleButton value={2}>option 2</ToggleButton>
-        <ToggleButton value={3}>option 3</ToggleButton>
+        <ToggleButton value={1} id="t1">option 1</ToggleButton>
+        <ToggleButton value={2} id="t2">option 2</ToggleButton>
+        <ToggleButton value={3} id="t3">option 3</ToggleButton>
     </ToggleButtonGroup>
 </FormGroup>
 ```
