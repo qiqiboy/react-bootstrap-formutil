@@ -43,6 +43,7 @@ interface CheckboxGroupProps<T> {
     onBlur?: React.FocusEventHandler;
     value?: T[];
     onChange?(value: T[]): void;
+    children: React.ReactElement<any> | Array<React.ReactElement<any>>;
 }
 
 export class CheckboxGroup<T = any> extends React.Component<CheckboxGroupProps<T>> {}
@@ -52,6 +53,7 @@ interface SwitchGroupProps<T> {
     onBlur?: React.FocusEventHandler;
     value?: T[];
     onChange?(value: T[]): void;
+    children: React.ReactElement<any> | Array<React.ReactElement<any>>;
 }
 
 export class SwitchGroup<T = any> extends React.Component<SwitchGroupProps<T>> {}
@@ -61,6 +63,7 @@ interface RadioGroupProps<T> {
     onBlur?: React.FocusEventHandler;
     value?: T;
     onChange?(value: T): void;
+    children: React.ReactElement<any> | Array<React.ReactElement<any>>;
 }
 
 export class RadioGroup<T = any> extends React.Component<RadioGroupProps<T>> {}
