@@ -100,7 +100,7 @@
     "mini-css-extract-plugin": "2.6.1",
     "node-xlsx": "0.17.2",
     "null-loader": "4.0.1",
-    "postcss": "8.4.14",
+    "postcss": "8.4.31",
     "postcss-flexbugs-fixes": "5.0.2",
     "postcss-loader": "6.2.1",
     "postcss-preset-env": "7.7.2",
