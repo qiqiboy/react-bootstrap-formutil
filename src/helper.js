@@ -7,7 +7,7 @@ try {
 
     document.getElementsByTagName('head')[0].appendChild(style);
 
-    styleSheet = document.styleSheets[document.styleSheets.length - 1];
+    styleSheet = style.sheet || style.styleSheet;
 } catch (err) {}
 
 export function insertRule(selector, content) {

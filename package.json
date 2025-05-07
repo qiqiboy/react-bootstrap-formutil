@@ -1,6 +1,6 @@
 {
   "name": "react-bootstrap-formutil",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Happy to build forms with react-formutil in the project based on react-bootstrap ^_^",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -66,7 +66,7 @@
     "@typescript-eslint/parser": "5.4.0",
     "babel-eslint": "10.1.0",
     "babel-jest": "26.6.3",
-    "babel-preset-react-app": "10.0.1",
+    "babel-preset-react-app": "^10.1.0",
     "eslint": "7.32.0",
     "eslint-config-react-app": "6.0.0",
     "eslint-plugin-flowtype": "5.10.0",
